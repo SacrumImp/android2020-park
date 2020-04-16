@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Агрегатор мероприятий</string>
     <string name="description_image_of_event">image of event</string>
+    <string name="price">Цена:</string>
+    <string name="description">Описание события</string>
 </resources>

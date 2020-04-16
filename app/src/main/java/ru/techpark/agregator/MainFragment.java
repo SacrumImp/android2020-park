@@ -31,16 +31,18 @@ import ru.techpark.agregator.event.EventRepo;
 import ru.techpark.agregator.network.EventApi;
 
 public class MainFragment extends Fragment {
-    private FragmentNavigator navigator;
+    private static FragmentNavigator navigator;
     private static final String TAG = "MainFragment";
     RecyclerView feed;
+    private static  FeedAdapter adapter;
+    public static FeedAdapter getAdapter(){return adapter;}
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navigator = ((FragmentNavigator)getActivity());
         feed = view.findViewById(R.id.list_of_events);
-        final FeedAdapter adapter = new FeedAdapter();
+        adapter = new FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = new Observer<List<Event>>() {
@@ -52,10 +54,11 @@ public class MainFragment extends Fragment {
             }
         };
 
-        new ViewModelProvider(this)
-                .get(FeedViewModel.class)
+        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
+        viewModelProvider.get(FeedViewModel.class)
                 .getEvents()
                 .observe(getViewLifecycleOwner(), observer);
+
     }
 
     @Nullable
@@ -85,6 +88,7 @@ public class MainFragment extends Fragment {
             int imageHeightPixels = 280;
             int imageWidthPixels = 600;
 
+
             Event event = events.get(position);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
@@ -103,6 +107,7 @@ public class MainFragment extends Fragment {
         public int getItemCount() {
             return events.size();
         }
+        public List<Event> getEvents(){return events;}
     }
 
     private static class FeedViewHolder extends RecyclerView.ViewHolder {
@@ -115,6 +120,19 @@ public class MainFragment extends Fragment {
             eventImage = itemView.findViewById(R.id.image_in_feed);
             title = itemView.findViewById(R.id.title_in_feed);
             description = itemView.findViewById(R.id.description_in_feed);
+            int pos = getBindingAdapterPosition();
+            List<Event> event = getAdapter().getEvents();
+            Event detailedEvent = event.get(1);
+            final int id = detailedEvent.getId();
+
+
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    navigator.navigateToAnotherFragment(id);
+                }
+            });
         }
     }
 }

@@ -21,6 +21,7 @@ import ru.techpark.agregator.network.EventApi;
 public class EventRepo {
     private final static MutableLiveData<List<Event>> mEvents = new MutableLiveData<>();
     private static final String TAG = "EventRepo";
+    private final static MutableLiveData<Event> mEvent = new MutableLiveData<>();
 
     static {
         mEvents.setValue(Collections.<Event>emptyList());
@@ -34,8 +35,12 @@ public class EventRepo {
         refresh();
     }
 
+
     public LiveData<List<Event>> getEvents() {
         return mEvents;
+    }
+    public LiveData<Event> getEvent() {
+        return mEvent;
     }
 
     public void refresh() {
@@ -64,6 +69,24 @@ public class EventRepo {
         }
         return result;
     }
+    private static Event transform(EventApi.DetailedEvent detailedEvent) {
+            Event result = map(detailedEvent);
+            Log.d(TAG, "Loaded " + result.getTitle() + " #" + result.getId());
+        return result;
+    }
+    private static Event map(EventApi.DetailedEvent detailedEvent) {
+
+        List<Image> images = new ArrayList<>();
+        if (detailedEvent.images.size() > 0)
+            images.add(new Image(detailedEvent.images.get(0).image));
+
+        return new Event(
+                detailedEvent.id,
+                detailedEvent.title,
+                images,
+                detailedEvent.description, detailedEvent.date, detailedEvent.location, detailedEvent.body_text, detailedEvent.price
+        );
+    }
 
     private static Event map(EventApi.Event feedEvent) {
 
@@ -77,6 +100,23 @@ public class EventRepo {
                 images,
                 feedEvent.description
         );
+    }
+    public void getCertainEvent(int id){
+        final EventApi api = ApiRepo.from(mContext).getEventApi();
+      //  final Event[] event = new Event[1];
+        api.getDetailedEvent(id).enqueue(new Callback<EventApi.DetailedEvent>() {
+            @Override
+            public void onResponse(Call<EventApi.DetailedEvent> call, Response<EventApi.DetailedEvent> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    mEvent.postValue(transform(response.body()));
+                }
+            }
+            @Override
+            public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {
+
+            }
+        });
+
     }
 
 }

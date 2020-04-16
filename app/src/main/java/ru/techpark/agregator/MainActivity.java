@@ -25,9 +25,10 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     @Override
     public void navigateToAnotherFragment(int num) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-     //   FragmentTransaction transaction = fragmentManager.beginTransaction().replace(R.id.fragment_container, FragmentSecond.newInstance(num)).
-       //         addToBackStack(null);
-       // transaction.commit();// all transactions before commit are added to backstack
+        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(R.id.fragment_container,
+                DetailedEventFragment.newInstance(num)).
+                addToBackStack(null);
+        transaction.commit();// all transactions before commit are added to backstack
     }
 
 

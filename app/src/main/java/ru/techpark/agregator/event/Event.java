@@ -10,12 +10,26 @@ public class Event {
     private String body_text;
     private String price;
     private List<Image> images;
+    private String location;
 
     public Event(int id, String title, List<Image> images, String description) {
         this.id = id;
         this.title = title;
         this.images = images;
         this.description = description;
+    }
+    public Event(int id, String title, List<Image> images, String description, Date date,
+            String location,
+            String body_text,
+            String price) {
+        this.id = id;
+        this.title = title;
+        this.images = images;
+        this.description = description;
+        this.dates = date;
+        this.location = location;
+        this.body_text = body_text;
+        this.price = price;
     }
 
     public int getId() {
