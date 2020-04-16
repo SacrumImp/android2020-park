@@ -33,16 +33,16 @@ import ru.techpark.agregator.network.EventApi;
 public class MainFragment extends Fragment {
     private FragmentNavigator navigator;
     private static final String TAG = "MainFragment";
-    @Nullable
+    RecyclerView feed;
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         navigator = ((FragmentNavigator)getActivity());
-        View view = inflater.inflate(R.layout.fragment_first, container, false);
-        RecyclerView feed = view.findViewById(R.id.list_of_events);
+        feed = view.findViewById(R.id.list_of_events);
         final FeedAdapter adapter = new FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
         Observer<List<Event>> observer = new Observer<List<Event>>() {
             @Override
             public void onChanged(List<Event> Events) {
@@ -56,9 +56,13 @@ public class MainFragment extends Fragment {
                 .get(FeedViewModel.class)
                 .getEvents()
                 .observe(getViewLifecycleOwner(), observer);
-        return  view;
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_first, container, false);
+    }
 
     private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
