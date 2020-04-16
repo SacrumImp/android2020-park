@@ -1,7 +1,9 @@
 package ru.techpark.agregator;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,19 +30,18 @@ import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.EventRepo;
 import ru.techpark.agregator.network.EventApi;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-
+public class MainFragment extends Fragment {
+    private FragmentNavigator navigator;
+    private static final String TAG = "MainFragment";
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        RecyclerView feed = findViewById(R.id.list_of_events);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        navigator = ((FragmentNavigator)getActivity());
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        RecyclerView feed = view.findViewById(R.id.list_of_events);
         final FeedAdapter adapter = new FeedAdapter();
         feed.setAdapter(adapter);
-        feed.setLayoutManager(new LinearLayoutManager(this));
+        feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         Observer<List<Event>> observer = new Observer<List<Event>>() {
             @Override
@@ -54,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
         new ViewModelProvider(this)
                 .get(FeedViewModel.class)
                 .getEvents()
-                .observe(this, observer);
+                .observe(getViewLifecycleOwner(), observer);
+        return  view;
     }
+
 
     private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
