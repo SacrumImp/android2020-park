@@ -9,20 +9,22 @@ import retrofit2.http.Path;
 import retrofit2.http.Url;
 import ru.techpark.agregator.event.Date;
 import ru.techpark.agregator.event.Image;
+import ru.techpark.agregator.event.Location;
+import ru.techpark.agregator.event.Place;
 
 public interface EventApi {
 
 
-     class Event {
+    class Event {
         public int id;
         public String title;
         public List<Image> images;
         public String description;
     }
-     class Image {
+    class Image {
         public String image;
     }
-     class FeedInfo {
+    class FeedInfo {
         public int count;
         public String next;
         public String previous;
@@ -33,20 +35,18 @@ public interface EventApi {
         public String title;
         public List<Image> images;
         public String description;
-        public Date date;
-        public String location;
         public String body_text;
         public String price;
-
+        public List<Date> dates;
+        public Location location;
+        public Place place;
     }
 
     @GET("events/?fields=images,id,title,description&order_by=-publication_date")
     Call<FeedInfo> getFeedEvents();
 
-    @GET("events/{event_id}/?fields=images,id,title,description,dates,location,body_text,price")
+   // @GET("events/{event_id}/?fields=images,id,title,description,location,body_text,price")
+   @GET("events/{event_id}/?expand=location,dates,place&fields=images,id,title,description,location,body_text,price,dates,place")
     Call<DetailedEvent> getDetailedEvent(@Path("event_id") int id);
-
-    @GET
-    Call<ResponseBody> getImageBody(@Url String url);
 
 }

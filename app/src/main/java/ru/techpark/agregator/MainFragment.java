@@ -33,15 +33,14 @@ import ru.techpark.agregator.network.EventApi;
 public class MainFragment extends Fragment {
     private static FragmentNavigator navigator;
     private static final String TAG = "MainFragment";
-    RecyclerView feed;
     private static  FeedAdapter adapter;
-    public static FeedAdapter getAdapter(){return adapter;}
+    private static FeedViewModel feedViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navigator = ((FragmentNavigator)getActivity());
-        feed = view.findViewById(R.id.list_of_events);
+        RecyclerView feed = view.findViewById(R.id.list_of_events);
         adapter = new FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -53,10 +52,9 @@ public class MainFragment extends Fragment {
                 }
             }
         };
-
-        ViewModelProvider viewModelProvider = new ViewModelProvider(this);
-        viewModelProvider.get(FeedViewModel.class)
-                .getEvents()
+//TODO сохранять надо VM, a не provider
+        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
+                feedViewModel.getEvents()
                 .observe(getViewLifecycleOwner(), observer);
 
     }
@@ -67,9 +65,13 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
-    private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+    public static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
         private List<Event> events = new ArrayList<>();
+
+        int getIdOfEvent(int position){
+            return events.get(position).getId();
+        }
 
         void setEvents(List<Event> events) {
             this.events = events;
@@ -107,10 +109,9 @@ public class MainFragment extends Fragment {
         public int getItemCount() {
             return events.size();
         }
-        public List<Event> getEvents(){return events;}
     }
 
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
+    static class FeedViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
         TextView title;
         TextView description;
@@ -120,17 +121,14 @@ public class MainFragment extends Fragment {
             eventImage = itemView.findViewById(R.id.image_in_feed);
             title = itemView.findViewById(R.id.title_in_feed);
             description = itemView.findViewById(R.id.description_in_feed);
-            int pos = getBindingAdapterPosition();
-            List<Event> event = getAdapter().getEvents();
-            Event detailedEvent = event.get(1);
-            final int id = detailedEvent.getId();
-
-
-
+//TODO вот здесь получение id
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    feedViewModel.refresh();
+                    int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
                     navigator.navigateToAnotherFragment(id);
+                    Log.d(TAG, "id " + id);
                 }
             });
         }

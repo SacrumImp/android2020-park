@@ -2,5 +2,11 @@
     <string name="app_name">Агрегатор мероприятий</string>
     <string name="description_image_of_event">image of event</string>
     <string name="price">Цена:</string>
+    <string name="way_to_go">Формат проведения:</string>
+    <string name="city">Город:</string>
     <string name="description">Описание события</string>
+    <string name="time">Время проведения:</string>
+    <string name="phone">Телефонный номер:</string>
+    <string name="place_title">Место:</string>
+    <string name="place_address">Адрес:</string>
 </resources>

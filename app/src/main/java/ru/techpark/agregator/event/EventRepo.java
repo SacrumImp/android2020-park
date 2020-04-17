@@ -25,6 +25,7 @@ public class EventRepo {
 
     static {
         mEvents.setValue(Collections.<Event>emptyList());
+        mEvent.setValue(null);
 
     }
 
@@ -32,6 +33,7 @@ public class EventRepo {
 
     public EventRepo(Context context) {
         mContext = context;
+        //todo вот это надо вставить перед открытием фрагмента, посмотри, как сделано в 6 лекции(я про рефреш)
         refresh();
     }
 
@@ -69,22 +71,22 @@ public class EventRepo {
         }
         return result;
     }
-    private static Event transform(EventApi.DetailedEvent detailedEvent) {
-            Event result = map(detailedEvent);
-            Log.d(TAG, "Loaded " + result.getTitle() + " #" + result.getId());
-        return result;
-    }
-    private static Event map(EventApi.DetailedEvent detailedEvent) {
 
+    //todo здесь map было писать не обязаельно(так как мы один раз это делаем)
+    private static Event transform(EventApi.DetailedEvent detailedEvent) {
         List<Image> images = new ArrayList<>();
         if (detailedEvent.images.size() > 0)
             images.add(new Image(detailedEvent.images.get(0).image));
-
+        List<Date> dates = new ArrayList<>();
+        if (detailedEvent.dates.size()>0)
+            dates.add(new Date(detailedEvent.dates.get(0).getStart_date(), detailedEvent.dates.get(0).getStart_time()));
+        Log.d(TAG, "id" + detailedEvent.id);
         return new Event(
                 detailedEvent.id,
                 detailedEvent.title,
                 images,
-                detailedEvent.description, detailedEvent.date, detailedEvent.location, detailedEvent.body_text, detailedEvent.price
+                detailedEvent.description,
+                detailedEvent.body_text, detailedEvent.price, dates, detailedEvent.location, detailedEvent.place
         );
     }
 
@@ -101,22 +103,25 @@ public class EventRepo {
                 feedEvent.description
         );
     }
+
     public void getCertainEvent(int id){
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-      //  final Event[] event = new Event[1];
+        //  final Event[] event = new Event[1];
+        Log.d(TAG, "try");
         api.getDetailedEvent(id).enqueue(new Callback<EventApi.DetailedEvent>() {
             @Override
             public void onResponse(Call<EventApi.DetailedEvent> call, Response<EventApi.DetailedEvent> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     mEvent.postValue(transform(response.body()));
+                    Log.d(TAG, "post");
                 }
             }
             @Override
             public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {
+                Log.e(TAG, "Failed to load event", t);
 
             }
         });
-
     }
 
 }
