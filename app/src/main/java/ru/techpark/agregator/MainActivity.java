@@ -28,7 +28,7 @@ import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.EventRepo;
 import ru.techpark.agregator.network.EventApi;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
