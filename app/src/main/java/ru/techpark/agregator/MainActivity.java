@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.lifecycle.Observer;
 
 
-import android.media.tv.TvContentRating;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -19,19 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ru.techpark.agregator.event.Event;
-import ru.techpark.agregator.event.EventRepo;
-import ru.techpark.agregator.network.EventApi;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
+    private FeedViewModel feedViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,23 +43,35 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Event> Events) {
                 if (Events != null) {
                     adapter.setEvents(Events);
+                    Log.d(TAG, "observer");
                 }
             }
         };
-
-        new ViewModelProvider(this)
-                .get(FeedViewModel.class)
+        feedViewModel = new ViewModelProvider(this)
+                .get(FeedViewModel.class);
+        feedViewModel
                 .getEvents()
                 .observe(this, observer);
+
+    }
+    private void loadNextPage(int page) {
+        feedViewModel.addNextPage(page);
     }
 
-    private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+    private class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
         private List<Event> events = new ArrayList<>();
+        private int pageCounter = 1;
 
         void setEvents(List<Event> events) {
+            int EVENTS_ON_PAGE = 20;
+
             this.events = events;
-            notifyDataSetChanged();
+            if (pageCounter == 1)
+                notifyDataSetChanged();
+            else {
+                notifyItemRangeInserted(EVENTS_ON_PAGE * (pageCounter - 1), EVENTS_ON_PAGE);
+            }
         }
 
         @NonNull
@@ -75,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-            int imageHeightPixels = 280;
-            int imageWidthPixels = 600;
 
             Event event = events.get(position);
             holder.title.setText(event.getTitle());
@@ -84,12 +90,11 @@ public class MainActivity extends AppCompatActivity {
             if (event.getImages().size() > 0)
                 Glide.with(holder.eventImage.getContext())
                         .load(event.getImages().get(0).getImageUrl())
-                        .skipMemoryCache(true)
-                        .override(imageWidthPixels, imageHeightPixels)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .fitCenter()
                         .error(R.drawable.ic_image_placeholder)
                         .into(holder.eventImage);
+            if (position == getItemCount() - 1) {
+                loadNextPage(++pageCounter);
+            }
         }
 
         @Override

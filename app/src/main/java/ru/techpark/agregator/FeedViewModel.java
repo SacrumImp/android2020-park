@@ -12,12 +12,16 @@ import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.EventRepo;
 
 public class FeedViewModel extends AndroidViewModel {
-
-    private LiveData<List<Event>> mResponseData = new EventRepo(getApplication()).getEvents();
+    private EventRepo eventRepo = new EventRepo(getApplication());
+    private LiveData<List<Event>> mResponseData = eventRepo.getEvents();
 
     public FeedViewModel(@NonNull Application application) {
         super(application);
+        eventRepo.addData(1);
+    }
 
+    public void addNextPage(int page) {
+        eventRepo.addData(page);
     }
 
     LiveData<List<Event>> getEvents() {
