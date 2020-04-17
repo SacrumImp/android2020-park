@@ -2,8 +2,10 @@ package ru.techpark.agregator.localdata;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 import ru.techpark.agregator.event.Date;
 import ru.techpark.agregator.event.Image;
 
@@ -11,13 +13,20 @@ import ru.techpark.agregator.event.Image;
 public class EventTable {
 
     @PrimaryKey(autoGenerate = true)
+    @NonNull
     public int id;     // id каждой записи (увеличивается автоматически)
 
-    public Date dates;     // дата события (дата начала и дата конца)
+    @TypeConverters({DateConverter.class})
+    public Date dates;       // дата события
     public String title;   // название
     public String description;     // краткое описание
     public String body_text;       // подробное описание
     public String price;       // цена
-    List<Image> images;     // изображения (адрес string)
+    @TypeConverters({ImageConverter.class})
+    public List<Image> images;     // изображения (адрес string)
+
+    public  EventTable(){
+
+    }
 
 }

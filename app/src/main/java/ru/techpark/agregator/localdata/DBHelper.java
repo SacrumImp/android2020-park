@@ -17,7 +17,7 @@ public class DBHelper {
         return ourInstance;
     }
 
-    public AppDatabase getDao(){
+    public AppDatabase getDb(){
         return appDatabase;
     }
 
