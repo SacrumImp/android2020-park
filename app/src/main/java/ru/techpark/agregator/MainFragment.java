@@ -1,7 +1,9 @@
-/*package ru.techpark.agregator;
+package ru.techpark.agregator;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,20 +30,20 @@ import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.EventRepo;
 import ru.techpark.agregator.network.EventApi;
 
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
+public class MainFragment extends Fragment {
+    private static FragmentNavigator navigator;
+    private static final String TAG = "MainFragment";
+    private static  FeedAdapter adapter;
+    private static FeedViewModel feedViewModel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        RecyclerView feed = findViewById(R.id.list_of_events);
-        final FeedAdapter adapter = new FeedAdapter();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navigator = ((FragmentNavigator)getActivity());
+        RecyclerView feed = view.findViewById(R.id.list_of_events);
+        adapter = new FeedAdapter();
         feed.setAdapter(adapter);
-        feed.setLayoutManager(new LinearLayoutManager(this));
-
+        feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = new Observer<List<Event>>() {
             @Override
             public void onChanged(List<Event> Events) {
@@ -50,16 +52,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+//TODO сохранять надо VM, a не provider
+        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
+                feedViewModel.getEvents()
+                .observe(getViewLifecycleOwner(), observer);
 
-        new ViewModelProvider(this)
-                .get(FeedViewModel.class)
-                .getEvents()
-                .observe(this, observer);
     }
 
-    private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_first, container, false);
+    }
+
+    public static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
 
         private List<Event> events = new ArrayList<>();
+
+        int getIdOfEvent(int position){
+            return events.get(position).getId();
+        }
 
         void setEvents(List<Event> events) {
             this.events = events;
@@ -77,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
             int imageHeightPixels = 280;
             int imageWidthPixels = 600;
+
 
             Event event = events.get(position);
             holder.title.setText(event.getTitle());
@@ -98,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
+    static class FeedViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
         TextView title;
         TextView description;
@@ -108,44 +121,16 @@ public class MainActivity extends AppCompatActivity {
             eventImage = itemView.findViewById(R.id.image_in_feed);
             title = itemView.findViewById(R.id.title_in_feed);
             description = itemView.findViewById(R.id.description_in_feed);
+//TODO вот здесь получение id
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    feedViewModel.refresh();
+                    int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
+                    navigator.navigateToAnotherFragment(id);
+                    Log.d(TAG, "id " + id);
+                }
+            });
         }
     }
-}
-
- */
-package ru.techpark.agregator;
-
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import android.os.Bundle;
-
-public class MainActivity extends AppCompatActivity implements FragmentNavigator{
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_container,   new MainFragment());
-            transaction.commit();
-        }
-    }
-
-
-
-    @Override
-    public void navigateToAnotherFragment(int num) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                DetailedEventFragment.newInstance(num)).
-                addToBackStack(null);
-        transaction.commit();// all transactions before commit are added to backstack
-    }
-
-
-
 }
