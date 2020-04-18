@@ -13,7 +13,6 @@ import ru.techpark.agregator.event.Image;
 public class EventTable {
 
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     public int id;     // id каждой записи (увеличивается автоматически)
 
     @TypeConverters({DateConverter.class})
@@ -25,8 +24,12 @@ public class EventTable {
     @TypeConverters({ImageConverter.class})
     public List<Image> images;     // изображения (адрес string)
 
-    public  EventTable(){
-
+    public EventTable(Date dates, String title, String description, String body_text, String price, List<Image> images) {
+        this.dates = dates;
+        this.title = title;
+        this.description = description;
+        this.body_text = body_text;
+        this.price = price;
+        this.images = images;
     }
-
 }

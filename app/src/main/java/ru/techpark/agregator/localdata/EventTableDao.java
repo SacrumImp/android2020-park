@@ -11,9 +11,13 @@ import androidx.room.Query;
 @Dao
 public interface EventTableDao {
 
-        // добавление строки
+        // добавление множества строки
         @Insert(onConflict = OnConflictStrategy.IGNORE)
         void insertAll(EventTable ... tableEvents);
+
+        // добавление строки
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        void insert(EventTable tableEvent);
 
         // получение всех строк
         @Query("SELECT * FROM event_table")
