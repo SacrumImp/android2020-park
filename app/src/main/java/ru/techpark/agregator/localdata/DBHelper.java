@@ -1,7 +1,6 @@
 package ru.techpark.agregator.localdata;
 
 import android.content.Context;
-import android.net.wifi.hotspot2.pps.Credential;
 
 import androidx.room.Room;
 

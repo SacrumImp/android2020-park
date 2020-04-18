@@ -7,7 +7,7 @@ import androidx.room.TypeConverter;
 import ru.techpark.agregator.event.Image;
 
 
-public class ImageConverter {
+class ImageConverter {
 
     @TypeConverter  // перевод списка Images в String
     public String fromImage(List<Image> images){
