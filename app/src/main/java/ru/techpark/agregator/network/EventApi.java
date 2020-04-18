@@ -5,6 +5,7 @@ import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import ru.techpark.agregator.event.Date;
@@ -42,8 +43,8 @@ public interface EventApi {
         public Place place;
     }
 
-    @GET("events/?fields=images,id,title,description")
-    Call<FeedInfo> getFeedEvents();
+    @GET("events/?fields=images,id,title,description&order_by=-publication_date")
+    Call<FeedInfo> getFeedEvents(@Query("page") int page);
 
    // @GET("events/{event_id}/?fields=images,id,title,description,location,body_text,price")
    @GET("events/{event_id}/?expand=location,dates,place&fields=images,id,title,description,location,body_text,price,dates,place")
