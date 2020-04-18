@@ -1,118 +1,4 @@
-/*package ru.techpark.agregator;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.lifecycle.Observer;
-
-
-import android.media.tv.TvContentRating;
-import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.techpark.agregator.event.Event;
-import ru.techpark.agregator.event.EventRepo;
-import ru.techpark.agregator.network.EventApi;
-
-public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "MainActivity";
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        RecyclerView feed = findViewById(R.id.list_of_events);
-        final FeedAdapter adapter = new FeedAdapter();
-        feed.setAdapter(adapter);
-        feed.setLayoutManager(new LinearLayoutManager(this));
-
-        Observer<List<Event>> observer = new Observer<List<Event>>() {
-            @Override
-            public void onChanged(List<Event> Events) {
-                if (Events != null) {
-                    adapter.setEvents(Events);
-                }
-            }
-        };
-
-        new ViewModelProvider(this)
-                .get(FeedViewModel.class)
-                .getEvents()
-                .observe(this, observer);
-    }
-
-    private static class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
-
-        private List<Event> events = new ArrayList<>();
-
-        void setEvents(List<Event> events) {
-            this.events = events;
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new FeedViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.feed_elem, parent, false));
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
-            int imageHeightPixels = 280;
-            int imageWidthPixels = 600;
-
-            Event event = events.get(position);
-            holder.title.setText(event.getTitle());
-            holder.description.setText(Html.fromHtml(event.getDescription()));
-            if (event.getImages().size() > 0)
-                Glide.with(holder.eventImage.getContext())
-                        .load(event.getImages().get(0).getImageUrl())
-                        .skipMemoryCache(true)
-                        .override(imageWidthPixels, imageHeightPixels)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .fitCenter()
-                        .error(R.drawable.ic_image_placeholder)
-                        .into(holder.eventImage);
-        }
-
-        @Override
-        public int getItemCount() {
-            return events.size();
-        }
-    }
-
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
-        ImageView eventImage;
-        TextView title;
-        TextView description;
-
-        FeedViewHolder(@NonNull View itemView) {
-            super(itemView);
-            eventImage = itemView.findViewById(R.id.image_in_feed);
-            title = itemView.findViewById(R.id.title_in_feed);
-            description = itemView.findViewById(R.id.description_in_feed);
-        }
-    }
-}
-
- */
 package ru.techpark.agregator;
 
 
@@ -129,6 +15,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
+            new FeedViewModel(getApplication()).addNextPage(1);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container,   new MainFragment());
             transaction.commit();
@@ -139,11 +26,12 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void navigateToAnotherFragment(int num) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(R.id.fragment_container,
-                DetailedEventFragment.newInstance(num)).
-                addToBackStack(null);
-        transaction.commit();// all transactions before commit are added to backstack
+        new FeedViewModel(getApplication()).getDetailedEvent(num);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container,DetailedEventFragment.newInstance(num))
+                .addToBackStack(null)
+                .commit();// all transactions before commit are added to backstack
     }
 
 

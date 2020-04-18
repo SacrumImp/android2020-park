@@ -25,26 +25,24 @@ public class DetailedEventFragment extends Fragment {
     private static final String NUM_CURR = "CURRENT";
     private int id;
     private Event event;
-    TextView title;
-    TextView description;
-    TextView body_text;
-    TextView price;
-    TextView date_start;
-    TextView time_start;
-    TextView location;
-    TextView location_label;
-    ImageView image;
-    TextView price_label;
-    TextView description_label;
-    TextView phone_label;
-    TextView time_label;
-    TextView place_title_label;
-    TextView place_title;
-    TextView place_address;
-    TextView place_address_label;
-    TextView phone;
-    int imageHeightPixels = 280;
-    int imageWidthPixels = 600;
+    private TextView title;
+    private TextView description;
+    private TextView body_text;
+    private TextView price;
+    private TextView date_start;
+    private TextView time_start;
+    private TextView location;
+    private TextView location_label;
+    private ImageView image;
+    private TextView price_label;
+    private TextView description_label;
+    private TextView phone_label;
+    private TextView time_label;
+    private TextView place_title_label;
+    private TextView place_title;
+    private TextView place_address;
+    private TextView place_address_label;
+    private TextView phone;
 
     static DetailedEventFragment newInstance(int num) {
         DetailedEventFragment frag = new DetailedEventFragment();
@@ -113,7 +111,6 @@ public class DetailedEventFragment extends Fragment {
                         Glide.with(image.getContext())
                                 .load(event.getImages().get(0).getImageUrl())
                                 .skipMemoryCache(true)
-                                .override(imageWidthPixels, imageHeightPixels)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .fitCenter()
                                 .error(R.drawable.ic_image_placeholder)
@@ -161,7 +158,6 @@ public class DetailedEventFragment extends Fragment {
         feedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-        feedViewModel.getDetailedEvent(id);
 
     }
 }

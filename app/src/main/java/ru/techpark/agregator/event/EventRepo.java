@@ -33,8 +33,6 @@ public class EventRepo {
 
     public EventRepo(Context context) {
         mContext = context;
-        //todo вот это надо вставить перед открытием фрагмента, посмотри, как сделано в 6 лекции(я про рефреш)
-        refresh();
     }
 
 
@@ -112,12 +110,14 @@ public class EventRepo {
         Log.d(TAG, "try");
         api.getDetailedEvent(id).enqueue(new Callback<EventApi.DetailedEvent>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<EventApi.DetailedEvent> call, Response<EventApi.DetailedEvent> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     mEvent.postValue(transform(response.body()));
                     Log.d(TAG, "post");
                 }
             }
+            @EverythingIsNonNull
             @Override
             public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {
                 Log.e(TAG, "Failed to load event", t);

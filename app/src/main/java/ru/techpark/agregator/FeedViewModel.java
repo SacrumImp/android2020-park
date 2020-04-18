@@ -28,9 +28,11 @@ public class FeedViewModel extends AndroidViewModel {
     LiveData<Event> getEvent(){
         return  mResponseEvent;
     }
+
     void getDetailedEvent(int id) {
         eventRepo.getCertainEvent(id);
     }
+
     LiveData<List<Event>> getEvents() {
         return mResponseData;
     }
