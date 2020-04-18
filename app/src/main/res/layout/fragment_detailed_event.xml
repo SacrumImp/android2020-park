@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:background="#B4E3F4"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="8dp"
+        >
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/description_image_of_event"
+            android:scaleType="centerInside" />
+        <TextView
+            android:id="@+id/label_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentLeft="true"
+            android:text="@string/time"
+             />
+
+        <TextView
+            android:id="@+id/date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/label_date"
+            tools:text="date_start" />
+        <TextView
+            android:id="@+id/time_start"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_toRightOf="@+id/date_start"
+            android:layout_marginTop="10dp"
+            tools:text="time_start" />
+        <TextView
+            android:id="@+id/location_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_start"
+            android:layout_marginTop="10dp"
+            tools:text="location_label" />
+        <TextView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_start"
+            android:layout_toRightOf="@id/location_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:text="location" />
+        <TextView
+            android:id="@+id/place_title_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_label"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/place_title"
+            tools:text="Место:" />
+        <TextView
+            android:id="@+id/place_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_label"
+            android:layout_toRightOf="@id/place_title_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:text="place_title" />
+        <TextView
+            android:id="@+id/place_address_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_label"
+            android:layout_toRightOf="@id/place_title"
+            android:layout_marginLeft="10dp"
+            android:text="@string/place_address"
+            android:layout_marginTop="10dp"
+            tools:text="Адрес:" />
+        <TextView
+            android:id="@+id/place_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_label"
+            android:layout_toRightOf="@id/place_address_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:text="place_address" />
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/place_title_label"
+            android:layout_toRightOf="@+id/phone_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:text="phone" />
+        <TextView
+            android:id="@+id/phone_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/place_title_label"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/phone"
+            tools:text="Телефон: " />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/phone"
+            android:layout_toRightOf="@+id/price_label"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:text="price" />
+        <TextView
+            android:id="@+id/price_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/phone"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:text="@string/price"
+            tools:text="Цена" />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/go_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/price"
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+            android:id="@+id/label_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/go_btn"
+            android:layout_marginTop="10dp"
+            android:text="@string/description" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="10dp"
+            tools:text="title" />
+        <TextView
+            android:id="@+id/body_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/description"
+            tools:text="body_text"/>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/label_description"
+            android:layout_marginTop="10dp"
+            tools:text="description" />
+
+    </RelativeLayout>
+</ScrollView>

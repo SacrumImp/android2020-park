@@ -4,18 +4,32 @@ import java.util.List;
 
 public class Event {
     private int id;
-    private Date dates;
     private String title;
     private String description;
     private String body_text;
     private String price;
     private List<Image> images;
+    private Location location;
+    private List<Date> dates;
+    private Place place;
 
-    public Event(int id, String title, List<Image> images, String description) {
+    Event(int id, String title, List<Image> images, String description) {
         this.id = id;
         this.title = title;
         this.images = images;
         this.description = description;
+    }
+    Event(int id, String title, List<Image> images, String description,
+          String body_text, String price, List<Date> dates, Location location, Place place) {
+        this.id = id;
+        this.title = title;
+        this.images = images;
+        this.description = description;
+        this.body_text = body_text;
+        this.price = price;
+        this.dates = dates;
+        this.location = location;
+        this.place = place;
     }
 
     public int getId() {
@@ -26,11 +40,11 @@ public class Event {
         this.id = id;
     }
 
-    public Date getDates() {
+    public List<Date> getDates() {
         return dates;
     }
 
-    public void setDates(Date dates) {
+    public void setDates(List<Date> dates) {
         this.dates = dates;
     }
 
@@ -72,5 +86,17 @@ public class Event {
 
     public void setImages(List<Image> images) {
         this.images = images;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Place getPlace() {
+        return place;
     }
 }
