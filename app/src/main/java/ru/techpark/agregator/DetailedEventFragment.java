@@ -98,6 +98,7 @@ public class DetailedEventFragment extends Fragment {
         if (arguments != null) {
             id = arguments.getInt(NUM_CURR);
         }
+        //todo делать это в observer лучше не надо....
         Observer<Event> observer = new Observer<Event>() {
             //Todo тут, наверное не так надо, это костыль
             @Override

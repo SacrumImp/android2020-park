@@ -25,11 +25,11 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
 
     @Override
-    public void navigateToAnotherFragment(int num) {
-        new FeedViewModel(getApplication()).getDetailedEvent(num);
+    public void navigateToAnotherFragment(int id) {
+        new DetailedViewModel(getApplication()).getDetailedEvent(id);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container,DetailedEventFragment.newInstance(num))
+                .replace(R.id.fragment_container,DetailedEventFragment.newInstance(id))
                 .addToBackStack(null)
                 .commit();// all transactions before commit are added to backstack
     }
