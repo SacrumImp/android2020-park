@@ -11,11 +11,11 @@
 
     <ImageView
         android:id="@+id/image_in_feed"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
         android:contentDescription="@string/description_image_of_event"
         android:layout_gravity="center"
-        android:scaleType="centerInside"/>
+        android:scaleType="fitXY"/>
 
     <TextView
         android:id="@+id/title_in_feed"

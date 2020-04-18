@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.techpark.agregator.event.Event;
-import ru.techpark.agregator.event.EventRepo;
-import ru.techpark.agregator.network.EventApi;
 
 public class MainFragment extends Fragment {
     private static FragmentNavigator navigator;
@@ -52,7 +50,6 @@ public class MainFragment extends Fragment {
                 }
             }
         };
-//TODO сохранять надо VM, a не provider
         feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
                 feedViewModel.getEvents()
                 .observe(getViewLifecycleOwner(), observer);
@@ -121,7 +118,6 @@ public class MainFragment extends Fragment {
             eventImage = itemView.findViewById(R.id.image_in_feed);
             title = itemView.findViewById(R.id.title_in_feed);
             description = itemView.findViewById(R.id.description_in_feed);
-//TODO вот здесь получение id
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

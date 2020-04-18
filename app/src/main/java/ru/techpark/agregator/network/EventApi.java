@@ -42,7 +42,7 @@ public interface EventApi {
         public Place place;
     }
 
-    @GET("events/?fields=images,id,title,description&order_by=-publication_date")
+    @GET("events/?fields=images,id,title,description")
     Call<FeedInfo> getFeedEvents();
 
    // @GET("events/{event_id}/?fields=images,id,title,description,location,body_text,price")

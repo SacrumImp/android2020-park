@@ -157,11 +157,8 @@ public class DetailedEventFragment extends Fragment {
             }
         };
 
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
-        feedViewModel
-                .getEvent()
-                .observe(getViewLifecycleOwner(), observer);
-        feedViewModel.getDetailedEvent(id);
-
+        DetailedViewModel detailedViewModel = new ViewModelProvider(this).get(DetailedViewModel.class);
+        detailedViewModel.getDetailedEvent(id);
+        detailedViewModel.getEvent().observe(getViewLifecycleOwner(),observer);
     }
 }
