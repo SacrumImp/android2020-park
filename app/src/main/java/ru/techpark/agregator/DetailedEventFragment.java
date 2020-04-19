@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ru.techpark.agregator.event.Event;
 
@@ -163,5 +165,11 @@ public class DetailedEventFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), observer);
         feedViewModel.getDetailedEvent(id);
 
+        //обработка нажатия лайка
+        FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
+        likeEvent.setOnClickListener((v) -> {
+            feedViewModel.insertEventBD(event);
+        });
     }
+
 }

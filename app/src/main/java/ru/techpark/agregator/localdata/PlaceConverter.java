@@ -7,7 +7,8 @@ public class PlaceConverter {
 
     @TypeConverter
     public String fromPlace(Place place){
-        return place.getTitle() + "," + place.getAddress() + "," + place.getPhone();
+        if(place == null) return "";
+        else return place.getTitle() + "," + place.getAddress() + "," + place.getPhone();
     }
 
     @TypeConverter

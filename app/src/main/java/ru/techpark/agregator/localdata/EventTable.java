@@ -2,15 +2,15 @@ package ru.techpark.agregator.localdata;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import ru.techpark.agregator.event.Date;
+import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.Image;
 import ru.techpark.agregator.event.Location;
 import ru.techpark.agregator.event.Place;
+
 
 @Entity(tableName = "event_table")      // таблица всех ивентов
 public class EventTable {
@@ -31,14 +31,17 @@ public class EventTable {
     @TypeConverters({PlaceConverter.class})
     public Place place;
 
-    public EventTable(String title, String description, String body_text, String price, List<Image> images, Location location, Date dates, Place place) {
-        this.dates = dates;
-        this.title = title;
-        this.description = description;
-        this.body_text = body_text;
-        this.price = price;
-        this.images = images;
-        this.location = location;
-        this.place = place;
+    public EventTable() {
+    }
+
+    public EventTable(Event event) {
+        this.dates = event.getDates().get(0);
+        this.title = event.getTitle();
+        this.description = event.getDescription();
+        this.body_text = event.getBody_text();
+        this.price = event.getPrice();
+        this.images = event.getImages();
+        this.location = event.getLocation();
+        this.place = event.getPlace();
     }
 }
