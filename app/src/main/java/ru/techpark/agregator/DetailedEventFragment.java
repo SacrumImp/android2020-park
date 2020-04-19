@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,9 +15,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.work.Data;
+import androidx.work.Data.Builder;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.event.Event;
 
@@ -43,6 +52,14 @@ public class DetailedEventFragment extends Fragment {
     private TextView place_address;
     private TextView place_address_label;
     private TextView phone;
+    private ImageButton button_go;
+
+    public final static String KEY_ID = "KEY_ID";
+    public final static String KEY_TITLE = "KEY_TITLE";
+    public final static String KEY_DES = "KEY_DES";
+    public final static String KEY_DATE = "KEY_DATE";
+    public final static String KEY_TIME = "KEY_TIME";
+
 
     static DetailedEventFragment newInstance(int num) {
         DetailedEventFragment frag = new DetailedEventFragment();
@@ -57,6 +74,7 @@ public class DetailedEventFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detailed_event, container, false);
     }
+
 
 
 
@@ -81,6 +99,7 @@ public class DetailedEventFragment extends Fragment {
         place_title = view.findViewById(R.id.place_title);
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
+        button_go = view.findViewById(R.id.go_btn);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -93,6 +112,7 @@ public class DetailedEventFragment extends Fragment {
         phone.setVisibility(View.GONE);
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
+
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -149,7 +169,26 @@ public class DetailedEventFragment extends Fragment {
                             phone.setText(event.getPlace().getPhone());
                         }
                     }
-
+                    button_go.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String workTag = event.getId() +"";
+                            Data put = new Data.Builder().putInt(KEY_ID, event.getId())
+                            .putString(KEY_DATE,event.getDates().get(0).getStart_date())
+                            .putString(KEY_TIME,event.getDates().get(0).getStart_time())
+                            .putString(KEY_TITLE,event.getTitle())
+                            .putString(KEY_DES,event.getDescription()).build();
+                            long difference = 0;
+                             Date curDate = new Date();
+                             Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l);
+                             long extra_time = 18000000; // 5 часов.
+                             difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
+                            OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                          //          .setInputData(put).build();
+                            .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
+                            WorkManager.getInstance(getContext()).enqueue(notificationWork);
+                        }
+                    });
                 }
                 Log.d("fragment", "observer worked");
             }
@@ -159,6 +198,5 @@ public class DetailedEventFragment extends Fragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
     }
 }

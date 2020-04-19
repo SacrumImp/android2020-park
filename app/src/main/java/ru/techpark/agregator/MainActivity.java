@@ -5,6 +5,8 @@ package ru.techpark.agregator;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator{
@@ -19,6 +21,11 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container,   new MainFragment());
             transaction.commit();
+        }
+        Intent intent = getIntent();
+        if (intent.getAction() == NotificationWorker.ACTION_TO_OPEN){
+            int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
+            navigateToAnotherFragment(id);
         }
     }
 
