@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#B4E3F4"
     android:layout_height="match_parent">
-    <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/likeUnlike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:layout_margin="35dp"
+        android:onClick="addToFavorite"
+        app:srcCompat="@drawable/baseline_favorite_black_18dp" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="8dp"
-        >
+        android:background="#B4E3F4">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:orientation="vertical">
 
         <ImageView
             android:id="@+id/image"
@@ -173,5 +188,7 @@
             android:layout_marginTop="10dp"
             tools:text="description" />
 
-    </RelativeLayout>
-</ScrollView>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

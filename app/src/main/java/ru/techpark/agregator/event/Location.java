@@ -9,6 +9,12 @@ public class Location {
         this.name = name;
     }
 
+    public Location(String slug, String name, String timezone){
+        this.slug = slug;
+        this.name = name;
+        this.timezone = timezone;
+    }
+
     public String getSlug() {
         return slug;
     }
