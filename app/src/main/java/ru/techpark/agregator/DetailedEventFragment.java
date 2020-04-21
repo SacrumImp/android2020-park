@@ -202,6 +202,7 @@ public class DetailedEventFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), observer);
 
         //обработка нажатия лайка
+        FeedViewModel feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
         FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
         likeEvent.setOnClickListener((v) -> {
             feedViewModel.insertEventBD(event);
