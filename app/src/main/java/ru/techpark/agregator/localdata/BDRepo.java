@@ -5,6 +5,8 @@ import android.content.Context;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,9 +21,12 @@ public class BDRepo {
     }
 
     private final Context mContext;
+    private Executor executor = Executors.newSingleThreadExecutor();
+    private AppDatabase db;
 
     public BDRepo(Context context){
         mContext = context;
+        db = DBHelper.getInstance(context).getDb();
         refresh();
     }
 
@@ -30,15 +35,22 @@ public class BDRepo {
     }
 
     public void refresh(){
-
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<EventTable> eventList = db.getDao().getAllEvents();
+                //sEvents.postValue();
+            }
+        });
     }
 
     public void insertEventBD(Event event){
-        new Thread(new Runnable() {
+        executor.execute(new Runnable() {
+            @Override
             public void run() {
                 EventTable eventDb = new EventTable(event);
-                DBHelper.getInstance(mContext).getDb().getDao().insert(eventDb);
+                db.getDao().insert(eventDb);
             }
-        }).start();
+        });
     }
 }
