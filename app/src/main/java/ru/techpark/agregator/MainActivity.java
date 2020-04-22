@@ -2,12 +2,11 @@
 package ru.techpark.agregator;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator{
 
@@ -17,9 +16,9 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            new FeedViewModel(getApplication()).addNextPage(1);
+            new FeedViewModel(getApplication()).addFeedNextPage(1);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_container,   new MainFragment());
+            transaction.add(R.id.fragment_container, new FeedFragment());
             transaction.commit();
         }
         Intent intent = getIntent();

@@ -20,10 +20,10 @@ import ru.techpark.agregator.network.EventApi;
 public class EventRepo {
     private final static MutableLiveData<List<Event>> mEvents = new MutableLiveData<>();
     private static final String TAG = "EventRepo";
-    private List<Event> eventsInFeed = new ArrayList<>();
+    private static List<Event> eventsInFeed = new ArrayList<>();
 
     static {
-        mEvents.setValue(Collections.<Event>emptyList());
+        mEvents.setValue(Collections.emptyList());
     }
 
     private final Context mContext;
@@ -38,16 +38,16 @@ public class EventRepo {
     }
 
 
-    public void addData(final int page) {
+    public void addDataFeed(final int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
         api.getFeedEvents(page).enqueue(new Callback<EventApi.FeedInfo>() {
             @Override
             @EverythingIsNonNull
-            public void onResponse( Call<EventApi.FeedInfo> call, Response<EventApi.FeedInfo> response) {
+            public void onResponse(Call<EventApi.FeedInfo> call, Response<EventApi.FeedInfo> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     if (page == 1)
                         eventsInFeed.clear();
-                    transform(response.body());
+                    transformFeed(response.body());
                     mEvents.postValue(eventsInFeed);
                 }
             }
@@ -60,15 +60,14 @@ public class EventRepo {
         });
     }
 
-    private void transform(EventApi.FeedInfo feedInfo) {
+    private void transformFeed(EventApi.FeedInfo feedInfo) {
         for (EventApi.Event feedEvent : feedInfo.results) {
-            Event event = map(feedEvent);
+            Event event = mapEvent(feedEvent);
             eventsInFeed.add(event);
         }
     }
 
-
-    private static Event map(EventApi.Event feedEvent) {
+    private static Event mapEvent(EventApi.Event feedEvent) {
 
         List<Image> images = new ArrayList<>();
         if (feedEvent.images.size() > 0)
@@ -79,6 +78,47 @@ public class EventRepo {
                 feedEvent.title,
                 images,
                 feedEvent.description
+        );
+    }
+
+    public void addDataSearch(String searchQuery, int page) {
+        final EventApi api = ApiRepo.from(mContext).getEventApi();
+        api.getSearchResult(page, searchQuery).enqueue(new Callback<EventApi.SearchInfo>() {
+            @Override
+            @EverythingIsNonNull
+            public void onResponse(Call<EventApi.SearchInfo> call, Response<EventApi.SearchInfo> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (page == 1)
+                        eventsInFeed.clear();
+                    transformSearch(response.body());
+                    mEvents.postValue(eventsInFeed);
+                }
+            }
+
+            @Override
+            @EverythingIsNonNull
+            public void onFailure(Call<EventApi.SearchInfo> call, Throwable t) {
+                Log.e(TAG, "Failed to load", t);
+            }
+        });
+    }
+
+    private void transformSearch(EventApi.SearchInfo body) {
+        for (EventApi.SearchEvent searchEvent : body.results) {
+            Event event = mapSearchEvent(searchEvent);
+            eventsInFeed.add(event);
+        }
+    }
+
+    private static Event mapSearchEvent(EventApi.SearchEvent searchEvent) {
+
+        List<Image> images = new ArrayList<>();
+        images.add(new Image(searchEvent.first_image.image));
+        return new Event(
+                searchEvent.id,
+                searchEvent.title,
+                images,
+                searchEvent.description
         );
     }
 }

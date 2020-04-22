@@ -24,16 +24,27 @@ public class FeedViewModel extends AndroidViewModel {
     public FeedViewModel(@NonNull Application application) {
         super(application);
     }
-    public void addNextPage(int page) {
-        eventRepo.addData(page);
+
+    void addFeedNextPage(int page) {
+        eventRepo.addDataFeed(page);
     }
+
+    void addSearchNextPage(String searchQuery, int page) {
+        eventRepo.addDataSearch(searchQuery, page);
+    }
+
 
     LiveData<List<Event>> getEvents() {
         return mResponseData;
     }
 
     //Обращение к view model за бд
-    LiveData<List<Event>> getBD(){ return mResponseBD; }    //получение данных
-    void insertEventBD(Event event) { bdRepo.insertEventBD(event); }    //ввод данных
+    LiveData<List<Event>> getBD() {
+        return mResponseBD;
+    }    //получение данных
+
+    void insertEventBD(Event event) {
+        bdRepo.insertEventBD(event);
+    }    //ввод данных
     //
 }

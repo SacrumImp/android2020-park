@@ -9,4 +9,7 @@
     <string name="phone">Телефонный номер:</string>
     <string name="place_title">Место:</string>
     <string name="place_address">Адрес:</string>
+    <string name="search_field_hint">Введите запрос</string>
+    <string name="exit_search_descriptor">вернуться к ленте событий</string>
+    <string name="start_search_descriptor">начать поиск</string>
 </resources>

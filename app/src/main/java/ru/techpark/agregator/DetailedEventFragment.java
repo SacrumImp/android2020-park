@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.Data;
-import androidx.work.Data.Builder;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
@@ -25,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -121,79 +118,71 @@ public class DetailedEventFragment extends Fragment {
             id = arguments.getInt(NUM_CURR);
         }
         //todo делать это в observer лучше не надо....
-        Observer<Event> observer = new Observer<Event>() {
-            //Todo тут, наверное не так надо, это костыль
-            @Override
-            public void onChanged(Event Event) {
-                if (Event != null) {
-                    event = Event;
-                    title.setText(event.getTitle());
-                    description_label.setVisibility(View.VISIBLE);
-                    description.setText(Html.fromHtml(event.getDescription()));
-                    if (event.getImages().size() > 0)
-                        Glide.with(image.getContext())
-                                .load(event.getImages().get(0).getImageUrl())
-                                .skipMemoryCache(true)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .fitCenter()
-                                .error(R.drawable.ic_image_placeholder)
-                                .into(image);
-                    body_text.setText(Html.fromHtml(event.getBody_text()));
-                    if (event.getPrice().length() !=0) {
-                        price_label.setVisibility(View.VISIBLE);
-                        price.setVisibility(View.VISIBLE);
-                        price.setText(event.getPrice());
-                    }
-                    if (event.getLocation().getSlug().equals("online")){
-                        location_label.setText(R.string.way_to_go);
-                    }
-                    else{
-                        location_label.setText(R.string.city);
-                    }
-                    location.setText(event.getLocation().getName());
-                    time_label.setVisibility(View.VISIBLE);
-                    date_start.setText(event.getDates().get(0).getStart_date());
-                    time_start.setText(event.getDates().get(0).getStart_time());
-                    if (event.getPlace() != null){
-                        if(event.getPlace().getTitle().length()!=0){
-                            place_title_label.setVisibility(View.VISIBLE);
-                            place_title.setVisibility(View.VISIBLE);
-                            place_title.setText(event.getPlace().getTitle());
-                        }
-                        if (event.getPlace().getAddress().length()!=0){
-                            place_address.setVisibility(View.VISIBLE);
-                            place_address_label.setVisibility(View.VISIBLE);
-                            place_address.setText(event.getPlace().getAddress());
-                        }
-                        if(event.getPlace().getPhone().length()!=0){
-                            phone_label.setVisibility(View.VISIBLE);
-                            phone.setVisibility(View.VISIBLE);
-                            phone.setText(event.getPlace().getPhone());
-                        }
-                    }
-                    button_go.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String workTag = event.getId() +"";
-                            Data put = new Data.Builder().putInt(KEY_ID, event.getId())
-                            .putString(KEY_DATE,event.getDates().get(0).getStart_date())
-                            .putString(KEY_TIME,event.getDates().get(0).getStart_time())
-                            .putString(KEY_TITLE,event.getTitle())
-                            .putString(KEY_DES,event.getDescription()).build();
-                            long difference = 0;
-                             Date curDate = new Date();
-                             Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l);
-                             long extra_time = 18000000; // 5 часов.
-                             difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
-                            OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                          //          .setInputData(put).build();
-                            .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
-                            WorkManager.getInstance(getContext()).enqueue(notificationWork);
-                        }
-                    });
+        Observer<Event> observer = Event -> {
+            if (Event != null) {
+                event = Event;
+                title.setText(event.getTitle());
+                description_label.setVisibility(View.VISIBLE);
+                description.setText(Html.fromHtml(event.getDescription()));
+                if (event.getImages().size() > 0)
+                    Glide.with(image.getContext())
+                            .load(event.getImages().get(0).getImageUrl())
+                            .skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .fitCenter()
+                            .error(R.drawable.ic_image_placeholder)
+                            .into(image);
+                body_text.setText(Html.fromHtml(event.getBody_text()));
+                if (event.getPrice().length() != 0) {
+                    price_label.setVisibility(View.VISIBLE);
+                    price.setVisibility(View.VISIBLE);
+                    price.setText(event.getPrice());
                 }
-                Log.d("fragment", "observer worked");
+                if (event.getLocation().getSlug().equals("online")) {
+                    location_label.setText(R.string.way_to_go);
+                } else {
+                    location_label.setText(R.string.city);
+                }
+                location.setText(event.getLocation().getName());
+                time_label.setVisibility(View.VISIBLE);
+                date_start.setText(event.getDates().get(0).getStart_date());
+                time_start.setText(event.getDates().get(0).getStart_time());
+                if (event.getPlace() != null) {
+                    if (event.getPlace().getTitle().length() != 0) {
+                        place_title_label.setVisibility(View.VISIBLE);
+                        place_title.setVisibility(View.VISIBLE);
+                        place_title.setText(event.getPlace().getTitle());
+                    }
+                    if (event.getPlace().getAddress().length() != 0) {
+                        place_address.setVisibility(View.VISIBLE);
+                        place_address_label.setVisibility(View.VISIBLE);
+                        place_address.setText(event.getPlace().getAddress());
+                    }
+                    if (event.getPlace().getPhone().length() != 0) {
+                        phone_label.setVisibility(View.VISIBLE);
+                        phone.setVisibility(View.VISIBLE);
+                        phone.setText(event.getPlace().getPhone());
+                    }
+                }
+                button_go.setOnClickListener(v -> {
+                    String workTag = event.getId() + "";
+                    Data put = new Data.Builder().putInt(KEY_ID, event.getId())
+                            .putString(KEY_DATE, event.getDates().get(0).getStart_date())
+                            .putString(KEY_TIME, event.getDates().get(0).getStart_time())
+                            .putString(KEY_TITLE, event.getTitle())
+                            .putString(KEY_DES, event.getDescription()).build();
+                    long difference = 0;
+                    Date curDate = new Date();
+                    Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
+                    long extra_time = 18000000; // 5 часов.
+                    difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
+                    OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                            //          .setInputData(put).build();
+                            .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
+                    WorkManager.getInstance(getContext()).enqueue(notificationWork);
+                });
             }
+            Log.d("fragment", "observer worked");
         };
 
         DetailedViewModel detailedViewModel = new ViewModelProvider(this).get(DetailedViewModel.class);
@@ -204,8 +193,6 @@ public class DetailedEventFragment extends Fragment {
         //обработка нажатия лайка
         FeedViewModel feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
         FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
-        likeEvent.setOnClickListener((v) -> {
-            feedViewModel.insertEventBD(event);
-        });
+        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }
 }
