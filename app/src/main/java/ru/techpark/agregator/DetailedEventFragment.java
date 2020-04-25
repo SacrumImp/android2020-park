@@ -185,13 +185,13 @@ public class DetailedEventFragment extends Fragment {
             Log.d("fragment", "observer worked");
         };
 
-        DetailedViewModel detailedViewModel = new ViewModelProvider(this).get(DetailedViewModel.class);
+        ApiSingleViewModel detailedViewModel = new ViewModelProvider(this).get(ApiSingleViewModel.class);
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
 
         //обработка нажатия лайка
-        ViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
+        FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
         FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
         likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }

@@ -10,9 +10,9 @@ import java.util.List;
 
 import ru.techpark.agregator.event.Event;
 
-public abstract class ViewModel extends AndroidViewModel {
+abstract class FeedViewModel extends AndroidViewModel {
 
-    public ViewModel(@NonNull Application application) {
+    FeedViewModel(@NonNull Application application) {
         super(application);
     }
 

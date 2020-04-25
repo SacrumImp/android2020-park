@@ -10,10 +10,10 @@ import java.util.List;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.localdata.BDRepo;
 
-public class BdViewModel extends ViewModel {
+public class BdViewModel extends FeedViewModel {
 
     private BDRepo bdRepo = new BDRepo(getApplication()); //инициализация репозитория
-    LiveData<List<Event>> mResponseData = bdRepo.getBD(); //получение данных для заполнения view
+    private LiveData<List<Event>> mResponseData = bdRepo.getBD(); //получение данных для заполнения view
 
     public BdViewModel(@NonNull Application application) {
         super(application);

@@ -10,10 +10,10 @@ import java.util.List;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.event.EventRepo;
 
-public class ApiViewModel extends ViewModel {
+public class ApiViewModel extends FeedViewModel {
 
     private EventRepo eventRepo = new EventRepo(getApplication()); //инициализация репозитория
-    LiveData<List<Event>> mResponseData = eventRepo.getEvents(); //получение данных для заполнения view
+    private LiveData<List<Event>> mResponseData = eventRepo.getEvents(); //получение данных для заполнения view
 
     public ApiViewModel(@NonNull Application application) {
         super(application);

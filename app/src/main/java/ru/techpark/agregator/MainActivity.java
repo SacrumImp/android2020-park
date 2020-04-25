@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void navigateToAnotherFragment(int id) {
-        new DetailedViewModel(getApplication()).getDetailedEvent(id);
+        new ApiSingleViewModel(getApplication()).getDetailedEvent(id);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container,DetailedEventFragment.newInstance(id))
