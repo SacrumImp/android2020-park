@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         if (savedInstanceState == null) {
             new ApiViewModel(getApplication()).addFeedNextPage(1);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_container, new FeedFragment());
+            transaction.add(R.id.fragment_container, new ApiFeedFragment());
             transaction.commit();
         }
         Intent intent = getIntent();
