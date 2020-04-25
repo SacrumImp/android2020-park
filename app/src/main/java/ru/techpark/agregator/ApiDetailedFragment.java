@@ -3,16 +3,10 @@ package ru.techpark.agregator;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.Data;
@@ -28,54 +22,15 @@ import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.event.Event;
 
+public class ApiDetailedFragment extends DetailedFragment {
 
-public class DetailedEventFragment extends Fragment {
-    private static final String NUM_CURR = "CURRENT";
-    private int id;
-    private Event event;
-    private TextView title;
-    private TextView description;
-    private TextView body_text;
-    private TextView price;
-    private TextView date_start;
-    private TextView time_start;
-    private TextView location;
-    private TextView location_label;
-    private ImageView image;
-    private TextView price_label;
-    private TextView description_label;
-    private TextView phone_label;
-    private TextView time_label;
-    private TextView place_title_label;
-    private TextView place_title;
-    private TextView place_address;
-    private TextView place_address_label;
-    private TextView phone;
-    private ImageButton button_go;
-
-    public final static String KEY_ID = "KEY_ID";
-    public final static String KEY_TITLE = "KEY_TITLE";
-    public final static String KEY_DES = "KEY_DES";
-    public final static String KEY_DATE = "KEY_DATE";
-    public final static String KEY_TIME = "KEY_TIME";
-
-
-    static DetailedEventFragment newInstance(int num) {
-        DetailedEventFragment frag = new DetailedEventFragment();
+    static ApiDetailedFragment newInstance(int num) {
+        ApiDetailedFragment frag = new ApiDetailedFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
         return frag;
     }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detailed_event, container, false);
-    }
-
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

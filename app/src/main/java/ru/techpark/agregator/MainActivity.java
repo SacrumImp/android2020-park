@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         new ApiSingleViewModel(getApplication()).getDetailedEvent(id);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container,DetailedEventFragment.newInstance(id))
+                .replace(R.id.fragment_container,ApiDetailedFragment.newInstance(id))
                 .addToBackStack(null)
                 .commit();// all transactions before commit are added to backstack
     }

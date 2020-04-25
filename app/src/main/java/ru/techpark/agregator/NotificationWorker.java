@@ -42,10 +42,10 @@ public class NotificationWorker extends Worker {
                 notificationManager.createNotificationChannel(channel);
             }
         }
-        int event_id = getInputData().getInt(DetailedEventFragment.KEY_ID, 0);
-        String event_title = getInputData().getString(DetailedEventFragment.KEY_TITLE);
-        String event_date = getInputData().getString(DetailedEventFragment.KEY_DATE);
-        String event_time = getInputData().getString(DetailedEventFragment.KEY_TIME);
+        int event_id = getInputData().getInt(ApiDetailedFragment.KEY_ID, 0);
+        String event_title = getInputData().getString(ApiDetailedFragment.KEY_TITLE);
+        String event_date = getInputData().getString(ApiDetailedFragment.KEY_DATE);
+        String event_time = getInputData().getString(ApiDetailedFragment.KEY_TIME);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setAction(ACTION_TO_OPEN);
         intent.putExtra(OPEN_FRAGMENT_ID, event_id);
