@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            new FeedViewModel(getApplication()).addFeedNextPage(1);
+            new ApiViewModel(getApplication()).addFeedNextPage(1);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container, new FeedFragment());
             transaction.commit();

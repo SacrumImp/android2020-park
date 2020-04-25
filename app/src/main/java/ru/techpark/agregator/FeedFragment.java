@@ -34,7 +34,7 @@ public class FeedFragment extends Fragment {
     private static final String TAG = "MainFragment";
     private static FragmentNavigator navigator;
     private static FeedAdapter adapter;
-    private static FeedViewModel feedViewModel;
+    private static ApiViewModel feedViewModel;
     private ProgressBar loadingProgress;
     private int pageCounter = 1;
     private boolean isAllEvents = false;
@@ -77,7 +77,7 @@ public class FeedFragment extends Fragment {
                 adapter.setEvents(Events);
             }
         };
-        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
+        feedViewModel = new ViewModelProvider(this).get(ApiViewModel.class);
         feedViewModel.getEvents()
                 .observe(getViewLifecycleOwner(), observer);
 
