@@ -4,9 +4,14 @@ package ru.techpark.agregator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator{
 
@@ -26,6 +31,23 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
             int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
             navigateToAnotherFragment(id);
         }
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.action_feed:
+                        break;
+                    case R.id.action_liked:
+                        Toast.makeText(MainActivity.this, "Liked", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_settings:
+                        Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
 

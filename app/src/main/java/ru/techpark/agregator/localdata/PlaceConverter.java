@@ -13,6 +13,7 @@ public class PlaceConverter {
 
     @TypeConverter
     public Place toPlace(String line){
+        if(line.length() == 0) return new Place("","","");
         String[] arr = line.split(",");
         return new Place(arr[0], arr[1], arr[2]);
     }
