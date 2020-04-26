@@ -19,6 +19,11 @@ import ru.techpark.agregator.event.Event;
 public class BdFeedFragment extends FeedFragment {
 
     @Override
+    void getFromAdapter(int id) {
+        navigator.navigateToAnotherBdFragment(id);
+    }
+
+    @Override
     protected void loadNextPage() {
 
     }

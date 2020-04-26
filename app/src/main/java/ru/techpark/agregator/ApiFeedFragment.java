@@ -67,6 +67,11 @@ public class ApiFeedFragment extends FeedFragment {
     }
 
     @Override
+    void getFromAdapter(int id) {
+        navigator.navigateToAnotherFragment(id);
+    }
+
+    @Override
     protected void loadNextPage() {
         showLoadingProgress();
         if (isSearch)

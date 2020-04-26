@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                         intent = getIntent();
                         if (intent.getAction() == NotificationWorker.ACTION_TO_OPEN){
                             int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
-                            navigateToAnotherFragment(id);
+                            navigateToAnotherBdFragment(id);
                         }
 
                         break;
@@ -86,6 +86,15 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                 .commit();// all transactions before commit are added to backstack
     }
 
+    @Override
+    public void navigateToAnotherBdFragment(int id) {
+        new BdSingleViewModel(getApplication()).getDetailedEvent(id);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container,BdDetailedFragment.newInstance(id))
+                .addToBackStack(null)
+                .commit();
+    }
 
 
 }

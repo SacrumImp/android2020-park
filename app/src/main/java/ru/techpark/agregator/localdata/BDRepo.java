@@ -17,8 +17,11 @@ public class BDRepo {
 
     private final static MutableLiveData<List<Event>> sEvents = new MutableLiveData<>();
 
+    private final static MutableLiveData<Event> sEvent = new MutableLiveData<>();
+
     static{
         sEvents.setValue(Collections.<Event>emptyList());
+        sEvent.setValue(null);
     }
 
     private final Context mContext;
@@ -34,6 +37,10 @@ public class BDRepo {
     public LiveData<List<Event>> getBD(){
         return sEvents;
     }
+
+    public LiveData<Event> getEvent() {return sEvent;}
+
+
 
     public void refresh(){
         executor.execute(new Runnable() {
@@ -51,6 +58,16 @@ public class BDRepo {
             public void run() {
                 EventTable eventDb = new EventTable(event);
                 db.getDao().insert(eventDb);
+            }
+        });
+    }
+
+    public void getCertainEvent(int id) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Event> certainEvent = transform(db.getDao().getEvent(id));
+                sEvent.postValue(certainEvent.get(0));
             }
         });
     }

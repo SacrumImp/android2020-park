@@ -7,26 +7,20 @@ import androidx.lifecycle.LiveData;
 
 import ru.techpark.agregator.event.DetailedEventRepo;
 import ru.techpark.agregator.event.Event;
+import ru.techpark.agregator.localdata.BDRepo;
 
 public class BdSingleViewModel extends SingleViewModel {
 
-    //TODO Изменить значение переменных под бд
-    private DetailedEventRepo detailedEventRepo = new DetailedEventRepo(getApplication());
-    private LiveData<Event> mResponseEvent = detailedEventRepo.getEvent();
+    private BDRepo detailedBdRepo = new BDRepo(getApplication());
+    private LiveData<Event> mResponseEvent = detailedBdRepo.getEvent();
 
     public BdSingleViewModel(@NonNull Application application) {
         super(application);
     }
 
-    //TODO Реализовать класс
     @Override
-    public LiveData<Event> getEvent() {
-        return null;
-    }
+    public LiveData<Event> getEvent() { return mResponseEvent; }
 
-    //TODO Реализовать класс
     @Override
-    public void getDetailedEvent(int id) {
-
-    }
+    public void getDetailedEvent(int id) { detailedBdRepo.getCertainEvent(id); }
 }

@@ -74,7 +74,7 @@ public abstract class FeedFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
-    static class FeedViewHolder extends RecyclerView.ViewHolder {
+    class FeedViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
         TextView title;
         TextView description;
@@ -86,11 +86,13 @@ public abstract class FeedFragment extends Fragment {
             description = itemView.findViewById(R.id.description_in_feed);
             itemView.setOnClickListener(v -> {
                 int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
-                navigator.navigateToAnotherFragment(id);
+                getFromAdapter(id);
                 Log.d(TAG, "id " + id);
             });
         }
     }
+
+    abstract void getFromAdapter(int id);
 
     protected void hideLoadingProgress() {
         Log.d(TAG, "progress hidden");

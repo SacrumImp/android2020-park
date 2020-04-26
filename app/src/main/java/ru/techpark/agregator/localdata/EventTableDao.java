@@ -26,6 +26,9 @@ public interface EventTableDao {
         @Query("SELECT * FROM event_table")
         List<EventTable> getAllEvents();
 
+        @Query("SELECT * FROM event_table WHERE (id = :certainId)")
+        List<EventTable> getEvent(int certainId);
+
         // удаление записи
         @Delete
         void delete(EventTable ... tableEvents);
