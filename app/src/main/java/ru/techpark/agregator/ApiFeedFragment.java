@@ -3,6 +3,7 @@ package ru.techpark.agregator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,10 +18,10 @@ import ru.techpark.agregator.event.Event;
 
 public class ApiFeedFragment extends FeedFragment {
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navigator = ((FragmentNavigator) getActivity());
         RecyclerView feed = view.findViewById(R.id.list_of_events);
         loadingProgress = view.findViewById(R.id.loading_progress);
         adapter = new FeedFragment.FeedAdapter();
@@ -30,6 +31,9 @@ public class ApiFeedFragment extends FeedFragment {
             if (Events != null) {
                 hideLoadingProgress();
                 adapter.setEvents(Events);
+            } else {
+                hideLoadingProgress();
+                Toast.makeText(getContext(), "Нет соеинения с интернетом", Toast.LENGTH_SHORT).show();
             }
         };
         feedViewModel = new ViewModelProvider(this).get(ApiViewModel.class);

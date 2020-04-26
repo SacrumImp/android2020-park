@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,13 +24,24 @@ import java.util.concurrent.TimeUnit;
 import ru.techpark.agregator.event.Event;
 
 public class ApiDetailedFragment extends DetailedFragment {
-
+    ApiSingleViewModel detailedViewModel;
     static ApiDetailedFragment newInstance(int num) {
         ApiDetailedFragment frag = new ApiDetailedFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
         return frag;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        detailedViewModel = new ViewModelProvider(this).get(ApiSingleViewModel.class);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            id = arguments.getInt(NUM_CURR);
+            detailedViewModel.getDetailedEvent(id);
+        }
     }
 
     @Override
@@ -54,6 +66,7 @@ public class ApiDetailedFragment extends DetailedFragment {
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
+        loading_progress = view.findViewById(R.id.loading_progress);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -66,16 +79,12 @@ public class ApiDetailedFragment extends DetailedFragment {
         phone.setVisibility(View.GONE);
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
+        button_go.setVisibility(View.GONE);
+        loading_progress.setVisibility(View.VISIBLE);
 
-
-
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            id = arguments.getInt(NUM_CURR);
-        }
-        //todo делать это в observer лучше не надо....
         Observer<Event> observer = Event -> {
             if (Event != null) {
+                loading_progress.setVisibility(View.GONE);
                 event = Event;
                 title.setText(event.getTitle());
                 description_label.setVisibility(View.VISIBLE);
@@ -137,14 +146,17 @@ public class ApiDetailedFragment extends DetailedFragment {
                             .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
                     WorkManager.getInstance(getContext()).enqueue(notificationWork);
                 });
+            } else {
+                loading_progress.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "Нет соеинения с интернетом", Toast.LENGTH_SHORT).show();
             }
             Log.d("fragment", "observer worked");
         };
 
-        ApiSingleViewModel detailedViewModel = new ViewModelProvider(this).get(ApiSingleViewModel.class);
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
+
 
         //обработка нажатия лайка
         FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);

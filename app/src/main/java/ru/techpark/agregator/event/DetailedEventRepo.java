@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -18,11 +17,7 @@ import ru.techpark.agregator.network.EventApi;
 
 public class DetailedEventRepo {
     private static final String TAG = "EventRepo";
-    private final static MutableLiveData<Event> mEvent = new MutableLiveData<>();
-
-    static {
-        mEvent.setValue(null);
-    }
+    private final MutableLiveData<Event> mEvent = new MutableLiveData<>();
 
     private final Context mContext;
 
@@ -66,6 +61,7 @@ public class DetailedEventRepo {
             }
             @Override
             public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {
+                mEvent.postValue(null);
                 Log.e(TAG, "Failed to load event", t);
             }
         });

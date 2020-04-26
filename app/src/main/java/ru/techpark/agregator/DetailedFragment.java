@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public abstract class DetailedFragment extends Fragment {
     protected TextView place_address;
     protected TextView place_address_label;
     protected TextView phone;
+    protected ProgressBar loading_progress;
     protected ImageButton button_go;
 
     public final static String KEY_ID = "KEY_ID";

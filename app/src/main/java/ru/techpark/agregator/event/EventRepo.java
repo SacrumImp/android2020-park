@@ -55,6 +55,7 @@ public class EventRepo {
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<EventApi.FeedInfo> call, Throwable t) {
+                mEvents.postValue(null);
                 Log.e(TAG, "Failed to load", t);
             }
         });
