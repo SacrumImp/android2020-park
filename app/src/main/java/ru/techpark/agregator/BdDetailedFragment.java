@@ -22,10 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.event.Event;
 
-public class ApiDetailedFragment extends DetailedFragment {
+public class BdDetailedFragment extends DetailedFragment {
 
-    static ApiDetailedFragment newInstance(int num) {
-        ApiDetailedFragment frag = new ApiDetailedFragment();
+    static BdDetailedFragment newInstance(int num) {
+        BdDetailedFragment frag = new BdDetailedFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
@@ -67,7 +67,8 @@ public class ApiDetailedFragment extends DetailedFragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
 
-
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);
+        floatingActionButton.setVisibility(View.GONE);
 
         Bundle arguments = getArguments();
         if (arguments != null) {
@@ -141,14 +142,10 @@ public class ApiDetailedFragment extends DetailedFragment {
             Log.d("fragment", "observer worked");
         };
 
-        ApiSingleViewModel detailedViewModel = new ViewModelProvider(this).get(ApiSingleViewModel.class);
+        BdSingleViewModel detailedViewModel = new ViewModelProvider(this).get(BdSingleViewModel.class);
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
-        //обработка нажатия лайка
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
-        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }
+
 }
