@@ -1,5 +1,6 @@
 package ru.techpark.agregator.localdata;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.room.Entity;
@@ -27,7 +28,7 @@ public class EventTable {
     @TypeConverters({LocationConverter.class})
     public Location location;
     @TypeConverters({DateConverter.class})
-    public Date dates;       // дата события
+    public List<Date> dates;       // дата события
     @TypeConverters({PlaceConverter.class})
     public Place place;
 
@@ -35,7 +36,7 @@ public class EventTable {
     }
 
     public EventTable(Event event) {
-        this.dates = event.getDates().get(0);
+        this.dates = event.getDates();
         this.title = event.getTitle();
         this.description = event.getDescription();
         this.body_text = event.getBody_text();
@@ -43,5 +44,13 @@ public class EventTable {
         this.images = event.getImages();
         this.location = event.getLocation();
         this.place = event.getPlace();
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public List<Date> getDates() {
+        return dates;
     }
 }

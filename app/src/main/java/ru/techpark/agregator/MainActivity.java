@@ -35,11 +35,36 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
                 switch(item.getItemId()){
                     case R.id.action_feed:
+                        if (savedInstanceState == null) {
+                            new ApiViewModel(getApplication()).addFeedNextPage(1);
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, new ApiFeedFragment());
+                            transaction.commit();
+                        }
+                        intent = getIntent();
+                        if (intent.getAction() == NotificationWorker.ACTION_TO_OPEN){
+                            int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
+                            navigateToAnotherFragment(id);
+                        }
                         break;
                     case R.id.action_liked:
                         Toast.makeText(MainActivity.this, "Liked", Toast.LENGTH_SHORT).show();
+
+                        if (savedInstanceState == null) {
+                            new BdViewModel(getApplication()).addFeedNextPage(1);
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, new BdFeedFragment());
+                            transaction.commit();
+                        }
+                        intent = getIntent();
+                        if (intent.getAction() == NotificationWorker.ACTION_TO_OPEN){
+                            int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
+                            navigateToAnotherFragment(id);
+                        }
+
                         break;
                     case R.id.action_settings:
                         Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();

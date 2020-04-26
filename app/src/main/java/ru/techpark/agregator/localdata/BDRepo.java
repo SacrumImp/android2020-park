@@ -3,6 +3,7 @@ package ru.techpark.agregator.localdata;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -38,8 +39,8 @@ public class BDRepo {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<EventTable> eventList = db.getDao().getAllEvents();
-                //sEvents.postValue();
+                List<Event> eventList = transform(db.getDao().getAllEvents());
+                sEvents.postValue(eventList);
             }
         });
     }
@@ -53,4 +54,15 @@ public class BDRepo {
             }
         });
     }
+
+    public List<Event> transform(List<EventTable> events){
+        List<Event> retList = new ArrayList<>();
+        Event event;
+        for(EventTable eventTbl: events){
+            event = new Event(eventTbl.id, eventTbl.title, eventTbl.getImages(), eventTbl.description, eventTbl.body_text, eventTbl.price, eventTbl.getDates(), eventTbl.location, eventTbl.place);
+            retList.add(event);
+        }
+        return retList;
+    }
+
 }

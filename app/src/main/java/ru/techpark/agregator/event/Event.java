@@ -19,7 +19,7 @@ public class Event {
         this.images = images;
         this.description = description;
     }
-    Event(int id, String title, List<Image> images, String description,
+    public Event(int id, String title, List<Image> images, String description,
           String body_text, String price, List<Date> dates, Location location, Place place) {
         this.id = id;
         this.title = title;
