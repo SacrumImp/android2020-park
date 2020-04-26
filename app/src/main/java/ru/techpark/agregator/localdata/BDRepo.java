@@ -72,6 +72,16 @@ public class BDRepo {
         });
     }
 
+    public void addDataSearch(String searchQuery){
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                List<Event> certainEvent = transform(db.getDao().getSearchEvent(searchQuery));
+                sEvents.postValue(certainEvent);
+            }
+        });
+    }
+
     public List<Event> transform(List<EventTable> events){
         List<Event> retList = new ArrayList<>();
         Event event;

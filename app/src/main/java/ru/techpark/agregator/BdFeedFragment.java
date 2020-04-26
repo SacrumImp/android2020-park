@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ru.techpark.agregator.FeedFragment;
 import ru.techpark.agregator.event.Event;
 
 public class BdFeedFragment extends FeedFragment {
@@ -25,7 +24,10 @@ public class BdFeedFragment extends FeedFragment {
 
     @Override
     protected void loadNextPage() {
-
+        showLoadingProgress();
+        if (isSearch)
+            feedViewModel.addSearchNextPage(searchQuery, pageCounter);
+        else feedViewModel.addFeedNextPage(pageCounter);
     }
 
     @Override

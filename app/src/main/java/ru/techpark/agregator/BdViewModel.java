@@ -20,10 +20,10 @@ public class BdViewModel extends FeedViewModel {
     } //конструктор
 
     @Override
-    void addFeedNextPage(int page) { }
+    void addFeedNextPage(int page) { bdRepo.refresh(); }
 
     @Override
-    void addSearchNextPage(String searchQuery, int page) { }
+    void addSearchNextPage(String searchQuery, int page) { bdRepo.addDataSearch(searchQuery); }
 
     @Override
     void insertEventBD(Event event) { bdRepo.insertEventBD(event); } //добавление в базу данных

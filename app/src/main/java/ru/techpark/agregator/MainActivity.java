@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                         }
                         break;
                     case R.id.action_liked:
-                        Toast.makeText(MainActivity.this, "Liked", Toast.LENGTH_SHORT).show();
-
                         if (savedInstanceState == null) {
                             new BdViewModel(getApplication()).addFeedNextPage(1);
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
