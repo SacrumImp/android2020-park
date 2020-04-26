@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:clickable="true"
         android:layout_margin="35dp"
         android:onClick="addToFavorite"
@@ -151,13 +151,15 @@
             android:layout_marginTop="10dp"
             android:text="@string/price"
             tools:text="Цена" />
-        <androidx.appcompat.widget.AppCompatImageButton
+
+            <ImageButton
             android:id="@+id/go_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/price"
             android:layout_centerHorizontal="true"
-            />
+                android:contentDescription="@string/notification_button"
+                app:srcCompat="@drawable/ic_notification_button" />
         <TextView
             android:id="@+id/label_description"
             android:layout_width="match_parent"
@@ -191,4 +193,10 @@
         </RelativeLayout>
     </ScrollView>
 
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
 </RelativeLayout>

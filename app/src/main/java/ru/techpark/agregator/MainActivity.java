@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
             int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
             navigateToAnotherFragment(id);
         }
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void navigateToAnotherFragment(int id) {
-        new ApiSingleViewModel(getApplication()).getDetailedEvent(id);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container,ApiDetailedFragment.newInstance(id))

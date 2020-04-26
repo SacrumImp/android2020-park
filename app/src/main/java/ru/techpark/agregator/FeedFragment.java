@@ -1,5 +1,6 @@
 package ru.techpark.agregator;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -42,6 +43,12 @@ public abstract class FeedFragment extends Fragment {
     protected EditText searchField;
     protected ImageButton startSearch;
     protected ImageButton exitSearch;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        navigator = (FragmentNavigator) context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,7 +111,6 @@ public abstract class FeedFragment extends Fragment {
         void setEvents(List<Event> events) {
             int EVENTS_ON_PAGE = 20;
 
-            //todo убрать этот костыль из-за конечности результатов поиска
             if (events.size() % EVENTS_ON_PAGE != 0)
                 isAllEvents = true;
             this.events = events;
