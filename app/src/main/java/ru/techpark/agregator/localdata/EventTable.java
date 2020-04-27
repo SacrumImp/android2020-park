@@ -14,10 +14,10 @@ import ru.techpark.agregator.event.Location;
 import ru.techpark.agregator.event.Place;
 
 
-@Entity(tableName = "event_table", indices = {@Index(value = {"title", "description"}, unique = true)})      // таблица всех ивентов
+@Entity(tableName = "event_table")      // таблица всех ивентов
 public class EventTable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id;     // id каждой записи (увеличивается автоматически)
 
     public String title;   // название
@@ -37,6 +37,7 @@ public class EventTable {
     }
 
     public EventTable(Event event) {
+        this.id = event.getId();
         this.dates = event.getDates();
         this.title = event.getTitle();
         this.description = event.getDescription();
