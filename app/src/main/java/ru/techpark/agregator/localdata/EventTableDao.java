@@ -29,7 +29,7 @@ public interface EventTableDao {
         @Query("SELECT * FROM event_table WHERE (id = :certainId)")
         List<EventTable> getEvent(int certainId);
 
-        @Query("SELECT * FROM event_table WHERE (description LIKE ('%' + :searchQuery + '%'))")
+        @Query("SELECT * FROM event_table WHERE (description LIKE :searchQuery)")
         List<EventTable> getSearchEvent(String searchQuery);
 
         // удаление записи

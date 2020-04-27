@@ -76,7 +76,7 @@ public class BDRepo {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                List<Event> certainEvent = transform(db.getDao().getSearchEvent(searchQuery));
+                List<Event> certainEvent = transform(db.getDao().getSearchEvent('%' + searchQuery + '%'));
                 sEvents.postValue(certainEvent);
             }
         });
