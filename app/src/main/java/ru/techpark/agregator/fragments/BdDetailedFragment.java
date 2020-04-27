@@ -1,18 +1,12 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.work.Data;
@@ -26,56 +20,31 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import ru.techpark.agregator.viewmodels.BdSingleViewModel;
+import ru.techpark.agregator.NotificationWorker;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
+public class BdDetailedFragment extends DetailedFragment {
 
-public class DetailedEventFragment extends Fragment {
-    private static final String NUM_CURR = "CURRENT";
-    private int id;
-    private Event event;
-    private TextView title;
-    private TextView description;
-    private TextView body_text;
-    private TextView price;
-    private TextView date_start;
-    private TextView time_start;
-    private TextView location;
-    private TextView location_label;
-    private ImageView image;
-    private TextView price_label;
-    private TextView description_label;
-    private TextView phone_label;
-    private TextView time_label;
-    private TextView place_title_label;
-    private TextView place_title;
-    private TextView place_address;
-    private TextView place_address_label;
-    private TextView phone;
-    private ImageButton button_go;
-
-    public final static String KEY_ID = "KEY_ID";
-    public final static String KEY_TITLE = "KEY_TITLE";
-    public final static String KEY_DES = "KEY_DES";
-    public final static String KEY_DATE = "KEY_DATE";
-    public final static String KEY_TIME = "KEY_TIME";
-
-
-    static DetailedEventFragment newInstance(int num) {
-        DetailedEventFragment frag = new DetailedEventFragment();
+    public static BdDetailedFragment newInstance(int num) {
+        BdDetailedFragment frag = new BdDetailedFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
         return frag;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detailed_event, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        detailedViewModel = new ViewModelProvider(this).get(BdSingleViewModel.class);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            id = arguments.getInt(NUM_CURR);
+            detailedViewModel.getDetailedEvent(id);
+        }
     }
-
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -99,6 +68,7 @@ public class DetailedEventFragment extends Fragment {
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
+        loading_progress = view.findViewById(R.id.loading_progress);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -111,19 +81,18 @@ public class DetailedEventFragment extends Fragment {
         phone.setVisibility(View.GONE);
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
+        loading_progress.setVisibility(View.VISIBLE);
 
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);
+        floatingActionButton.setVisibility(View.GONE);
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            id = arguments.getInt(NUM_CURR);
-        }
-        //todo делать это в observer лучше не надо....
         Observer<Event> observer = Event -> {
             if (Event != null) {
                 event = Event;
                 title.setText(event.getTitle());
                 description_label.setVisibility(View.VISIBLE);
                 description.setText(Html.fromHtml(event.getDescription()));
+                loading_progress.setVisibility(View.GONE);
                 if (event.getImages().size() > 0)
                     Glide.with(image.getContext())
                             .load(event.getImages().get(0).getImageUrl())
@@ -171,7 +140,7 @@ public class DetailedEventFragment extends Fragment {
                             .putString(KEY_TIME, event.getDates().get(0).getStart_time())
                             .putString(KEY_TITLE, event.getTitle())
                             .putString(KEY_DES, event.getDescription()).build();
-                    long difference = 0;
+                    long difference;
                     Date curDate = new Date();
                     Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
                     long extra_time = 18000000; // 5 часов.
@@ -185,14 +154,9 @@ public class DetailedEventFragment extends Fragment {
             Log.d("fragment", "observer worked");
         };
 
-        DetailedViewModel detailedViewModel = new ViewModelProvider(this).get(DetailedViewModel.class);
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
-        //обработка нажатия лайка
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
-        FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
-        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }
+
 }

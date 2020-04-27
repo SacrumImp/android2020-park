@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_feed"
+        android:icon="@drawable/ic_action_feed"
+        android:title="Feed" />
+    <item
+        android:id="@+id/action_liked"
+        android:icon="@drawable/ic_action_liked"
+        android:title="Liked" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="Settings" />
+</menu>

@@ -8,20 +8,23 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+
 @Dao
 public interface EventTableDao {
 
-        // добавление множества строки
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
-        void insertAll(EventTable ... tableEvents);
-
         // добавление строки
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         void insert(EventTable tableEvent);
 
         // получение всех строк
         @Query("SELECT * FROM event_table")
         List<EventTable> getAllEvents();
+
+        @Query("SELECT * FROM event_table WHERE (id = :certainId)")
+        List<EventTable> getEvent(int certainId);
+
+        @Query("SELECT * FROM event_table WHERE (description LIKE :searchQuery)")
+        List<EventTable> getSearchEvent(String searchQuery);
 
         // удаление записи
         @Delete

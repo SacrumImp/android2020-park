@@ -15,7 +15,7 @@ import ru.techpark.agregator.event.Place;
 @Entity(tableName = "event_table")      // таблица всех ивентов
 public class EventTable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id;     // id каждой записи (увеличивается автоматически)
 
     public String title;   // название
@@ -27,7 +27,7 @@ public class EventTable {
     @TypeConverters({LocationConverter.class})
     public Location location;
     @TypeConverters({DateConverter.class})
-    public Date dates;       // дата события
+    public List<Date> dates;       // дата события
     @TypeConverters({PlaceConverter.class})
     public Place place;
 
@@ -35,7 +35,8 @@ public class EventTable {
     }
 
     public EventTable(Event event) {
-        this.dates = event.getDates().get(0);
+        this.id = event.getId();
+        this.dates = event.getDates();
         this.title = event.getTitle();
         this.description = event.getDescription();
         this.body_text = event.getBody_text();
@@ -43,5 +44,13 @@ public class EventTable {
         this.images = event.getImages();
         this.location = event.getLocation();
         this.place = event.getPlace();
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public List<Date> getDates() {
+        return dates;
     }
 }

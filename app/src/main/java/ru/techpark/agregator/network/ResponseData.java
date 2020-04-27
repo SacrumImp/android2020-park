@@ -13,7 +13,6 @@ public class ResponseData {
     public int getCount() {
         return count;
     }
-
     public void setCount(int count) {
         this.count = count;
     }
@@ -21,7 +20,6 @@ public class ResponseData {
     public List<Event> getEvents() {
         return results;
     }
-
     public void setEvents(List<Event> events) {
         this.results = events;
     }
@@ -29,7 +27,6 @@ public class ResponseData {
     public String getNextPage() {
         return next;
     }
-
     public void setNextPage(String nextPage) {
         this.next = nextPage;
     }
@@ -37,7 +34,6 @@ public class ResponseData {
     public String getPreviousPage() {
         return previous;
     }
-
     public void setPreviousPage(String previousPage) {
         this.previous = previousPage;
     }

@@ -1,5 +1,6 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -15,9 +16,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,24 +23,35 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.techpark.agregator.viewmodels.FeedViewModel;
+import ru.techpark.agregator.FragmentNavigator;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
-public class FeedFragment extends Fragment {
+public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_STATE = "SEARCH_STATE";
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
-    private static final String TAG = "MainFragment";
-    private static FragmentNavigator navigator;
-    private static FeedAdapter adapter;
-    private static FeedViewModel feedViewModel;
-    private ProgressBar loadingProgress;
-    private int pageCounter = 1;
-    private boolean isAllEvents = false;
-    private boolean isSearch = false;
-    private String searchQuery;
-    private EditText searchField;
-    private ImageButton startSearch;
-    private ImageButton exitSearch;
+    static final String TAG = "MainFragment";
+    boolean isSearch = false;
+    protected String searchQuery;
+    int pageCounter = 1;
+    boolean isAllEvents = false;
+
+    static FragmentNavigator navigator;
+    ProgressBar loadingProgress;
+    static FeedViewModel feedViewModel;
+    static FeedFragment.FeedAdapter adapter;
+
+    EditText searchField;
+    ImageButton startSearch;
+    ImageButton exitSearch;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        navigator = (FragmentNavigator) context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,75 +71,13 @@ public class FeedFragment extends Fragment {
         outState.putInt(PAGE, pageCounter);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        navigator = ((FragmentNavigator) getActivity());
-        RecyclerView feed = view.findViewById(R.id.list_of_events);
-        loadingProgress = view.findViewById(R.id.loading_progress);
-        adapter = new FeedAdapter();
-        feed.setAdapter(adapter);
-        feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        Observer<List<Event>> observer = Events -> {
-            if (Events != null) {
-                hideLoadingProgress();
-                adapter.setEvents(Events);
-            }
-        };
-        feedViewModel = new ViewModelProvider(this).get(FeedViewModel.class);
-        feedViewModel.getEvents()
-                .observe(getViewLifecycleOwner(), observer);
-
-        searchField = view.findViewById(R.id.search_query);
-        Log.d(TAG, "is search " + isSearch);
-        exitSearch = view.findViewById(R.id.exit_search);
-        if (isSearch)
-            exitSearch.setVisibility(View.VISIBLE);
-        exitSearch.setOnClickListener((l) -> {
-            isSearch = false;
-            isAllEvents = false;
-            pageCounter = 1;
-            loadNextPage();
-            exitSearch.setVisibility(View.GONE);
-            searchField.setText("");
-        });
-        startSearch = view.findViewById(R.id.start_search);
-        startSearch.setOnClickListener((l) -> {
-            searchQuery = searchField.getText().toString();
-            if (!searchQuery.equals("")) {
-                pageCounter = 1;
-                isAllEvents = false;
-                isSearch = true;
-                exitSearch.setVisibility(View.VISIBLE);
-                loadNextPage();
-            }
-        });
-    }
-
-    private void hideLoadingProgress() {
-        Log.d(TAG, "progress hidden");
-        loadingProgress.setVisibility(View.GONE);
-    }
-
-    private void showLoadingProgress() {
-        Log.d(TAG, "progress shown");
-        loadingProgress.setVisibility(View.VISIBLE);
-    }
-
-    private void loadNextPage() {
-        showLoadingProgress();
-        if (isSearch)
-            feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-        else feedViewModel.addFeedNextPage(pageCounter);
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
-    static class FeedViewHolder extends RecyclerView.ViewHolder {
+    class FeedViewHolder extends RecyclerView.ViewHolder {
         ImageView eventImage;
         TextView title;
         TextView description;
@@ -142,20 +89,33 @@ public class FeedFragment extends Fragment {
             description = itemView.findViewById(R.id.description_in_feed);
             itemView.setOnClickListener(v -> {
                 int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
-                navigator.navigateToAnotherFragment(id);
+                getFromAdapter(id);
                 Log.d(TAG, "id " + id);
             });
         }
     }
 
-    private class FeedAdapter extends RecyclerView.Adapter<FeedViewHolder> {
+    abstract void getFromAdapter(int id);
+
+    void hideLoadingProgress() {
+        Log.d(TAG, "progress hidden");
+        loadingProgress.setVisibility(View.GONE);
+    }
+
+    void showLoadingProgress() {
+        Log.d(TAG, "progress shown");
+        loadingProgress.setVisibility(View.VISIBLE);
+    }
+
+    protected abstract void loadNextPage();
+
+    protected class FeedAdapter extends RecyclerView.Adapter<FeedFragment.FeedViewHolder> {
 
         private List<Event> events = new ArrayList<>();
 
         void setEvents(List<Event> events) {
             int EVENTS_ON_PAGE = 20;
 
-            //todo убрать этот костыль из-за конечности результатов поиска
             if (events.size() % EVENTS_ON_PAGE != 0)
                 isAllEvents = true;
             this.events = events;
@@ -172,14 +132,14 @@ public class FeedFragment extends Fragment {
 
         @NonNull
         @Override
-        public FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new FeedViewHolder(LayoutInflater.from(parent.getContext())
+        public FeedFragment.FeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return new FeedFragment.FeedViewHolder(LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.feed_elem, parent, false));
         }
 
 
         @Override
-        public void onBindViewHolder(@NonNull FeedViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull FeedFragment.FeedViewHolder holder, int position) {
 
             Event event = events.get(position);
             holder.title.setText(event.getTitle());
