@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ru.techpark.agregator.viewmodels.BdViewModel;
+import ru.techpark.agregator.FragmentNavigator;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
 public class BdFeedFragment extends FeedFragment {

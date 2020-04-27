@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,26 +23,29 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.techpark.agregator.viewmodels.FeedViewModel;
+import ru.techpark.agregator.FragmentNavigator;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
 public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_STATE = "SEARCH_STATE";
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
-    protected static final String TAG = "MainFragment";
-    protected boolean isSearch = false;
+    static final String TAG = "MainFragment";
+    boolean isSearch = false;
     protected String searchQuery;
-    protected int pageCounter = 1;
-    protected boolean isAllEvents = false;
+    int pageCounter = 1;
+    boolean isAllEvents = false;
 
-    protected static FragmentNavigator navigator;
-    protected ProgressBar loadingProgress;
-    protected static FeedViewModel feedViewModel;
-    protected static FeedFragment.FeedAdapter adapter;
+    static FragmentNavigator navigator;
+    ProgressBar loadingProgress;
+    static FeedViewModel feedViewModel;
+    static FeedFragment.FeedAdapter adapter;
 
-    protected EditText searchField;
-    protected ImageButton startSearch;
-    protected ImageButton exitSearch;
+    EditText searchField;
+    ImageButton startSearch;
+    ImageButton exitSearch;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -94,12 +97,12 @@ public abstract class FeedFragment extends Fragment {
 
     abstract void getFromAdapter(int id);
 
-    protected void hideLoadingProgress() {
+    void hideLoadingProgress() {
         Log.d(TAG, "progress hidden");
         loadingProgress.setVisibility(View.GONE);
     }
 
-    protected void showLoadingProgress() {
+    void showLoadingProgress() {
         Log.d(TAG, "progress shown");
         loadingProgress.setVisibility(View.VISIBLE);
     }

@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.viewmodels;
 
 import android.app.Application;
 
@@ -10,7 +10,7 @@ import ru.techpark.agregator.event.Event;
 
 abstract public class SingleViewModel extends AndroidViewModel {
 
-    public SingleViewModel(@NonNull Application application) {
+    SingleViewModel(@NonNull Application application) {
         super(application);
     }
 

@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,40 +15,42 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import ru.techpark.agregator.R;
+import ru.techpark.agregator.viewmodels.SingleViewModel;
 import ru.techpark.agregator.event.Event;
 
 public abstract class DetailedFragment extends Fragment {
 
-    protected static final String NUM_CURR = "CURRENT";
+    static final String NUM_CURR = "CURRENT";
     protected int id;
     protected Event event;
     protected TextView title;
     protected TextView description;
     protected TextView body_text;
     protected TextView price;
-    protected TextView date_start;
-    protected TextView time_start;
+    TextView date_start;
+    TextView time_start;
     protected TextView location;
-    protected TextView location_label;
+    TextView location_label;
     protected ImageView image;
-    protected TextView price_label;
-    protected TextView description_label;
-    protected TextView phone_label;
-    protected TextView time_label;
-    protected TextView place_title_label;
-    protected TextView place_title;
-    protected TextView place_address;
-    protected TextView place_address_label;
-    protected TextView phone;
-    protected ProgressBar loading_progress;
-    protected ImageButton button_go;
-    protected FloatingActionButton likeEvent;
+    TextView price_label;
+    TextView description_label;
+    TextView phone_label;
+    TextView time_label;
+    TextView place_title_label;
+    TextView place_title;
+    TextView place_address;
+    TextView place_address_label;
+    TextView phone;
+    ProgressBar loading_progress;
+    ImageButton button_go;
+    FloatingActionButton likeEvent;
 
     SingleViewModel detailedViewModel;
 
     public final static String KEY_ID = "KEY_ID";
     public final static String KEY_TITLE = "KEY_TITLE";
-    public final static String KEY_DES = "KEY_DES";
+    final static String KEY_DES = "KEY_DES";
     public final static String KEY_DATE = "KEY_DATE";
     public final static String KEY_TIME = "KEY_TIME";
 

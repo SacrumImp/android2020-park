@@ -4,19 +4,19 @@ import android.content.Context;
 
 import androidx.room.Room;
 
-public class DBHelper {
+class DBHelper {
 
     private static DBHelper ourInstance;
     private final AppDatabase appDatabase;
 
-    public static DBHelper getInstance(Context context){
+    static DBHelper getInstance(Context context){
         if(ourInstance == null){
             ourInstance = new DBHelper(context);
         }
         return ourInstance;
     }
 
-    public AppDatabase getDb(){
+    AppDatabase getDb(){
         return appDatabase;
     }
 

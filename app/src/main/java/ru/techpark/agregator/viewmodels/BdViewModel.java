@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.viewmodels;
 
 import android.app.Application;
 
@@ -20,14 +20,14 @@ public class BdViewModel extends FeedViewModel {
     } //конструктор
 
     @Override
-    void addFeedNextPage(int page) { bdRepo.refresh(); }
+    public void addFeedNextPage(int page) { bdRepo.refresh(); }
 
     @Override
-    void addSearchNextPage(String searchQuery, int page) { bdRepo.addDataSearch(searchQuery); }
+    public void addSearchNextPage(String searchQuery, int page) { bdRepo.addDataSearch(searchQuery); }
 
     @Override
-    void insertEventBD(Event event) { bdRepo.insertEventBD(event); } //добавление в базу данных
+    public void insertEventBD(Event event) { bdRepo.insertEventBD(event); } //добавление в базу данных
 
     @Override
-    LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
+    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
 }

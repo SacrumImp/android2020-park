@@ -20,7 +20,7 @@ public class BDRepo {
     private final static MutableLiveData<Event> sEvent = new MutableLiveData<>();
 
     static{
-        sEvents.setValue(Collections.<Event>emptyList());
+        sEvents.setValue(Collections.emptyList());
         sEvent.setValue(null);
     }
 
@@ -43,46 +43,34 @@ public class BDRepo {
 
 
     public void refresh(){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Event> eventList = transform(db.getDao().getAllEvents());
-                sEvents.postValue(eventList);
-            }
+        executor.execute(() -> {
+            List<Event> eventList = transform(db.getDao().getAllEvents());
+            sEvents.postValue(eventList);
         });
     }
 
     public void insertEventBD(Event event){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                EventTable eventDb = new EventTable(event);
-                db.getDao().insert(eventDb);
-            }
+        executor.execute(() -> {
+            EventTable eventDb = new EventTable(event);
+            db.getDao().insert(eventDb);
         });
     }
 
     public void getCertainEvent(int id) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Event> certainEvent = transform(db.getDao().getEvent(id));
-                sEvent.postValue(certainEvent.get(0));
-            }
+        executor.execute(() -> {
+            List<Event> certainEvent = transform(db.getDao().getEvent(id));
+            sEvent.postValue(certainEvent.get(0));
         });
     }
 
     public void addDataSearch(String searchQuery){
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                List<Event> certainEvent = transform(db.getDao().getSearchEvent('%' + searchQuery + '%'));
-                sEvents.postValue(certainEvent);
-            }
+        executor.execute(() -> {
+            List<Event> certainEvent = transform(db.getDao().getSearchEvent('%' + searchQuery + '%'));
+            sEvents.postValue(certainEvent);
         });
     }
 
-    public List<Event> transform(List<EventTable> events){
+    private List<Event> transform(List<EventTable> events){
         List<Event> retList = new ArrayList<>();
         Event event;
         for(EventTable eventTbl: events){

@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.viewmodels;
 
 import android.app.Application;
 
@@ -20,14 +20,14 @@ public class ApiViewModel extends FeedViewModel {
     } //конструктор
 
     @Override
-    void addFeedNextPage(int page) { eventRepo.addDataFeed(page); } //получение новой страницы
+    public void addFeedNextPage(int page) { eventRepo.addDataFeed(page); } //получение новой страницы
 
     @Override
-    void addSearchNextPage(String searchQuery, int page) { eventRepo.addDataSearch(searchQuery, page); } //данные поиска
+    public void addSearchNextPage(String searchQuery, int page) { eventRepo.addDataSearch(searchQuery, page); } //данные поиска
 
     @Override
-    void insertEventBD(Event event) { }
+    public void insertEventBD(Event event) { }
 
     @Override
-    LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
+    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
 }

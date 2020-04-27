@@ -1,11 +1,10 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.viewmodels;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
-import ru.techpark.agregator.event.DetailedEventRepo;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.localdata.BDRepo;
 

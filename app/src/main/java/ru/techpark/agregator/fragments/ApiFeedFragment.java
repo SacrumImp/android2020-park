@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ru.techpark.agregator.viewmodels.ApiViewModel;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
 public class ApiFeedFragment extends FeedFragment {

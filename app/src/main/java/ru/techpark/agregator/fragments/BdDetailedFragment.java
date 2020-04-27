@@ -1,10 +1,9 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,12 +20,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import ru.techpark.agregator.viewmodels.BdSingleViewModel;
+import ru.techpark.agregator.NotificationWorker;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 
-public class ApiDetailedFragment extends DetailedFragment {
+public class BdDetailedFragment extends DetailedFragment {
 
-    static ApiDetailedFragment newInstance(int num) {
-        ApiDetailedFragment frag = new ApiDetailedFragment();
+    public static BdDetailedFragment newInstance(int num) {
+        BdDetailedFragment frag = new BdDetailedFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
@@ -36,7 +38,7 @@ public class ApiDetailedFragment extends DetailedFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        detailedViewModel = new ViewModelProvider(this).get(ApiSingleViewModel.class);
+        detailedViewModel = new ViewModelProvider(this).get(BdSingleViewModel.class);
         Bundle arguments = getArguments();
         if (arguments != null) {
             id = arguments.getInt(NUM_CURR);
@@ -67,7 +69,6 @@ public class ApiDetailedFragment extends DetailedFragment {
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
         loading_progress = view.findViewById(R.id.loading_progress);
-        likeEvent = view.findViewById(R.id.likeUnlike);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -80,18 +81,18 @@ public class ApiDetailedFragment extends DetailedFragment {
         phone.setVisibility(View.GONE);
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
-        button_go.setVisibility(View.GONE);
-        likeEvent.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
+
+        FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);
+        floatingActionButton.setVisibility(View.GONE);
 
         Observer<Event> observer = Event -> {
             if (Event != null) {
-                loading_progress.setVisibility(View.GONE);
-                likeEvent.setVisibility(View.VISIBLE);
                 event = Event;
                 title.setText(event.getTitle());
                 description_label.setVisibility(View.VISIBLE);
                 description.setText(Html.fromHtml(event.getDescription()));
+                loading_progress.setVisibility(View.GONE);
                 if (event.getImages().size() > 0)
                     Glide.with(image.getContext())
                             .load(event.getImages().get(0).getImageUrl())
@@ -139,7 +140,7 @@ public class ApiDetailedFragment extends DetailedFragment {
                             .putString(KEY_TIME, event.getDates().get(0).getStart_time())
                             .putString(KEY_TITLE, event.getTitle())
                             .putString(KEY_DES, event.getDescription()).build();
-                    long difference = 0;
+                    long difference;
                     Date curDate = new Date();
                     Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
                     long extra_time = 18000000; // 5 часов.
@@ -149,9 +150,6 @@ public class ApiDetailedFragment extends DetailedFragment {
                             .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
                     WorkManager.getInstance(getContext()).enqueue(notificationWork);
                 });
-            } else {
-                loading_progress.setVisibility(View.GONE);
-                Toast.makeText(getContext(), "Нет соеинения с интернетом", Toast.LENGTH_SHORT).show();
             }
             Log.d("fragment", "observer worked");
         };
@@ -159,10 +157,6 @@ public class ApiDetailedFragment extends DetailedFragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
-
-        //обработка нажатия лайка
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }
+
 }

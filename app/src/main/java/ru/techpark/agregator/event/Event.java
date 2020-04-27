@@ -35,7 +35,6 @@ public class Event {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -43,7 +42,6 @@ public class Event {
     public List<Date> getDates() {
         return dates;
     }
-
     public void setDates(List<Date> dates) {
         this.dates = dates;
     }
@@ -51,7 +49,6 @@ public class Event {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -59,7 +56,6 @@ public class Event {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -67,7 +63,6 @@ public class Event {
     public String getBody_text() {
         return body_text;
     }
-
     public void setBody_text(String body_text) {
         this.body_text = body_text;
     }
@@ -75,7 +70,6 @@ public class Event {
     public String getPrice() {
         return price;
     }
-
     public void setPrice(String price) {
         this.price = price;
     }
@@ -83,7 +77,6 @@ public class Event {
     public List<Image> getImages() {
         return images;
     }
-
     public void setImages(List<Image> images) {
         this.images = images;
     }
@@ -91,7 +84,6 @@ public class Event {
     public Location getLocation() {
         return location;
     }
-
     public void setLocation(Location location) {
         this.location = location;
     }
@@ -99,4 +91,5 @@ public class Event {
     public Place getPlace() {
         return place;
     }
+    public void setPlace(Place place){ this.place = place; }
 }

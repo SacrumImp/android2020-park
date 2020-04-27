@@ -1,4 +1,4 @@
-package ru.techpark.agregator;
+package ru.techpark.agregator.viewmodels;
 
 import android.app.Application;
 
