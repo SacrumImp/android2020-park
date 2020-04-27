@@ -67,6 +67,7 @@ public class ApiDetailedFragment extends DetailedFragment {
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
         loading_progress = view.findViewById(R.id.loading_progress);
+        likeEvent = view.findViewById(R.id.likeUnlike);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -80,11 +81,13 @@ public class ApiDetailedFragment extends DetailedFragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         button_go.setVisibility(View.GONE);
+        likeEvent.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
 
         Observer<Event> observer = Event -> {
             if (Event != null) {
                 loading_progress.setVisibility(View.GONE);
+                likeEvent.setVisibility(View.VISIBLE);
                 event = Event;
                 title.setText(event.getTitle());
                 description_label.setVisibility(View.VISIBLE);
@@ -160,7 +163,6 @@ public class ApiDetailedFragment extends DetailedFragment {
 
         //обработка нажатия лайка
         FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        FloatingActionButton likeEvent = view.findViewById(R.id.likeUnlike);
         likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
     }
 }

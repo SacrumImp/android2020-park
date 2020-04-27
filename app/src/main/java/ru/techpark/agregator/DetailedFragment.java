@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import ru.techpark.agregator.event.Event;
 
 public abstract class DetailedFragment extends Fragment {
@@ -40,6 +42,7 @@ public abstract class DetailedFragment extends Fragment {
     protected TextView phone;
     protected ProgressBar loading_progress;
     protected ImageButton button_go;
+    protected FloatingActionButton likeEvent;
 
     SingleViewModel detailedViewModel;
 
