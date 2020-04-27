@@ -14,12 +14,8 @@ import ru.techpark.agregator.event.Event;
 @Dao
 public interface EventTableDao {
 
-        // добавление множества строки
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
-        void insertAll(EventTable ... tableEvents);
-
         // добавление строки
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
         void insert(EventTable tableEvent);
 
         // получение всех строк

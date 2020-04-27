@@ -11,7 +11,7 @@ class DateConverter {
 
     @TypeConverter  // перевод из Date в String
     public String fromDate (List<Date> dates){
-        return dates.get(0).getStart() + "," + dates.get(0).getEnd();
+        return dates.get(0).getStart_date() + "," + dates.get(0).getStart_time();
     }
 
     @TypeConverter  // перевод из String в Date
