@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 import ru.techpark.agregator.event.Event;
 
 public class ApiDetailedFragment extends DetailedFragment {
-    ApiSingleViewModel detailedViewModel;
+
     static ApiDetailedFragment newInstance(int num) {
         ApiDetailedFragment frag = new ApiDetailedFragment();
         Bundle bundle = new Bundle();

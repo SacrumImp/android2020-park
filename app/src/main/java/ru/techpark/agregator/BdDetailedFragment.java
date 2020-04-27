@@ -33,6 +33,17 @@ public class BdDetailedFragment extends DetailedFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        detailedViewModel = new ViewModelProvider(this).get(BdSingleViewModel.class);
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            id = arguments.getInt(NUM_CURR);
+            detailedViewModel.getDetailedEvent(id);
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         time_label = view.findViewById(R.id.label_date);
@@ -54,6 +65,7 @@ public class BdDetailedFragment extends DetailedFragment {
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
+        loading_progress = view.findViewById(R.id.loading_progress);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);
@@ -66,21 +78,18 @@ public class BdDetailedFragment extends DetailedFragment {
         phone.setVisibility(View.GONE);
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
+        loading_progress.setVisibility(View.VISIBLE);
 
         FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);
         floatingActionButton.setVisibility(View.GONE);
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            id = arguments.getInt(NUM_CURR);
-        }
-        //todo делать это в observer лучше не надо....
         Observer<Event> observer = Event -> {
             if (Event != null) {
                 event = Event;
                 title.setText(event.getTitle());
                 description_label.setVisibility(View.VISIBLE);
                 description.setText(Html.fromHtml(event.getDescription()));
+                loading_progress.setVisibility(View.GONE);
                 if (event.getImages().size() > 0)
                     Glide.with(image.getContext())
                             .load(event.getImages().get(0).getImageUrl())
@@ -142,7 +151,6 @@ public class BdDetailedFragment extends DetailedFragment {
             Log.d("fragment", "observer worked");
         };
 
-        BdSingleViewModel detailedViewModel = new ViewModelProvider(this).get(BdSingleViewModel.class);
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);

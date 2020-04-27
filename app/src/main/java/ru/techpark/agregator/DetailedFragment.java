@@ -41,6 +41,8 @@ public abstract class DetailedFragment extends Fragment {
     protected ProgressBar loading_progress;
     protected ImageButton button_go;
 
+    SingleViewModel detailedViewModel;
+
     public final static String KEY_ID = "KEY_ID";
     public final static String KEY_TITLE = "KEY_TITLE";
     public final static String KEY_DES = "KEY_DES";
