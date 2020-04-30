@@ -18,8 +18,12 @@ public class BdSingleViewModel extends SingleViewModel {
     }
 
     @Override
-    public LiveData<Event> getEvent() { return mResponseEvent; }
+    public LiveData<Event> getEvent() {
+        return mResponseEvent;
+    }
 
     @Override
-    public void getDetailedEvent(int id) { detailedBdRepo.getCertainEvent(id); }
+    public void getDetailedEvent(int id) {
+        detailedBdRepo.getCertainEvent(id);
+    }
 }

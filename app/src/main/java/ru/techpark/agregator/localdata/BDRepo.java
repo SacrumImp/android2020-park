@@ -3,25 +3,24 @@ package ru.techpark.agregator.localdata;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import ru.techpark.agregator.event.Event;
 
 public class BDRepo {
 
     private final static MutableLiveData<List<Event>> sEvents = new MutableLiveData<>();
-
-    private final static MutableLiveData<Event> sEvent = new MutableLiveData<>();
+    private final MutableLiveData<Event> sEvent = new MutableLiveData<>();
 
     static{
         sEvents.setValue(Collections.emptyList());
-        sEvent.setValue(null);
     }
 
     private final Context mContext;
