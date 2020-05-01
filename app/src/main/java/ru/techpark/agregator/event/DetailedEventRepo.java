@@ -12,11 +12,12 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 import ru.techpark.agregator.network.ApiRepo;
 import ru.techpark.agregator.network.EventApi;
 
 public class DetailedEventRepo {
-    private static final String TAG = "EventRepo";
+    private static final String TAG = "DetailedEventRepo";
     private final MutableLiveData<Event> mEvent = new MutableLiveData<>();
 
     private final Context mContext;
@@ -53,6 +54,7 @@ public class DetailedEventRepo {
         Log.d(TAG, "try");
         api.getDetailedEvent(id).enqueue(new Callback<EventApi.DetailedEvent>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<EventApi.DetailedEvent> call, Response<EventApi.DetailedEvent> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     mEvent.postValue(transform(response.body()));
@@ -60,6 +62,7 @@ public class DetailedEventRepo {
                 }
             }
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {
                 mEvent.postValue(null);
                 Log.e(TAG, "Failed to load event", t);

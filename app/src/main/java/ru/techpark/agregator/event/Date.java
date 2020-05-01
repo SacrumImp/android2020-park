@@ -1,7 +1,7 @@
 package ru.techpark.agregator.event;
 
 public class Date {
-    private int start;
+    private long start;
     private int end;
     private String start_date;
     private String start_time;
@@ -12,7 +12,7 @@ public class Date {
     }
 
     public int getStart() {
-        return start;
+        return (int) start;
     }
     public void setStart(int start) {
         this.start = start;

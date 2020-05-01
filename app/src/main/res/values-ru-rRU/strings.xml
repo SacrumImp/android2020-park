@@ -1,6 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Агрегатор мероприятий</string>
-    <string name="description_image_of_event">image of event</string>
     <string name="price">Цена:</string>
     <string name="way_to_go">Формат проведения:</string>
     <string name="city">Город:</string>
@@ -13,7 +13,8 @@
     <string name="exit_search_descriptor">Вернуться к ленте событий</string>
     <string name="start_search_descriptor">Начать поиск</string>
     <string name="notification_button">Включить уведомление</string>
-    <string name="feed_navigation_menu">Лента</string>
-    <string name="liked_navigation_menu">Избранное</string>
     <string name="settings_navigation_menu">Настройки</string>
+    <string name="liked_navigation_menu">Избранное</string>
+    <string name="feed_navigation_menu">Лента</string>
+    <string name="description_image_of_event">Изображение события</string>
 </resources>

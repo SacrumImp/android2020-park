@@ -112,7 +112,7 @@ public abstract class DetailedFragment extends Fragment {
 
         Observer<Event> observer = event -> {
             if (event != null) {
-                setEventData(this.event);
+                setEventData(event);
             } else {
                 handleErrorInObserver();
             }
@@ -125,6 +125,7 @@ public abstract class DetailedFragment extends Fragment {
     }
 
     private void setEventData(Event event) {
+        this.event = event;
         hideLoading();
         title.setText(event.getTitle());
         description_label.setVisibility(View.VISIBLE);

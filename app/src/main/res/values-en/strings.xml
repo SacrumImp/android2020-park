@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Event aggregator</string>
+    <string name="description_image_of_event">image of event</string>
+    <string name="feed_navigation_menu">Feed</string>
+    <string name="liked_navigation_menu">Liked</string>
+    <string name="settings_navigation_menu">Settings</string>
+    <string name="price">Price:</string>
+    <string name="city">City</string>
+    <string name="description">Description:</string>
+    <string name="time">Time:</string>
+    <string name="phone">Phone numper:</string>
+    <string name="place_title">City:</string>
+    <string name="place_address">Address</string>
+    <string name="search_field_hint">Enter query</string>
+    <string name="exit_search_descriptor">Go back to feed</string>
+    <string name="start_search_descriptor">Start search</string>
+    <string name="notification_button">Turn on notification</string>
+    <string name="way_to_go">Format:</string>
+</resources>
