@@ -4,9 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,12 +37,12 @@ public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_STATE = "SEARCH_STATE";
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
+    protected String searchQuery;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
     boolean isSearch = false;
-    protected String searchQuery;
-    private FeedFragment.FeedAdapter adapter;
     int pageCounter = 1;
+    private FeedFragment.FeedAdapter adapter;
     private boolean isAllEvents = false;
     private ProgressBar loadingProgress;
     private EditText searchField;
@@ -74,7 +76,7 @@ public abstract class FeedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_first, container, false);
+        return inflater.inflate(R.layout.fragment_feed, container, false);
     }
 
     @Override
@@ -110,6 +112,24 @@ public abstract class FeedFragment extends Fragment {
             }
         });
 
+        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    searchQuery = searchField.getText().toString();
+                    if (!searchQuery.equals("")) {
+                        pageCounter = 1;
+                        isAllEvents = false;
+                        isSearch = true;
+                        exitSearch.setVisibility(View.VISIBLE);
+                        loadNextPage();
+                        handled = true;
+                    }
+                }
+                return handled;
+            }
+        });
         adapter = new FeedFragment.FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));

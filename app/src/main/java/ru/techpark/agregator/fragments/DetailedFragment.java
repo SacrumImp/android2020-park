@@ -80,7 +80,6 @@ public abstract class DetailedFragment extends Fragment {
         description_label = view.findViewById(R.id.label_description);
         body_text = view.findViewById(R.id.body_text);
         price = view.findViewById(R.id.price);
-        title = view.findViewById(R.id.title);
         image = view.findViewById(R.id.image);
         description = view.findViewById(R.id.description);
         date_start = view.findViewById(R.id.date_start);
@@ -96,6 +95,7 @@ public abstract class DetailedFragment extends Fragment {
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
         loading_progress = view.findViewById(R.id.loading_progress);
+        title = view.findViewById(R.id.title);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.INVISIBLE);

@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     public static final String TAG = "MainActivity";
     private FragmentManager manager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openApiDetailedFragment(int id) {
+
         manager.beginTransaction()
                 .replace(R.id.fragment_container, ApiDetailedFragment.newInstance(id))
                 .addToBackStack(null)

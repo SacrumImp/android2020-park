@@ -28,6 +28,7 @@
         android:layout_toStartOf="@+id/start_search"
         android:layout_alignBottom="@+id/start_search"
         android:importantForAutofill="no"
+        android:imeOptions="actionSearch"
         android:inputType="text" />
 
     <ImageButton
