@@ -188,11 +188,19 @@ public abstract class FeedFragment extends Fragment {
 
             if (events.size() % EVENTS_ON_PAGE != 0)
                 isAllEvents = true;
-            this.events = events;
+           // this.events = events;
             if (pageCounter == 1)
                 notifyDataSetChanged();
             else {
                 notifyItemRangeInserted(EVENTS_ON_PAGE * (pageCounter - 1), EVENTS_ON_PAGE);
+            }
+            // todo, нужно поле "start" и "end" класса Date в БД добавить
+            // отобразим только те инвенты, которые позже текущего времени
+            for (int i = 0; i < events.size(); i++){
+                if (!(events.get(i).getDates().get(0).getStart_date()==null || events.get(i).getDates().get(0).getStart_time()==null) &&
+                        events.get(i).getDates().get(0).getStart()*1000 > System.currentTimeMillis()) {
+                    this.events.add(events.get(i));
+                }
             }
         }
 

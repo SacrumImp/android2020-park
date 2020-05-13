@@ -73,12 +73,17 @@ public class EventRepo {
         List<Image> images = new ArrayList<>();
         if (feedEvent.images.size() > 0)
             images.add(new Image(feedEvent.images.get(0).image));
+        List<Date> dates = new ArrayList<>();
+        if (feedEvent.dates.size()>0)
+            dates.add(new Date(feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
+                    feedEvent.dates.get(0).getStart(),feedEvent.dates.get(0).getEnd()));
 
         return new Event(
                 feedEvent.id,
                 feedEvent.title,
                 images,
-                feedEvent.description
+                feedEvent.description,
+                dates
         );
     }
 

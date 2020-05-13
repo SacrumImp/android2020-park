@@ -18,6 +18,7 @@ public interface EventApi {
         public String title;
         public List<Image> images;
         public String description;
+        public List<Date> dates;
     }
 
     class Image {
@@ -57,7 +58,7 @@ public interface EventApi {
         public String description;
     }
 
-    @GET("events/?fields=images,id,title,description&order_by=-publication_date")
+    @GET("events/?expand=dates&fields=images,id,title,description,dates&order_by=-publication_date")
     Call<FeedInfo> getFeedEvents(@Query("page") int page);
 
     @GET("events/{event_id}/?expand=location,dates,place&fields=images,id,title,description,location,body_text,price,dates,place")

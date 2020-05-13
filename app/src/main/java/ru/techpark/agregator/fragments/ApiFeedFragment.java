@@ -38,4 +38,5 @@ public class ApiFeedFragment extends FeedFragment {
             feedViewModel.addSearchNextPage(searchQuery, pageCounter);
         else feedViewModel.addFeedNextPage(pageCounter);
     }
+
 }

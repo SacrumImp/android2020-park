@@ -19,6 +19,13 @@ public class Event {
         this.images = images;
         this.description = description;
     }
+    Event(int id, String title, List<Image> images, String description, List<Date> dates) {
+        this.id = id;
+        this.title = title;
+        this.images = images;
+        this.description = description;
+        this.dates = dates;
+    }
     public Event(int id, String title, List<Image> images, String description,
           String body_text, String price, List<Date> dates, Location location, Place place) {
         this.id = id;

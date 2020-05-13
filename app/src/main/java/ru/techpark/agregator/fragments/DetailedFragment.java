@@ -94,11 +94,12 @@ public abstract class DetailedFragment extends Fragment {
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
         button_go = view.findViewById(R.id.go_btn);
+
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
 
         description_label.setVisibility(View.INVISIBLE);
-        time_label.setVisibility(View.INVISIBLE);
+        time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
         phone_label.setVisibility(View.GONE);
         place_address.setVisibility(View.GONE);
@@ -150,9 +151,11 @@ public abstract class DetailedFragment extends Fragment {
             location_label.setText(R.string.city);
         }
         location.setText(event.getLocation().getName());
+
         time_label.setVisibility(View.VISIBLE);
         date_start.setText(event.getDates().get(0).getStart_date());
         time_start.setText(event.getDates().get(0).getStart_time());
+
         if (event.getPlace() != null) {
             if (event.getPlace().getTitle().length() != 0) {
                 place_title_label.setVisibility(View.VISIBLE);
@@ -178,10 +181,10 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_TITLE, event.getTitle())
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
-            Date curDate = new Date();
-            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
+            long event_date = event.getDates().get(0).getStart() * 1000;
+            Date eventDate = new Date(event_date);
             long extra_time = 18000000; // 5 часов.
-            difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
+            difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                     //          .setInputData(put).build();
                     .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
