@@ -17,4 +17,6 @@
     <string name="start_search_descriptor">Start search</string>
     <string name="notification_button">Turn on notification</string>
     <string name="way_to_go">Format:</string>
+    <string name="share_event">Share</string>
+    <string name="add_to_calendar">Add to calendar</string>
 </resources>

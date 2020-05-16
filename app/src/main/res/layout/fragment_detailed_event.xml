@@ -31,7 +31,8 @@
             <Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -227,7 +228,7 @@
                         tools:text="Цена" />
 
                     <ImageButton
-                        android:id="@+id/go_btn"
+                        android:id="@+id/notify_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -274,7 +275,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="35dp"
+        android:layout_margin="16dp"
         android:clickable="true"
         android:focusable="true"
         android:onClick="addToFavorite"

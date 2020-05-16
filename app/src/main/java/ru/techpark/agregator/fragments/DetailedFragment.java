@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
@@ -33,11 +35,19 @@ import ru.techpark.agregator.viewmodels.SingleViewModel;
 
 public abstract class DetailedFragment extends Fragment {
 
-    static final String NUM_CURR = "CURRENT";
     public final static String KEY_DES = "KEY_DES";
+    public final static String KEY_ID = "KEY_ID";
+    public final static String KEY_TITLE = "KEY_TITLE";
+    public final static String KEY_DATE = "KEY_DATE";
+    public final static String KEY_TIME = "KEY_TIME";
+    static final String NUM_CURR = "CURRENT";
+    private static final String TAG = "DetailedFragment";
     protected int id;
     protected Event event;
-    private static final String TAG = "fragment";
+    ProgressBar loading_progress;
+    ImageButton button_go;
+    FloatingActionButton likeEvent;
+    SingleViewModel detailedViewModel;
     private TextView title;
     private TextView description;
     private TextView body_text;
@@ -55,23 +65,16 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
-    ProgressBar loading_progress;
-    ImageButton button_go;
-    FloatingActionButton likeEvent;
-
-    SingleViewModel detailedViewModel;
-
-    public final static String KEY_ID = "KEY_ID";
-    public final static String KEY_TITLE = "KEY_TITLE";
     private TextView phone;
-    public final static String KEY_DATE = "KEY_DATE";
-    public final static String KEY_TIME = "KEY_TIME";
+    private Toolbar toolbar;
+    private CollapsingToolbarLayout collapsingToolbar;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detailed_event, container, false);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -93,10 +96,13 @@ public abstract class DetailedFragment extends Fragment {
         place_title = view.findViewById(R.id.place_title);
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
-        button_go = view.findViewById(R.id.go_btn);
-
+        button_go = view.findViewById(R.id.notify_button);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
+        toolbar = view.findViewById(R.id.toolbar);
+        collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
+
+        toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -123,6 +129,11 @@ public abstract class DetailedFragment extends Fragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            Log.d(TAG, item.getTitle() + " clicked");
+            return true;
+        });
     }
 
     private void setEventData(Event event) {
@@ -195,4 +206,6 @@ public abstract class DetailedFragment extends Fragment {
     abstract void hideLoading();
 
     abstract void handleErrorInObserver();
+
+
 }

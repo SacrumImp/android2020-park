@@ -16,4 +16,6 @@
     <string name="feed_navigation_menu">Лента</string>
     <string name="liked_navigation_menu">Избранное</string>
     <string name="settings_navigation_menu">Настройки</string>
+    <string name="share_event">Поделиться</string>
+    <string name="add_to_calendar">Добавить в календарь</string>
 </resources>

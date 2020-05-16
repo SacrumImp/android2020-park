@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_favorite"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/share_event"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_notify"
+        android:title="@string/notification_button"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_to_calendar"
+        android:title="@string/add_to_calendar"
+        app:showAsAction="never" />
+
+</menu>
