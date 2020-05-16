@@ -21,7 +21,9 @@
 
     <!--Navigation Drawer-->
 
-
+    <style name="ThemeOverlay.MyTheme.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
+        <item name="tint">@color/white_50</item>
+    </style>
     <style name="Widget.MyTheme.NavigationView" parent="Widget.MaterialComponents.NavigationView">
         <item name="itemTextAppearance">?attr/textAppearanceBody2</item>
     </style>
