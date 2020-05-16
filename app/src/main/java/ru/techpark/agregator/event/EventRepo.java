@@ -71,14 +71,19 @@ public class EventRepo {
     private static Event mapEvent(EventApi.Event feedEvent) {
 
         List<Image> images = new ArrayList<>();
+        List<Date> dates = new ArrayList<>();
         if (feedEvent.images.size() > 0)
             images.add(new Image(feedEvent.images.get(0).image));
+        if (feedEvent.dates.size()>0)
+            dates.add(new Date (feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
+                    feedEvent.dates.get(0).getStart(), feedEvent.dates.get(0).getEnd()));
 
         return new Event(
                 feedEvent.id,
                 feedEvent.title.substring(0,1).toUpperCase() + feedEvent.title.substring(1),
                 images,
-                feedEvent.description
+                feedEvent.description,
+                dates
         );
     }
 

@@ -42,9 +42,9 @@ public abstract class FeedFragment extends Fragment {
     FeedViewModel feedViewModel;
     boolean isSearch = false;
     int pageCounter = 1;
-    private FeedFragment.FeedAdapter adapter;
+    protected FeedFragment.FeedAdapter adapter;
     private boolean isAllEvents = false;
-    private ProgressBar loadingProgress;
+    protected ProgressBar loadingProgress;
     private EditText searchField;
     private ImageButton startSearch;
     private ImageButton exitSearch;
@@ -165,12 +165,18 @@ public abstract class FeedFragment extends Fragment {
         ImageView eventImage;
         TextView title;
         TextView description;
+        TextView date;
+        TextView time;
+        TextView dateLabel;
 
         FeedViewHolder(@NonNull View itemView) {
             super(itemView);
             eventImage = itemView.findViewById(R.id.image_in_feed);
             title = itemView.findViewById(R.id.title_in_feed);
             description = itemView.findViewById(R.id.description_in_feed);
+            date = itemView.findViewById(R.id.date_in_feed);
+            time = itemView.findViewById(R.id.time_in_feed);
+            dateLabel = itemView.findViewById(R.id.date_label_in_feed);
             itemView.setOnClickListener(v -> {
                 int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
                 getFromAdapter(id);
@@ -181,7 +187,7 @@ public abstract class FeedFragment extends Fragment {
 
     protected class FeedAdapter extends RecyclerView.Adapter<FeedFragment.FeedViewHolder> {
 
-        private List<Event> events = new ArrayList<>();
+        protected List<Event> events = new ArrayList<>();
 
         void setEvents(List<Event> events) {
             int EVENTS_ON_PAGE = 20;
@@ -212,8 +218,34 @@ public abstract class FeedFragment extends Fragment {
         public void onBindViewHolder(@NonNull FeedFragment.FeedViewHolder holder, int position) {
 
             Event event = events.get(position);
+            holder.dateLabel.setVisibility(View.INVISIBLE);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
+            if((!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null))){
+                holder.date.setText(event.getDates().get(0).getStart_date());
+                holder.time.setText(event.getDates().get(0).getStart_time());
+                holder.dateLabel.setVisibility(View.VISIBLE);
+                boolean flag = false;
+                boolean flag1 = false;
+                if (event.getDates().get(0).getStart_date()!=null){
+                    if (event.getDates().get(0).getStart_date().equals("null")) {
+                        flag = true;
+                        flag1 = true;
+                    }
+                }
+                if (event.getDates().get(0).getStart_time()!=null){
+                    if ((event.getDates().get(0).getStart_time().equals("00:00:00") && flag1==true)
+                            || event.getDates().get(0).getStart_time().equals("null")) {
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    holder.dateLabel.setVisibility(View.INVISIBLE);
+                    holder.date.setVisibility(View.INVISIBLE);
+                    holder.time.setVisibility(View.INVISIBLE);
+                }
+            }
+
             if (event.getImages().size() > 0)
                 Glide.with(holder.eventImage.getContext())
                         .load(event.getImages().get(0).getImageUrl())
