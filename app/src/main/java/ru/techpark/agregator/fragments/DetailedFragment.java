@@ -42,24 +42,24 @@ public abstract class DetailedFragment extends Fragment {
     private TextView description;
     private TextView body_text;
     private TextView price;
-    private TextView date_start;
-    private TextView time_start;
+    protected TextView date_start;
+    protected TextView time_start;
     private TextView location;
     private TextView location_label;
     private ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    private TextView time_label;
+    protected TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
     ProgressBar loading_progress;
-    ImageButton button_go;
+    protected ImageButton button_go;
     FloatingActionButton likeEvent;
 
-    SingleViewModel detailedViewModel;
+    protected SingleViewModel detailedViewModel;
 
     public final static String KEY_ID = "KEY_ID";
     public final static String KEY_TITLE = "KEY_TITLE";
@@ -98,9 +98,11 @@ public abstract class DetailedFragment extends Fragment {
         title = view.findViewById(R.id.title);
 
         description_label.setVisibility(View.INVISIBLE);
-        time_label.setVisibility(View.INVISIBLE);
+        time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
         phone_label.setVisibility(View.GONE);
+        time_start.setVisibility(View.GONE);
+        date_start.setVisibility(View.GONE);
         place_address.setVisibility(View.GONE);
         place_address_label.setVisibility(View.GONE);
         place_title.setVisibility(View.GONE);
@@ -109,6 +111,7 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
+       // button_go.setVisibility(View.GONE);
 
         Observer<Event> observer = event -> {
             if (event != null) {
@@ -150,9 +153,8 @@ public abstract class DetailedFragment extends Fragment {
             location_label.setText(R.string.city);
         }
         location.setText(event.getLocation().getName());
-        time_label.setVisibility(View.VISIBLE);
-        date_start.setText(event.getDates().get(0).getStart_date());
-        time_start.setText(event.getDates().get(0).getStart_time());
+
+
         if (event.getPlace() != null) {
             if (event.getPlace().getTitle().length() != 0) {
                 place_title_label.setVisibility(View.VISIBLE);

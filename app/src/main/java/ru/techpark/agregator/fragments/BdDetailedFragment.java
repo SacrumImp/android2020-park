@@ -1,16 +1,19 @@
 package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ru.techpark.agregator.R;
+import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.BdSingleViewModel;
 
 public class BdDetailedFragment extends DetailedFragment {
@@ -47,6 +50,28 @@ public class BdDetailedFragment extends DetailedFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        button_go.setVisibility(View.GONE);
+        Observer<Event> observer = event -> {
+            if (event != null) {
+                this.event = event;
+                if (!(event.getDates().get(0).getStart_date().equals("null") || event.getDates().get(0).getStart_time().equals("00:00:00") ||
+                        event.getDates().get(0).getStart_time().equals("null") )) {
+                    time_label.setVisibility(View.VISIBLE);
+                    time_start.setVisibility(View.VISIBLE);
+                    date_start.setVisibility(View.VISIBLE);
+                    button_go.setVisibility(View.VISIBLE);
+                    date_start.setText(event.getDates().get(0).getStart_date());
+                    time_start.setText(event.getDates().get(0).getStart_time());
+                }
+            } else {
+                handleErrorInObserver();
+            }
+        };
+
+        detailedViewModel
+                .getEvent()
+                .observe(getViewLifecycleOwner(), observer);
+
 
 
         FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);

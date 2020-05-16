@@ -38,7 +38,8 @@ public class DetailedEventRepo {
             images.add(new Image(detailedEvent.images.get(0).image));
         List<Date> dates = new ArrayList<>();
         if (detailedEvent.dates.size()>0)
-            dates.add(new Date(detailedEvent.dates.get(0).getStart_date(), detailedEvent.dates.get(0).getStart_time()));
+            dates.add(new Date(detailedEvent.dates.get(0).getStart_date(), detailedEvent.dates.get(0).getStart_time(),
+                    detailedEvent.dates.get(0).getStart(), detailedEvent.dates.get(0).getEnd()));
         Log.d(TAG, "id" + detailedEvent.id);
         return new Event(
                 detailedEvent.id,

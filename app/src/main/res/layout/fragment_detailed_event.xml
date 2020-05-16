@@ -123,7 +123,7 @@
                         android:id="@+id/location_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/date_start"
+                        android:layout_below="@+id/label_date"
                         android:layout_marginVertical="8dp"
                         android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
                         tools:text="location_label" />
@@ -132,7 +132,7 @@
                         android:id="@+id/location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/date_start"
+                        android:layout_below="@+id/label_date"
                         android:layout_marginHorizontal="16dp"
                         android:layout_marginVertical="8dp"
                         android:layout_toEndOf="@id/location_label"
