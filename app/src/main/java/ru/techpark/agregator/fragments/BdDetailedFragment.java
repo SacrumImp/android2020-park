@@ -34,6 +34,7 @@ public class BdDetailedFragment extends DetailedFragment {
             id = arguments.getInt(NUM_CURR);
             detailedViewModel.getDetailedEvent(id);
         }
+        else Toast.makeText(getContext(), "@string/error_find", Toast.LENGTH_SHORT).show();
     }
 
     void hideLoading() {
@@ -44,6 +45,7 @@ public class BdDetailedFragment extends DetailedFragment {
         loading_progress.setVisibility(View.GONE);
         Toast.makeText(getContext(), ERROR_IN_OBSERVER, Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

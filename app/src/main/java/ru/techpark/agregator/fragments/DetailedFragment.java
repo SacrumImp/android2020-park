@@ -2,6 +2,7 @@ package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,6 +110,8 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
+
+        body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         Observer<Event> observer = event -> {
             if (event != null) {
