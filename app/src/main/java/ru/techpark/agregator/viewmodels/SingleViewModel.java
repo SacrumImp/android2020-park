@@ -15,5 +15,9 @@ abstract public class SingleViewModel extends AndroidViewModel {
     }
 
     public abstract LiveData<Event> getEvent();
+
     public abstract void getDetailedEvent(int id);
+
+    public abstract void insertEventBD(Event event);
+
 }

@@ -26,4 +26,7 @@ public class BdSingleViewModel extends SingleViewModel {
     public void getDetailedEvent(int id) {
         detailedBdRepo.getCertainEvent(id);
     }
+
+    @Override
+    public void insertEventBD(Event event) {  detailedBdRepo.insertEventBD(event); }
 }

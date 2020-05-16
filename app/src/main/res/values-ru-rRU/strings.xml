@@ -17,4 +17,5 @@
     <string name="liked_navigation_menu">Избранное</string>
     <string name="feed_navigation_menu">Лента</string>
     <string name="description_image_of_event">Изображение события</string>
+    <string name="error_find">Событие не найдено!</string>
 </resources>

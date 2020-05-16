@@ -12,9 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
-import ru.techpark.agregator.viewmodels.BdViewModel;
-import ru.techpark.agregator.viewmodels.FeedViewModel;
-
 public class ApiDetailedFragment extends DetailedFragment {
 
     private static final String ERROR_IN_OBSERVER = "Нет соеинения с интернетом";
@@ -83,8 +80,7 @@ public class ApiDetailedFragment extends DetailedFragment {
 
 
         //обработка нажатия лайка
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
+        likeEvent.setOnClickListener((v) -> detailedViewModel.insertEventBD(event));
     }
 
 

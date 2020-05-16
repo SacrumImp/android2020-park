@@ -26,8 +26,10 @@ public class BdViewModel extends FeedViewModel {
     public void addSearchNextPage(String searchQuery, int page) { bdRepo.addDataSearch(searchQuery); }
 
     @Override
-    public void insertEventBD(Event event) { bdRepo.insertEventBD(event); } //добавление в базу данных
+    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
 
     @Override
-    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
+    public boolean isEmpty() {
+        return bdRepo.isEmpty();
+    }
 }
