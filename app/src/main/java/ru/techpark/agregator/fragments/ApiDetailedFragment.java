@@ -6,9 +6,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.techpark.agregator.R;
+import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
 public class ApiDetailedFragment extends DetailedFragment {
 
@@ -51,7 +53,35 @@ public class ApiDetailedFragment extends DetailedFragment {
         button_go.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
 
+
+        Observer<Event> observer = event -> {
+            if (event != null) {
+                this.event = event;
+                if (!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null)) {
+                    time_label.setVisibility(View.VISIBLE);
+                    time_start.setVisibility(View.VISIBLE);
+                    date_start.setVisibility(View.VISIBLE);
+                    date_start.setText(event.getDates().get(0).getStart_date());
+                    time_start.setText(event.getDates().get(0).getStart_time());
+                }
+
+            } else {
+                handleErrorInObserver();
+            }
+        };
+
+        detailedViewModel
+                .getEvent()
+                .observe(getViewLifecycleOwner(), observer);
+
+
+
+
+
+
         //обработка нажатия лайка
         likeEvent.setOnClickListener((v) -> detailedViewModel.insertEventBD(event));
     }
+
+
 }

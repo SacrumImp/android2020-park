@@ -2,13 +2,19 @@ package ru.techpark.agregator.event;
 
 public class Date {
     private long start;
-    private int end;
+    private long end;
     private String start_date;
     private String start_time;
 
     public Date(String start_date, String start_time) {
         this.start_date = start_date;
         this.start_time = start_time;
+    }
+    public Date(String start_date, String start_time, long start, long end) {
+        this.start_date = start_date;
+        this.start_time = start_time;
+        this.start = start;
+        this.end = end;
     }
 
     public int getStart() {
@@ -26,7 +32,7 @@ public class Date {
         this.start_time = start_time;
     }
 
-    public int getEnd() {
+    public long getEnd() {
         return end;
     }
     public void setEnd(int end) {
