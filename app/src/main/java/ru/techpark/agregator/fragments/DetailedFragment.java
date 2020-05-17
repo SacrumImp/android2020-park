@@ -1,5 +1,7 @@
 package ru.techpark.agregator.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -131,8 +133,25 @@ public abstract class DetailedFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), observer);
 
         toolbar.setOnMenuItemClickListener(item -> {
-            Log.d(TAG, item.getTitle() + " clicked");
-            return true;
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    //TODO ссылку надо хранить в Event и тут указывать
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "link to event");
+                    sendIntent.setType("text/plain");
+                    startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_event)));
+                    return true;
+                case R.id.action_open_in_browser:
+                    Intent openIntent = new Intent();
+                    openIntent.setAction(Intent.ACTION_VIEW);
+                    //TODO ссылку надо хранить в Event и тут указывать
+                    openIntent.setData(Uri.parse("https://kudago.com/all/list/zooparki-online/"));
+                    startActivity(Intent.createChooser(openIntent, getResources().getString(R.string.open_in_browser)));
+                    return true;
+                default:
+                    return false;
+            }
         });
     }
 

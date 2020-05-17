@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_favorite"
+        android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_event"
         app:showAsAction="ifRoom" />
@@ -10,6 +10,11 @@
     <item
         android:id="@+id/action_notify"
         android:title="@string/notification_button"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_open_in_browser"
+        android:title="@string/open_in_browser"
         app:showAsAction="never" />
 
     <item

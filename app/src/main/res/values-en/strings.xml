@@ -19,4 +19,5 @@
     <string name="way_to_go">Format:</string>
     <string name="share_event">Share</string>
     <string name="add_to_calendar">Add to calendar</string>
+    <string name="open_in_browser">Open in browser</string>
 </resources>
