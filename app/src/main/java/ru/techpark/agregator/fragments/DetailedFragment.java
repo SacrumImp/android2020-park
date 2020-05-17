@@ -1,6 +1,8 @@
 package ru.techpark.agregator.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -24,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -58,6 +61,7 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_address_label;
     ProgressBar loading_progress;
     protected ImageButton button_go;
+    protected ImageButton calendar_button;
     FloatingActionButton likeEvent;
 
     protected SingleViewModel detailedViewModel;
@@ -97,6 +101,7 @@ public abstract class DetailedFragment extends Fragment {
         button_go = view.findViewById(R.id.go_btn);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
+        calendar_button = view.findViewById(R.id.calendar_button);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -112,7 +117,6 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
-       // button_go.setVisibility(View.GONE);
 
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -183,14 +187,27 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_TITLE, event.getTitle())
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
-            Date curDate = new Date();
-            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
+            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l + 10800000l);
             long extra_time = 18000000; // 5 часов.
-            difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
+            difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                     //          .setInputData(put).build();
                     .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
             WorkManager.getInstance(getContext()).enqueue(notificationWork);
+        });
+        calendar_button.setOnClickListener(v ->{
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l + 10800000l);
+            Calendar endTime = Calendar.getInstance();
+            endTime.setTimeInMillis(event.getDates().get(0).getEnd()*1000l + 10800000l);
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+            startActivity(intent);
         });
     }
 

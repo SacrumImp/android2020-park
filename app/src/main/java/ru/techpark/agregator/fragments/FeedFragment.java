@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -222,20 +224,35 @@ public abstract class FeedFragment extends Fragment {
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
             if((!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null))){
-                holder.date.setText(event.getDates().get(0).getStart_date());
-                holder.time.setText(event.getDates().get(0).getStart_time());
+                GregorianCalendar startTime = new GregorianCalendar();
+                startTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l+10800000l);
+                String month;
+                String minute;
+                String day;
+                int correctMonth = startTime.get(Calendar.MONTH)+1;
+                if (correctMonth >= 0 && correctMonth <10)
+                    month = "0" + correctMonth;
+                else
+                    month = String.valueOf(correctMonth);
+                if (startTime.get(Calendar.MINUTE) >= 0 && startTime.get(Calendar.MINUTE) <10)
+                    minute = "0" + startTime.get(Calendar.MINUTE);
+                else
+                    minute = String.valueOf(startTime.get(Calendar.MINUTE));
+                if (startTime.get(Calendar.DAY_OF_MONTH) >= 0 && startTime.get(Calendar.DAY_OF_MONTH) <10)
+                    day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
+                else
+                    day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
+                holder.date.setText(day+"."+ month +"."+startTime.get(Calendar.YEAR));
+                holder.time.setText(startTime.get(Calendar.HOUR_OF_DAY )+ ":"+minute);
                 holder.dateLabel.setVisibility(View.VISIBLE);
                 boolean flag = false;
-                boolean flag1 = false;
                 if (event.getDates().get(0).getStart_date()!=null){
                     if (event.getDates().get(0).getStart_date().equals("null")) {
                         flag = true;
-                        flag1 = true;
                     }
                 }
                 if (event.getDates().get(0).getStart_time()!=null){
-                    if ((event.getDates().get(0).getStart_time().equals("00:00:00") && flag1==true)
-                            || event.getDates().get(0).getStart_time().equals("null")) {
+                    if (event.getDates().get(0).getStart_time().equals("null")) {
                         flag = true;
                     }
                 }
