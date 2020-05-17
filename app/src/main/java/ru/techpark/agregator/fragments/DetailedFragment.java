@@ -135,20 +135,22 @@ public abstract class DetailedFragment extends Fragment {
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.action_share:
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    //TODO ссылку надо хранить в Event и тут указывать
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "link to event");
-                    sendIntent.setType("text/plain");
-                    startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_event)));
-                    return true;
+                    if (event != null) {
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, event.getSite_url());
+                        sendIntent.setType("text/plain");
+                        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_event)));
+                        return true;
+                    } else return false;
                 case R.id.action_open_in_browser:
-                    Intent openIntent = new Intent();
-                    openIntent.setAction(Intent.ACTION_VIEW);
-                    //TODO ссылку надо хранить в Event и тут указывать
-                    openIntent.setData(Uri.parse("https://kudago.com/all/list/zooparki-online/"));
-                    startActivity(Intent.createChooser(openIntent, getResources().getString(R.string.open_in_browser)));
-                    return true;
+                    if (event != null) {
+                        Intent openIntent = new Intent();
+                        openIntent.setAction(Intent.ACTION_VIEW);
+                        openIntent.setData(Uri.parse(event.getSite_url()));
+                        startActivity(Intent.createChooser(openIntent, getResources().getString(R.string.open_in_browser)));
+                        return true;
+                    } else return false;
                 default:
                     return false;
             }

@@ -46,7 +46,12 @@ public class DetailedEventRepo {
                 detailedEvent.title,
                 images,
                 detailedEvent.description,
-                detailedEvent.body_text, detailedEvent.price, dates, detailedEvent.location, detailedEvent.place
+                detailedEvent.body_text,
+                detailedEvent.price,
+                dates,
+                detailedEvent.location,
+                detailedEvent.place,
+                detailedEvent.site_url
         );
     }
     public void getCertainEvent(int id){

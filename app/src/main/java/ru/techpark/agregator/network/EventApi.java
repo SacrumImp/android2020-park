@@ -42,6 +42,7 @@ public interface EventApi {
         public List<Date> dates;
         public Location location;
         public Place place;
+        public String site_url;
     }
 
     class SearchInfo {
