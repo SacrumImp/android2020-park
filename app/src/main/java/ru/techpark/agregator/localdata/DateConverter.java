@@ -11,14 +11,14 @@ class DateConverter {
 
     @TypeConverter  // перевод из Date в String
     public String fromDate(List<Date> dates){
-        return dates.get(0).getStart_date() + "," + dates.get(0).getStart_time();
+        return dates.get(0).getStart_date() + "," + dates.get(0).getStart_time() + "," + dates.get(0).getStart() + "," + dates.get(0).getEnd();
     }
 
     @TypeConverter  // перевод из String в Date
     public List<Date> toDate(String dates){
         String[] datesLine = dates.split(",");
         List<Date> dateRet = new ArrayList<>();
-        dateRet.add(new Date(datesLine[0], datesLine[1]));
+        dateRet.add(new Date(datesLine[0], datesLine[1], Long.parseLong(datesLine[2]), Long.parseLong(datesLine[3])));
         return dateRet;
     }
 }
