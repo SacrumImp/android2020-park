@@ -75,15 +75,11 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
-    ProgressBar loading_progress;
-    protected ImageButton button_go;
     protected ImageButton calendar_button;
-    FloatingActionButton likeEvent;
 
 
     private TextView phone;
     private Toolbar toolbar;
-    private CollapsingToolbarLayout collapsingToolbar;
 
     FragmentNavigator navigator;
 
@@ -123,7 +119,6 @@ public abstract class DetailedFragment extends Fragment {
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
         toolbar = view.findViewById(R.id.toolbar);
-        collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
         calendar_button = view.findViewById(R.id.calendar_button);
@@ -209,10 +204,12 @@ public abstract class DetailedFragment extends Fragment {
             location_label.setText(R.string.city);
         }
         location.setText(event.getLocation().getName());
-
-        time_label.setVisibility(View.VISIBLE);
-        date_start.setText(event.getDates().get(0).getStart_date());
-        time_start.setText(event.getDates().get(0).getStart_time());
+        Log.d(TAG, "\"" + event.getDates().get(0).getStart_date() + "\" \"" + event.getDates().get(0).getStart_time() + "\" " + (event.getDates().get(0).getStart_date() != null));
+        if (!event.getDates().get(0).getStart_date().equals("null") && event.getDates().get(0).getStart_date().length() > 0) {
+            time_label.setVisibility(View.VISIBLE);
+            date_start.setText(event.getDates().get(0).getStart_date());
+            time_start.setText(event.getDates().get(0).getStart_time());
+        }
 
         if (event.getPlace() != null) {
             if (event.getPlace().getTitle().length() != 0) {
@@ -240,8 +237,6 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
             Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l + 10800000l);
-            long event_date = event.getDates().get(0).getStart() * 1000;
-            Date eventDate = new Date(event_date);
             long extra_time = 18000000; // 5 часов.
             difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
