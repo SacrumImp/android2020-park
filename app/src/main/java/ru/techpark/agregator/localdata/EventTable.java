@@ -30,6 +30,7 @@ public class EventTable {
     public List<Date> dates;       // дата события
     @TypeConverters({PlaceConverter.class})
     public Place place;
+    public String site_url;
 
     public EventTable() {
     }
@@ -44,6 +45,7 @@ public class EventTable {
         this.images = event.getImages();
         this.location = event.getLocation();
         this.place = event.getPlace();
+        this.site_url = event.getSite_url();
     }
 
     public List<Image> getImages() {

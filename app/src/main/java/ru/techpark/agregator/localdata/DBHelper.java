@@ -25,6 +25,8 @@ class DBHelper {
         appDatabase = Room.databaseBuilder(
                 context,
                 AppDatabase.class,
-                "event_table.db").build();
+                "event_table.db")
+                .fallbackToDestructiveMigration()
+                .build();
     }
 }

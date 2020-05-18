@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
 public class ApiDetailedFragment extends DetailedFragment {
