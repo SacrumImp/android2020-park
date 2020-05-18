@@ -1,6 +1,7 @@
 package ru.techpark.agregator.fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -71,15 +72,6 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
-
-    ProgressBar loading_progress;
-    protected ImageButton button_go;
-    FloatingActionButton likeEvent;
-
-    protected SingleViewModel detailedViewModel;
-
-    public final static String KEY_ID = "KEY_ID";
-    public final static String KEY_TITLE = "KEY_TITLE";
 
   
     private TextView phone;
