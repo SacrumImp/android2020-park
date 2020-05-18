@@ -234,11 +234,18 @@
 
                     <ImageButton
                         android:id="@+id/notify_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_alignParentEnd="true"
                         android:contentDescription="@string/notification_button"
                         app:srcCompat="@drawable/ic_notification_button" />
+                    <ImageButton
+                        android:id="@+id/calendar_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@+id/go_btn"
+                        app:srcCompat="@drawable/ic_calendar_button" />
 
 
                 </RelativeLayout>

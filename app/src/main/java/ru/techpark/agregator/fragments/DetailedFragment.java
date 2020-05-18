@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -31,6 +33,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -72,8 +75,12 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
+    ProgressBar loading_progress;
+    protected ImageButton button_go;
+    protected ImageButton calendar_button;
+    FloatingActionButton likeEvent;
 
-  
+
     private TextView phone;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -91,7 +98,6 @@ public abstract class DetailedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detailed_event, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -120,6 +126,7 @@ public abstract class DetailedFragment extends Fragment {
         collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
+        calendar_button = view.findViewById(R.id.calendar_button);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -135,7 +142,6 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
-       // button_go.setVisibility(View.GONE);
 
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -176,7 +182,7 @@ public abstract class DetailedFragment extends Fragment {
             }
         });
     }
-
+ //todo поддержка остальных кнопок
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
@@ -233,6 +239,7 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_TITLE, event.getTitle())
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
+            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l + 10800000l);
             long event_date = event.getDates().get(0).getStart() * 1000;
             Date eventDate = new Date(event_date);
             long extra_time = 18000000; // 5 часов.
@@ -242,11 +249,23 @@ public abstract class DetailedFragment extends Fragment {
                     .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
             WorkManager.getInstance(getContext()).enqueue(notificationWork);
         });
+        calendar_button.setOnClickListener(v ->{
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l + 10800000l);
+            Calendar endTime = Calendar.getInstance();
+            endTime.setTimeInMillis(event.getDates().get(0).getEnd()*1000l + 10800000l);
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+            startActivity(intent);
+        });
     }
 
     abstract void hideLoading();
 
     abstract void handleErrorInObserver();
-
-
 }
