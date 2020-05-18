@@ -48,7 +48,12 @@ public class DetailedEventRepo {
                 detailedEvent.title.substring(0,1).toUpperCase() + detailedEvent.title.substring(1),
                 images,
                 detailedEvent.description,
-                detailedEvent.body_text, detailedEvent.price, dates, detailedEvent.location, detailedEvent.place
+                detailedEvent.body_text,
+                detailedEvent.price,
+                dates,
+                detailedEvent.location,
+                detailedEvent.place,
+                detailedEvent.site_url
         );
     }
 

@@ -6,6 +6,12 @@ public class Date {
     private String start_date;
     private String start_time;
 
+    public Date(String start_date, String start_time, long start, long end) {
+        this.start_date = start_date;
+        this.start_time = start_time;
+        this.start = start;
+        this.end = end;
+    }
     public Date(String start_date, String start_time) {
         this.start_date = start_date;
         this.start_time = start_time;
@@ -17,8 +23,9 @@ public class Date {
         this.end = end;
     }
 
-    public int getStart() {
-        return (int) start;
+
+    public long getStart() {
+        return  start;
     }
     public void setStart(int start) {
         this.start = start;

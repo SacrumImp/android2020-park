@@ -79,7 +79,8 @@ public class BDRepo {
         List<Event> retList = new ArrayList<>();
         Event event;
         for(EventTable eventTbl: events){
-            event = new Event(eventTbl.id, eventTbl.title, eventTbl.getImages(), eventTbl.description, eventTbl.body_text, eventTbl.price, eventTbl.getDates(), eventTbl.location, eventTbl.place);
+            //Todo строка в конце - url
+            event = new Event(eventTbl.id, eventTbl.title, eventTbl.getImages(), eventTbl.description, eventTbl.body_text, eventTbl.price, eventTbl.getDates(), eventTbl.location, eventTbl.place, "");
             retList.add(event);
         }
         return retList;

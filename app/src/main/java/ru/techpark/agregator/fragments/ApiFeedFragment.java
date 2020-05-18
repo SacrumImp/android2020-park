@@ -42,4 +42,5 @@ public class ApiFeedFragment extends FeedFragment {
 
         else feedViewModel.addFeedNextPage(pageCounter);
     }
+
 }

@@ -1,6 +1,9 @@
 package ru.techpark.agregator.fragments;
 
-import android.content.Context;
+
+import android.content.Intent;
+import android.net.Uri;
+
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
@@ -23,6 +27,7 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Date;
@@ -36,11 +41,19 @@ import ru.techpark.agregator.viewmodels.SingleViewModel;
 
 public abstract class DetailedFragment extends Fragment {
 
-    static final String NUM_CURR = "CURRENT";
     public final static String KEY_DES = "KEY_DES";
+    public final static String KEY_ID = "KEY_ID";
+    public final static String KEY_TITLE = "KEY_TITLE";
+    public final static String KEY_DATE = "KEY_DATE";
+    public final static String KEY_TIME = "KEY_TIME";
+    static final String NUM_CURR = "CURRENT";
+    private static final String TAG = "DetailedFragment";
     protected int id;
     protected Event event;
-    private static final String TAG = "fragment";
+    ProgressBar loading_progress;
+    ImageButton button_go;
+    FloatingActionButton likeEvent;
+    SingleViewModel detailedViewModel;
     private TextView title;
     private TextView description;
     private TextView body_text;
@@ -58,6 +71,7 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
+
     ProgressBar loading_progress;
     protected ImageButton button_go;
     FloatingActionButton likeEvent;
@@ -66,9 +80,11 @@ public abstract class DetailedFragment extends Fragment {
 
     public final static String KEY_ID = "KEY_ID";
     public final static String KEY_TITLE = "KEY_TITLE";
+
+  
     private TextView phone;
-    public final static String KEY_DATE = "KEY_DATE";
-    public final static String KEY_TIME = "KEY_TIME";
+    private Toolbar toolbar;
+    private CollapsingToolbarLayout collapsingToolbar;
 
     FragmentNavigator navigator;
 
@@ -83,6 +99,7 @@ public abstract class DetailedFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detailed_event, container, false);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -104,9 +121,12 @@ public abstract class DetailedFragment extends Fragment {
         place_title = view.findViewById(R.id.place_title);
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
-        button_go = view.findViewById(R.id.go_btn);
+        button_go = view.findViewById(R.id.notify_button);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
+        toolbar = view.findViewById(R.id.toolbar);
+        collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
+        toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
 
         description_label.setVisibility(View.INVISIBLE);
@@ -139,6 +159,30 @@ public abstract class DetailedFragment extends Fragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    if (event != null) {
+                        Intent sendIntent = new Intent();
+                        sendIntent.setAction(Intent.ACTION_SEND);
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, event.getSite_url());
+                        sendIntent.setType("text/plain");
+                        startActivity(Intent.createChooser(sendIntent, getResources().getString(R.string.share_event)));
+                        return true;
+                    } else return false;
+                case R.id.action_open_in_browser:
+                    if (event != null) {
+                        Intent openIntent = new Intent();
+                        openIntent.setAction(Intent.ACTION_VIEW);
+                        openIntent.setData(Uri.parse(event.getSite_url()));
+                        startActivity(Intent.createChooser(openIntent, getResources().getString(R.string.open_in_browser)));
+                        return true;
+                    } else return false;
+                default:
+                    return false;
+            }
+        });
     }
 
     private void setEventData(Event event) {
@@ -168,6 +212,9 @@ public abstract class DetailedFragment extends Fragment {
         }
         location.setText(event.getLocation().getName());
 
+        time_label.setVisibility(View.VISIBLE);
+        date_start.setText(event.getDates().get(0).getStart_date());
+        time_start.setText(event.getDates().get(0).getStart_time());
 
         if (event.getPlace() != null) {
             if (event.getPlace().getTitle().length() != 0) {
@@ -194,10 +241,10 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_TITLE, event.getTitle())
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
-            Date curDate = new Date();
-            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L);
+            long event_date = event.getDates().get(0).getStart() * 1000;
+            Date eventDate = new Date(event_date);
             long extra_time = 18000000; // 5 часов.
-            difference = eventDate.getTime() - curDate.getTime() - extra_time; // за 5 часов до события
+            difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                     //          .setInputData(put).build();
                     .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
@@ -208,4 +255,6 @@ public abstract class DetailedFragment extends Fragment {
     abstract void hideLoading();
 
     abstract void handleErrorInObserver();
+
+
 }
