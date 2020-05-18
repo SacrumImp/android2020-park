@@ -26,8 +26,10 @@ public class ApiViewModel extends FeedViewModel {
     public void addSearchNextPage(String searchQuery, int page) { eventRepo.addDataSearch(searchQuery, page); } //данные поиска
 
     @Override
-    public void insertEventBD(Event event) { }
+    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
 
     @Override
-    public LiveData<List<Event>> getEvents() { return mResponseData; } //возврат данных
+    public boolean isEmpty() {
+        return eventRepo.isEmpty();
+    }
 }

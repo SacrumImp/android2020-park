@@ -19,4 +19,5 @@
     <string name="share_event">Поделиться</string>
     <string name="add_to_calendar">Добавить в календарь</string>
     <string name="open_in_browser">Открыть в браузере</string>
+    <string name="error_find">Событие не найдено!</string>
 </resources>

@@ -6,13 +6,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.techpark.agregator.R;
+import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
-import ru.techpark.agregator.viewmodels.BdViewModel;
-import ru.techpark.agregator.viewmodels.FeedViewModel;
-
 public class ApiDetailedFragment extends DetailedFragment {
 
     private static final String ERROR_IN_OBSERVER = "Нет соеинения с интернетом";
@@ -49,13 +48,34 @@ public class ApiDetailedFragment extends DetailedFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        likeEvent = view.findViewById(R.id.likeUnlike);
 
         button_go.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
 
+
+        Observer<Event> observer = event -> {
+            if (event != null) {
+                this.event = event;
+                if (!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null)) {
+                    time_label.setVisibility(View.VISIBLE);
+                    time_start.setVisibility(View.VISIBLE);
+                    date_start.setVisibility(View.VISIBLE);
+                    date_start.setText(event.getDates().get(0).getStart_date());
+                    time_start.setText(event.getDates().get(0).getStart_time());
+                }
+
+            } else {
+                handleErrorInObserver();
+            }
+        };
+
+        detailedViewModel
+                .getEvent()
+                .observe(getViewLifecycleOwner(), observer);
+
         //обработка нажатия лайка
-        FeedViewModel feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        likeEvent.setOnClickListener((v) -> feedViewModel.insertEventBD(event));
+        likeEvent.setOnClickListener((v) -> detailedViewModel.insertEventBD(event));
     }
+
+
 }

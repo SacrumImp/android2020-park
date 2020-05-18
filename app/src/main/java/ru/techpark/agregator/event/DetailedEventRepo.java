@@ -22,7 +22,7 @@ public class DetailedEventRepo {
 
     private final Context mContext;
 
-    public DetailedEventRepo (Context context) {
+    public DetailedEventRepo(Context context) {
         mContext = context;
     }
 
@@ -37,13 +37,15 @@ public class DetailedEventRepo {
         if (detailedEvent.images.size() > 0)
             images.add(new Image(detailedEvent.images.get(0).image));
         List<Date> dates = new ArrayList<>();
+      
         if (detailedEvent.dates.size()>0)
             dates.add(new Date(detailedEvent.dates.get(0).getStart_date(), detailedEvent.dates.get(0).getStart_time(),
-                    detailedEvent.dates.get(0).getStart(),detailedEvent.dates.get(0).getEnd()));
+                    detailedEvent.dates.get(0).getStart(), detailedEvent.dates.get(0).getEnd()));
+
         Log.d(TAG, "id" + detailedEvent.id);
         return new Event(
                 detailedEvent.id,
-                detailedEvent.title,
+                detailedEvent.title.substring(0,1).toUpperCase() + detailedEvent.title.substring(1),
                 images,
                 detailedEvent.description,
                 detailedEvent.body_text,
@@ -54,7 +56,8 @@ public class DetailedEventRepo {
                 detailedEvent.site_url
         );
     }
-    public void getCertainEvent(int id){
+
+    public void getCertainEvent(int id) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
         //  final Event[] event = new Event[1];
         Log.d(TAG, "try");
@@ -67,6 +70,7 @@ public class DetailedEventRepo {
                     Log.d(TAG, "post");
                 }
             }
+
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<EventApi.DetailedEvent> call, Throwable t) {

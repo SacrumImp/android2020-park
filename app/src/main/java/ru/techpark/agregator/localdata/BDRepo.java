@@ -18,6 +18,7 @@ public class BDRepo {
 
     private final static MutableLiveData<List<Event>> sEvents = new MutableLiveData<>();
     private final MutableLiveData<Event> sEvent = new MutableLiveData<>();
+    private List<Event> eventList;
 
     static{
         sEvents.setValue(Collections.emptyList());
@@ -39,19 +40,24 @@ public class BDRepo {
 
     public LiveData<Event> getEvent() {return sEvent;}
 
-
-
     public void refresh(){
         executor.execute(() -> {
-            List<Event> eventList = transform(db.getDao().getAllEvents());
+            eventList = transform(db.getDao().getAllEvents());
             sEvents.postValue(eventList);
         });
     }
 
     public void insertEventBD(Event event){
         executor.execute(() -> {
-            EventTable eventDb = new EventTable(event);
-            db.getDao().insert(eventDb);
+            EventTable eventBd = new EventTable(event);
+            db.getDao().insert(eventBd);
+        });
+    }
+
+    public void deleteEventBD(Event event){
+        executor.execute(() -> {
+            EventTable eventBd = new EventTable(event);
+            db.getDao().delete(eventBd);
         });
     }
 
@@ -64,8 +70,8 @@ public class BDRepo {
 
     public void addDataSearch(String searchQuery){
         executor.execute(() -> {
-            List<Event> certainEvent = transform(db.getDao().getSearchEvent('%' + searchQuery + '%'));
-            sEvents.postValue(certainEvent);
+            eventList = transform(db.getDao().getSearchEvent('%' + searchQuery + '%'));
+            sEvents.postValue(eventList);
         });
     }
 
@@ -78,6 +84,10 @@ public class BDRepo {
             retList.add(event);
         }
         return retList;
+    }
+
+    public boolean isEmpty(){
+        return  eventList.isEmpty();
     }
 
 }

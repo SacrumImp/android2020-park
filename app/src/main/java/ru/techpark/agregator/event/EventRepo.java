@@ -80,7 +80,7 @@ public class EventRepo {
 
         return new Event(
                 feedEvent.id,
-                feedEvent.title,
+                feedEvent.title.substring(0,1).toUpperCase() + feedEvent.title.substring(1),
                 images,
                 feedEvent.description,
                 dates
@@ -126,5 +126,9 @@ public class EventRepo {
                 images,
                 searchEvent.description
         );
+    }
+
+    public boolean isEmpty(){
+        return eventsInFeed.isEmpty();
     }
 }

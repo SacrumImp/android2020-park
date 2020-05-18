@@ -16,6 +16,12 @@ public class Date {
         this.start_date = start_date;
         this.start_time = start_time;
     }
+    public Date(String start_date, String start_time, long start, long end) {
+        this.start_date = start_date;
+        this.start_time = start_time;
+        this.start = start;
+        this.end = end;
+    }
 
 
     public long getStart() {

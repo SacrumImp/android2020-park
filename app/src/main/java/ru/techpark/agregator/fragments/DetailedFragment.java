@@ -1,9 +1,12 @@
 package ru.techpark.agregator.fragments;
 
+
 import android.content.Intent;
 import android.net.Uri;
+
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import ru.techpark.agregator.FragmentNavigator;
 import ru.techpark.agregator.NotificationWorker;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
@@ -54,22 +58,41 @@ public abstract class DetailedFragment extends Fragment {
     private TextView description;
     private TextView body_text;
     private TextView price;
-    private TextView date_start;
-    private TextView time_start;
+    protected TextView date_start;
+    protected TextView time_start;
     private TextView location;
     private TextView location_label;
     private ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    private TextView time_label;
+    protected TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
+
+    ProgressBar loading_progress;
+    protected ImageButton button_go;
+    FloatingActionButton likeEvent;
+
+    protected SingleViewModel detailedViewModel;
+
+    public final static String KEY_ID = "KEY_ID";
+    public final static String KEY_TITLE = "KEY_TITLE";
+
+  
     private TextView phone;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbar;
+
+    FragmentNavigator navigator;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        navigator = (FragmentNavigator) context;
+    }
 
     @Nullable
     @Override
@@ -103,13 +126,15 @@ public abstract class DetailedFragment extends Fragment {
         title = view.findViewById(R.id.title);
         toolbar = view.findViewById(R.id.toolbar);
         collapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
-
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
+        likeEvent = view.findViewById(R.id.likeUnlike);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
         phone_label.setVisibility(View.GONE);
+        time_start.setVisibility(View.GONE);
+        date_start.setVisibility(View.GONE);
         place_address.setVisibility(View.GONE);
         place_address_label.setVisibility(View.GONE);
         place_title.setVisibility(View.GONE);
@@ -118,6 +143,9 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
+       // button_go.setVisibility(View.GONE);
+
+        body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         Observer<Event> observer = event -> {
             if (event != null) {

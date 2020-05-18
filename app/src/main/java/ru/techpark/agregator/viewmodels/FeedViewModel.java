@@ -18,7 +18,7 @@ public abstract class FeedViewModel extends AndroidViewModel {
 
     public abstract void addFeedNextPage(int page);
     public abstract void addSearchNextPage(String searchQuery, int page);
-    public abstract void insertEventBD(Event event);
     public abstract LiveData<List<Event>> getEvents();
+    public abstract boolean isEmpty();
 
 }
