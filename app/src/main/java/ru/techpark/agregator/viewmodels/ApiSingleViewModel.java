@@ -30,4 +30,7 @@ public class ApiSingleViewModel extends SingleViewModel {
 
     @Override
     public void insertEventBD(Event event) {  bdRepo.insertEventBD(event); }
+
+    @Override
+    public void deleteEventBD(Event event) { }
 }

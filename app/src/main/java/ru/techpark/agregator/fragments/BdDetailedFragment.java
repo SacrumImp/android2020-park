@@ -1,16 +1,14 @@
 package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
@@ -26,6 +24,10 @@ public class BdDetailedFragment extends DetailedFragment {
         bundle.putInt(NUM_CURR, num);
         frag.setArguments(bundle);
         return frag;
+    }
+
+    void updateFeed() {
+        navigator.openDBFeed();
     }
 
     @Override
@@ -53,6 +55,7 @@ public class BdDetailedFragment extends DetailedFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         button_go.setVisibility(View.GONE);
+        likeEvent.setImageResource(R.drawable.ic_action_delete);
         Observer<Event> observer = event -> {
             if (event != null) {
                 this.event = event;
@@ -74,10 +77,10 @@ public class BdDetailedFragment extends DetailedFragment {
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
 
-
-
-        FloatingActionButton floatingActionButton = view.findViewById(R.id.likeUnlike);
-        floatingActionButton.setVisibility(View.GONE);
+        likeEvent.setOnClickListener((v) -> {
+            detailedViewModel.deleteEventBD(event);
+            updateFeed();
+        });
 
     }
 

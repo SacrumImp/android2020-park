@@ -1,5 +1,6 @@
 package ru.techpark.agregator.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -27,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import ru.techpark.agregator.FragmentNavigator;
 import ru.techpark.agregator.NotificationWorker;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
@@ -68,6 +70,14 @@ public abstract class DetailedFragment extends Fragment {
     public final static String KEY_DATE = "KEY_DATE";
     public final static String KEY_TIME = "KEY_TIME";
 
+    FragmentNavigator navigator;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        navigator = (FragmentNavigator) context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -97,6 +107,7 @@ public abstract class DetailedFragment extends Fragment {
         button_go = view.findViewById(R.id.go_btn);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
+        likeEvent = view.findViewById(R.id.likeUnlike);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);

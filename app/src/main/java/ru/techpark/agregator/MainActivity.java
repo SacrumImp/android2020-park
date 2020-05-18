@@ -78,5 +78,12 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                 .commit();
     }
 
+    @Override
+    public void openDBFeed() {
+        manager.beginTransaction()
+                .replace(R.id.fragment_container, new BdFeedFragment())
+                .commit();
+    }
+
 
 }

@@ -48,7 +48,6 @@ public class ApiDetailedFragment extends DetailedFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        likeEvent = view.findViewById(R.id.likeUnlike);
 
         button_go.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
@@ -73,11 +72,6 @@ public class ApiDetailedFragment extends DetailedFragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
-
-
-
-
 
         //обработка нажатия лайка
         likeEvent.setOnClickListener((v) -> detailedViewModel.insertEventBD(event));

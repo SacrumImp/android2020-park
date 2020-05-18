@@ -49,8 +49,15 @@ public class BDRepo {
 
     public void insertEventBD(Event event){
         executor.execute(() -> {
-            EventTable eventDb = new EventTable(event);
-            db.getDao().insert(eventDb);
+            EventTable eventBd = new EventTable(event);
+            db.getDao().insert(eventBd);
+        });
+    }
+
+    public void deleteEventBD(Event event){
+        executor.execute(() -> {
+            EventTable eventBd = new EventTable(event);
+            db.getDao().delete(eventBd);
         });
     }
 

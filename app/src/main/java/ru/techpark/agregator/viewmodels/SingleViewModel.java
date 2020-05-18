@@ -20,4 +20,6 @@ abstract public class SingleViewModel extends AndroidViewModel {
 
     public abstract void insertEventBD(Event event);
 
+    public abstract void deleteEventBD(Event event);
+
 }

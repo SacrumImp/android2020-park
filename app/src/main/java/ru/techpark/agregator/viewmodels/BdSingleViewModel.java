@@ -29,4 +29,7 @@ public class BdSingleViewModel extends SingleViewModel {
 
     @Override
     public void insertEventBD(Event event) {  detailedBdRepo.insertEventBD(event); }
+
+    @Override
+    public void deleteEventBD(Event event) { detailedBdRepo.deleteEventBD(event);}
 }
