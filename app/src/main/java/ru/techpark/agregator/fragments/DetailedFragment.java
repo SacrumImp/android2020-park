@@ -62,20 +62,20 @@ public abstract class DetailedFragment extends Fragment {
     private TextView description;
     private TextView body_text;
     private TextView price;
-    protected TextView date_start;
-    protected TextView time_start;
+    TextView date_start;
+    TextView time_start;
     private TextView location;
     private TextView location_label;
     private ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    protected TextView time_label;
+    TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
-    protected ImageButton calendar_button;
+    ImageButton calendar_button;
 
 
     private TextView phone;
@@ -204,8 +204,7 @@ public abstract class DetailedFragment extends Fragment {
             location_label.setText(R.string.city);
         }
         location.setText(event.getLocation().getName());
-        Log.d(TAG, "\"" + event.getDates().get(0).getStart_date() + "\" \"" + event.getDates().get(0).getStart_time() + "\" " + (event.getDates().get(0).getStart_date() != null));
-        if (!event.getDates().get(0).getStart_date().equals("null") && event.getDates().get(0).getStart_date().length() > 0) {
+        if (event.getDates().get(0).getStart_date() != null && !event.getDates().get(0).getStart_date().equals("null") && event.getDates().get(0).getStart_date().length() > 0) {
             time_label.setVisibility(View.VISIBLE);
             date_start.setText(event.getDates().get(0).getStart_date());
             time_start.setText(event.getDates().get(0).getStart_time());
@@ -236,7 +235,7 @@ public abstract class DetailedFragment extends Fragment {
                     .putString(KEY_TITLE, event.getTitle())
                     .putString(KEY_DES, event.getDescription()).build();
             long difference;
-            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000l + 10800000l);
+            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L + 10800000L);
             long extra_time = 18000000; // 5 часов.
             difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
             OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
@@ -246,9 +245,9 @@ public abstract class DetailedFragment extends Fragment {
         });
         calendar_button.setOnClickListener(v ->{
             Calendar beginTime = Calendar.getInstance();
-            beginTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l + 10800000l);
+            beginTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
             Calendar endTime = Calendar.getInstance();
-            endTime.setTimeInMillis(event.getDates().get(0).getEnd()*1000l + 10800000l);
+            endTime.setTimeInMillis(event.getDates().get(0).getEnd()* 1000L + 10800000L);
             Intent intent = new Intent(Intent.ACTION_INSERT)
                     .setData(CalendarContract.Events.CONTENT_URI)
                     .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
