@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="listCities">
+        <item>@string/moscow</item>
+        <item>@string/spb</item>
+        <item>@string/ekb</item>
+        <item>@string/krs</item>
+        <item>@string/krd</item>
+        <item>@string/kzn</item>
+        <item>@string/nnv</item>
+        <item>@string/nsk</item>
+        <item>@string/sochi</item>
+    </string-array>
+
+    <string-array name="listValues">
+        <item>msk</item>
+        <item>spb</item>
+        <item>ekb</item>
+        <item>krasnoyarsk</item>
+        <item>krd</item>
+        <item>kzn</item>
+        <item>nnv</item>
+        <item>nsk</item>
+        <item>sochi</item>
+    </string-array>
+
+</resources>

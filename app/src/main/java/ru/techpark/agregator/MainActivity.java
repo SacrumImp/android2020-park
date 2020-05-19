@@ -1,30 +1,45 @@
 package ru.techpark.agregator;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Locale;
 
 import ru.techpark.agregator.fragments.ApiDetailedFragment;
 import ru.techpark.agregator.fragments.ApiFeedFragment;
 import ru.techpark.agregator.fragments.BdDetailedFragment;
 import ru.techpark.agregator.fragments.BdFeedFragment;
+import ru.techpark.agregator.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator {
 
     public static final String TAG = "MainActivity";
     private FragmentManager manager;
+    SharedPreferences prefs;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(updateBaseContextLocale(newBase));
+        if(prefs.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         manager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             manager.beginTransaction()
@@ -52,7 +67,9 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                             .commit();
                     break;
                 case R.id.action_settings:
-                    Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    manager.beginTransaction()
+                            .replace(R.id.fragment_container, new SettingsFragment())
+                            .commit();
                     break;
             }
             return true;
@@ -86,5 +103,17 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                 .commit();
     }
 
+    private Context updateBaseContextLocale(Context context){
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Locale loc;
+
+        if(prefs.getBoolean("switch_language", false)) loc = new Locale("en");
+        else loc = new Locale("ru", "rRu");
+        Locale.setDefault(loc);
+        Configuration configuration = new Configuration(context.getResources().getConfiguration());
+        configuration.setLocale(loc);
+        return context.createConfigurationContext(configuration);
+    }
 
 }

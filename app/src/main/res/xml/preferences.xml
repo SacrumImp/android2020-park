@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:key="language"
+        app:title="@string/language">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="switch_language"
+            android:summary="turn this"
+            android:title="@string/switch_language"
+            android:summaryOff="@string/Russian"
+            android:summaryOn="@string/English"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="theme"
+        app:title="@string/theme">
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="dark_theme"
+            android:summary="turn this"
+            android:title="@string/dark_theme"
+            android:summaryOff="@string/light"
+            android:summaryOn="@string/dark"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="city"
+        app:title="@string/location">
+        <ListPreference
+            android:title="@string/choosing_city"
+            android:key="city_list"
+            android:defaultValue="msk"
+            android:entries="@array/listCities"
+            android:entryValues="@array/listValues" />
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

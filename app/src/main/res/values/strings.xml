@@ -20,4 +20,23 @@
     <string name="add_to_calendar">Добавить в календарь</string>
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="error_find">Событие не найдено!</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="language">Язык</string>
+    <string name="switch_language">Смена языка</string>
+    <string name="theme">Тема</string>
+    <string name="Russian">Русский</string>
+    <string name="English">Английский</string>
+    <string name="dark">Темная</string>
+    <string name="light">Светлая</string>
+    <string name="location">Местоположение</string>
+    <string name="choosing_city">Выбор города</string>
+    <string name="moscow">Москва</string>
+    <string name="spb">Санкт-Петербург</string>
+    <string name="ekb">Екатеринбург</string>
+    <string name="krs">Красноярск</string>
+    <string name="krd">Краснодар</string>
+    <string name="kzn">Казань</string>
+    <string name="nnv">Нижний Новгород</string>
+    <string name="nsk">Новосибирск</string>
+    <string name="sochi">Сочи</string>
 </resources>
