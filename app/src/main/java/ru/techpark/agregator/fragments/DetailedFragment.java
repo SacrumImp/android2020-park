@@ -4,8 +4,6 @@ package ru.techpark.agregator.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -30,7 +28,6 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
@@ -58,30 +55,27 @@ public abstract class DetailedFragment extends Fragment {
     ImageButton button_go;
     FloatingActionButton likeEvent;
     SingleViewModel detailedViewModel;
+    TextView date_start;
+    TextView time_start;
+    TextView time_label;
+    ImageButton calendar_button;
+    FragmentNavigator navigator;
     private TextView title;
     private TextView description;
     private TextView body_text;
     private TextView price;
-    TextView date_start;
-    TextView time_start;
     private TextView location;
     private TextView location_label;
     private ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
-    ImageButton calendar_button;
-
-
     private TextView phone;
     private Toolbar toolbar;
-
-    FragmentNavigator navigator;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -177,7 +171,8 @@ public abstract class DetailedFragment extends Fragment {
             }
         });
     }
- //todo поддержка остальных кнопок
+
+    //todo поддержка остальных кнопок
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
@@ -243,11 +238,11 @@ public abstract class DetailedFragment extends Fragment {
                     .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
             WorkManager.getInstance(getContext()).enqueue(notificationWork);
         });
-        calendar_button.setOnClickListener(v ->{
+        calendar_button.setOnClickListener(v -> {
             Calendar beginTime = Calendar.getInstance();
-            beginTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
+            beginTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
             Calendar endTime = Calendar.getInstance();
-            endTime.setTimeInMillis(event.getDates().get(0).getEnd()* 1000L + 10800000L);
+            endTime.setTimeInMillis(event.getDates().get(0).getEnd() * 1000L + 10800000L);
             Intent intent = new Intent(Intent.ACTION_INSERT)
                     .setData(CalendarContract.Events.CONTENT_URI)
                     .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())

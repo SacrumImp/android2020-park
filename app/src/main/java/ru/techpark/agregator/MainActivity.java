@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                             .commit();
                     break;
                 case R.id.action_settings:
-                    Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.settings_navigation_menu, Toast.LENGTH_SHORT).show();
                     break;
             }
             return true;

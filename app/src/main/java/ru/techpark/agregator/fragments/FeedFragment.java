@@ -12,11 +12,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,6 +53,10 @@ public abstract class FeedFragment extends Fragment {
     private EditText searchField;
     private ImageButton startSearch;
     private ImageButton exitSearch;
+    private ImageButton setFilter;
+    private Toolbar toolbar;
+    private LinearLayout chipsLayout;
+    private RecyclerView feed;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -84,35 +91,35 @@ public abstract class FeedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView feed = view.findViewById(R.id.list_of_events);
+        feed = view.findViewById(R.id.list_of_events);
         loadingProgress = view.findViewById(R.id.loading_progress);
+        toolbar = view.findViewById(R.id.toolbar);
+        startSearch = toolbar.findViewById(R.id.start_search);
+        searchField = toolbar.findViewById(R.id.search_query);
+        exitSearch = toolbar.findViewById(R.id.exit_search);
+        setFilter = toolbar.findViewById(R.id.filters_button);
+        chipsLayout = view.findViewById(R.id.chips_layout);
+
         if (savedInstanceState == null)
             loadingProgress.setVisibility(View.VISIBLE);
-        startSearch = view.findViewById(R.id.start_search);
-        searchField = view.findViewById(R.id.search_query);
-        exitSearch = view.findViewById(R.id.exit_search);
-        if (isSearch)
-            exitSearch.setVisibility(View.VISIBLE);
+        setHomeState();
+        if (isSearch) {
+            setSearchState();
+        }
 
         exitSearch.setOnClickListener((l) -> {
-            isSearch = false;
-            isAllEvents = false;
-            pageCounter = 1;
-            loadNextPage();
-            exitSearch.setVisibility(View.GONE);
-            searchField.setText("");
-        });
-
-        startSearch.setOnClickListener((l) -> {
-            searchQuery = searchField.getText().toString();
-            if (!searchQuery.equals("")) {
-                pageCounter = 1;
+            if (isSearch) {
+                isSearch = false;
                 isAllEvents = false;
-                isSearch = true;
-                exitSearch.setVisibility(View.VISIBLE);
+                pageCounter = 1;
                 loadNextPage();
             }
+            setHomeState();
         });
+
+        startSearch.setOnClickListener(l -> setSearchState());
+
+        setFilter.setOnClickListener(l -> setFilterState());
 
         searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -124,9 +131,10 @@ public abstract class FeedFragment extends Fragment {
                         pageCounter = 1;
                         isAllEvents = false;
                         isSearch = true;
-                        exitSearch.setVisibility(View.VISIBLE);
                         loadNextPage();
                         handled = true;
+                    } else {
+                        Toast.makeText(getContext(), R.string.search_toast_empty_field, Toast.LENGTH_SHORT).show();
                     }
                 }
                 return handled;
@@ -145,6 +153,33 @@ public abstract class FeedFragment extends Fragment {
         };
         feedViewModel.getEvents()
                 .observe(getViewLifecycleOwner(), observer);
+    }
+
+    private void setHomeState() {
+        exitSearch.setVisibility(View.GONE);
+        setFilter.setVisibility(View.VISIBLE);
+        startSearch.setVisibility(View.VISIBLE);
+        searchField.setVisibility(View.GONE);
+        chipsLayout.setVisibility(View.GONE);
+        searchField.setText("");
+    }
+
+    private void setSearchState() {
+        searchField.setVisibility(View.VISIBLE);
+        setFilter.setVisibility(View.GONE);
+        exitSearch.setVisibility(View.VISIBLE);
+        startSearch.setVisibility(View.GONE);
+        chipsLayout.setVisibility(View.GONE);
+    }
+
+    private void setFilterState() {
+        exitSearch.setVisibility(View.GONE);
+        setFilter.setVisibility(View.GONE);
+        startSearch.setVisibility(View.GONE);
+        searchField.setVisibility(View.GONE);
+        exitSearch.setVisibility(View.VISIBLE);
+        chipsLayout.setVisibility(View.VISIBLE);
+        searchField.setText("");
     }
 
     abstract void handleObserverError();
@@ -223,9 +258,9 @@ public abstract class FeedFragment extends Fragment {
             holder.dateLabel.setVisibility(View.INVISIBLE);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
-            if((!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null))){
+            if (event.getDates() != null && (!(event.getDates().get(0).getStart_date() == null || event.getDates().get(0).getStart_time() == null))) {
                 GregorianCalendar startTime = new GregorianCalendar();
-                startTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l+10800000l);
+                startTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
                 String month;
                 String minute;
                 String day;
@@ -248,11 +283,6 @@ public abstract class FeedFragment extends Fragment {
                 boolean flag = false;
                 if (event.getDates().get(0).getStart_date()!=null){
                     if (event.getDates().get(0).getStart_date().equals("null")) {
-                        flag = true;
-                    }
-                }
-                if (event.getDates().get(0).getStart_time()!=null){
-                    if (event.getDates().get(0).getStart_time().equals("null")) {
                         flag = true;
                     }
                 }

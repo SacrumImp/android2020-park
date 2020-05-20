@@ -20,4 +20,6 @@
     <string name="add_to_calendar">Добавить в календарь</string>
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="error_find">Событие не найдено!</string>
+    <string name="search_toast_empty_field">Введите запрос</string>
+    <string name="set_filter">Установить фильтры</string>
 </resources>

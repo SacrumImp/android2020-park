@@ -21,4 +21,6 @@
     <string name="add_to_calendar">Add to calendar</string>
     <string name="open_in_browser">Open in browser</string>
     <string name="error_find">Can not find event!</string>
+    <string name="search_toast_empty_field">Empty query</string>
+    <string name="set_filter">Set filters</string>
 </resources>
