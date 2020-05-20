@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -104,10 +103,8 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     }
 
     private Context updateBaseContextLocale(Context context){
-
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Locale loc;
-
         if(prefs.getBoolean("switch_language", false)) loc = new Locale("en");
         else loc = new Locale("ru", "rRu");
         Locale.setDefault(loc);

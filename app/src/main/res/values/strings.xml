@@ -39,4 +39,11 @@
     <string name="nnv">Нижний Новгород</string>
     <string name="nsk">Новосибирск</string>
     <string name="sochi">Сочи</string>
+    <string name="notify">Уведомления</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+    <string name="choosing_time">Время напоминания</string>
+    <string name="hours">часы</string>
+    <string name="minutes">минуты</string>
+    <string name="any">Любой</string>
 </resources>

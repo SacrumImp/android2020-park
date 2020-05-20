@@ -10,8 +10,8 @@
         <!--selection controls.-->
         <item name="colorPrimary">@color/red_light</item>
         <item name="colorPrimaryVariant">@color/red_variant_light</item>
-        <item name="colorSecondary">@color/blue_custom</item>
-        <item name="colorSecondaryVariant">@color/blue_custom_variant</item>
+        <item name="colorSecondary">@color/red_light</item>
+        <item name="colorSecondaryVariant">@color/red_variant_light</item>
         <!--colorBackground appears behind scrollable content and is used for the default window-->
         <!--background. colorSurface is mapped to the surface of components such as cards, sheets-->
         <!--and menus. colorError is used to indicate an error state for components such as-->

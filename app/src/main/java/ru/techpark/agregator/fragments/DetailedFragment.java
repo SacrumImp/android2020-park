@@ -3,6 +3,7 @@ package ru.techpark.agregator.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -22,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -262,8 +264,9 @@ public abstract class DetailedFragment extends Fragment {
                 .putString(KEY_DES, event.getDescription()).build();
         long difference;
         Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L + 10800000L);
-        //todo тут время уведомления
-        long extra_time = 18000000; // 5 часов.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        long extra_time = sharedPreferences.getInt("notif_min", 0) + 60000;
+        extra_time += sharedPreferences.getInt("notif_ch", 0) * 3600000;
         difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
                 //          .setInputData(put).build();

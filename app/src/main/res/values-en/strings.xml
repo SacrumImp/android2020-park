@@ -40,4 +40,11 @@
     <string name="nnv">Nizhny Novgorod</string>
     <string name="nsk">Novosibirsk</string>
     <string name="sochi">Sochi</string>
+    <string name="notify">Notifications</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="choosing_time">Remind time</string>
+    <string name="hours">hours</string>
+    <string name="minutes">minutes</string>
+    <string name="any">Any city</string>
 </resources>

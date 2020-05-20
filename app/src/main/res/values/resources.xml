@@ -11,6 +11,7 @@
         <item>@string/nnv</item>
         <item>@string/nsk</item>
         <item>@string/sochi</item>
+        <item>@string/any</item>
     </string-array>
 
     <string-array name="listValues">
@@ -23,6 +24,7 @@
         <item>nnv</item>
         <item>nsk</item>
         <item>sochi</item>
+        <item></item>
     </string-array>
 
 </resources>

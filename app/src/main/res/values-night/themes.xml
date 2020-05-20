@@ -19,7 +19,7 @@
         <!--Material color attributes (dark theme) -->
         <item name="colorPrimary">@color/red_dark</item>
         <item name="colorPrimaryVariant">@color/red_variant_dark</item>
-        <item name="colorSecondary">@color/blue_custom</item>
+        <item name="colorSecondary">@color/red_dark</item>
         <item name="colorSecondaryVariant">@color/blue_custom_variant</item>
         <item name="android:colorBackground">@color/black_900</item>
         <item name="colorSurface">@color/black_800</item>
