@@ -4,8 +4,6 @@ package ru.techpark.agregator.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -30,11 +28,11 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -55,7 +53,7 @@ public abstract class DetailedFragment extends Fragment {
     protected int id;
     protected Event event;
     ProgressBar loading_progress;
-    ImageButton button_go;
+    ImageButton notifyButton;
     FloatingActionButton likeEvent;
     SingleViewModel detailedViewModel;
     private TextView title;
@@ -115,7 +113,7 @@ public abstract class DetailedFragment extends Fragment {
         place_title = view.findViewById(R.id.place_title);
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
-        button_go = view.findViewById(R.id.notify_button);
+        notifyButton = view.findViewById(R.id.notify_button);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
         toolbar = view.findViewById(R.id.toolbar);
@@ -123,6 +121,7 @@ public abstract class DetailedFragment extends Fragment {
         likeEvent = view.findViewById(R.id.likeUnlike);
         calendar_button = view.findViewById(R.id.calendar_button);
 
+        title.setVisibility(View.GONE);
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
@@ -137,6 +136,9 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
+        notifyButton.setVisibility(View.GONE);
+        calendar_button.setVisibility(View.GONE);
+        likeEvent.setVisibility(View.GONE);
 
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -152,6 +154,8 @@ public abstract class DetailedFragment extends Fragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
+
+
 
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -172,19 +176,30 @@ public abstract class DetailedFragment extends Fragment {
                         startActivity(Intent.createChooser(openIntent, getResources().getString(R.string.open_in_browser)));
                         return true;
                     } else return false;
+                case R.id.action_add_to_calendar:
+                    if (event != null) {
+                        addToCalendar(event);
+                        return true;
+                    } else return false;
+                case R.id.action_notify:
+                    if (event != null) {
+                        turnOnNotification(event);
+                        return true;
+                    } else return false;
                 default:
                     return false;
             }
         });
     }
- //todo поддержка остальных кнопок
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
+        title.setVisibility(View.VISIBLE);
         title.setText(event.getTitle());
         description_label.setVisibility(View.VISIBLE);
         description.setText(Html.fromHtml(event.getDescription()));
-        if (event.getImages().size() > 0)
+
+        if (event.getImages() != null && event.getImages().size() > 0)
             Glide.with(image.getContext())
                     .load(event.getImages().get(0).getImageUrl())
                     .skipMemoryCache(true)
@@ -192,22 +207,25 @@ public abstract class DetailedFragment extends Fragment {
                     .fitCenter()
                     .error(R.drawable.ic_image_placeholder)
                     .into(image);
+
         body_text.setText(Html.fromHtml(event.getBody_text()));
-        if (event.getPrice().length() != 0) {
+        if (event.getPrice() != null && !event.getPrice().equals("null") && event.getPrice().length() != 0) {
             price_label.setVisibility(View.VISIBLE);
             price.setVisibility(View.VISIBLE);
             price.setText(event.getPrice());
         }
-        if (event.getLocation().getSlug().equals("online")) {
-            location_label.setText(R.string.way_to_go);
-        } else {
-            location_label.setText(R.string.city);
+
+        if (event.getLocation() != null) {
+            if (event.getLocation().getSlug().equals("online")) {
+                location_label.setText(R.string.way_to_go);
+            } else {
+                location_label.setText(R.string.city);
+            }
+            location.setText(event.getLocation().getName());
         }
-        location.setText(event.getLocation().getName());
-        if (event.getDates().get(0).getStart_date() != null && !event.getDates().get(0).getStart_date().equals("null") && event.getDates().get(0).getStart_date().length() > 0) {
-            time_label.setVisibility(View.VISIBLE);
-            date_start.setText(event.getDates().get(0).getStart_date());
-            time_start.setText(event.getDates().get(0).getStart_time());
+
+        if (hasTime(event)) {
+            setTimeInformation(event);
         }
 
         if (event.getPlace() != null) {
@@ -227,39 +245,82 @@ public abstract class DetailedFragment extends Fragment {
                 phone.setText(event.getPlace().getPhone());
             }
         }
-        button_go.setOnClickListener(v -> {
-            String workTag = event.getId() + "";
-            Data put = new Data.Builder().putInt(KEY_ID, event.getId())
-                    .putString(KEY_DATE, event.getDates().get(0).getStart_date())
-                    .putString(KEY_TIME, event.getDates().get(0).getStart_time())
-                    .putString(KEY_TITLE, event.getTitle())
-                    .putString(KEY_DES, event.getDescription()).build();
-            long difference;
-            Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L + 10800000L);
-            long extra_time = 18000000; // 5 часов.
-            difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
-            OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                    //          .setInputData(put).build();
-                    .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
-            WorkManager.getInstance(getContext()).enqueue(notificationWork);
+        notifyButton.setOnClickListener(v -> {
+            turnOnNotification(event);
         });
         calendar_button.setOnClickListener(v ->{
-            Calendar beginTime = Calendar.getInstance();
-            beginTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
-            Calendar endTime = Calendar.getInstance();
-            endTime.setTimeInMillis(event.getDates().get(0).getEnd()* 1000L + 10800000L);
-            Intent intent = new Intent(Intent.ACTION_INSERT)
-                    .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
-                    .putExtra(CalendarContract.Events.TITLE, event.getTitle())
-                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
-                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-            startActivity(intent);
+            addToCalendar(event);
         });
     }
 
-    abstract void hideLoading();
+    private void turnOnNotification(Event event) {
+        String workTag = event.getId() + "";
+        Data put = new Data.Builder().putInt(KEY_ID, event.getId())
+                .putString(KEY_DATE, event.getDates().get(0).getStart_date())
+                .putString(KEY_TIME, event.getDates().get(0).getStart_time())
+                .putString(KEY_TITLE, event.getTitle())
+                .putString(KEY_DES, event.getDescription()).build();
+        long difference;
+        Date eventDate = new Date(event.getDates().get(0).getStart() * 1000L + 10800000L);
+        //todo тут время уведомления
+        long extra_time = 18000000; // 5 часов.
+        difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
+                //          .setInputData(put).build();
+                .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
+        WorkManager.getInstance(getContext()).enqueue(notificationWork);
+    }
 
+    private void addToCalendar(Event event) {
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
+        Calendar endTime = Calendar.getInstance();
+        endTime.setTimeInMillis(event.getDates().get(0).getEnd()* 1000L + 10800000L);
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
+                .putExtra(CalendarContract.Events.TITLE, event.getTitle())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        startActivity(intent);
+    }
+
+    void setTimeInformation(Event event) {
+        time_label.setVisibility(View.VISIBLE);
+        time_start.setVisibility(View.VISIBLE);
+        date_start.setVisibility(View.VISIBLE);
+        GregorianCalendar startTime = new GregorianCalendar();
+        startTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
+        String month;
+        String minute;
+        String day;
+        int correctMonth = startTime.get(Calendar.MONTH) + 1;
+        if (correctMonth < 10)
+            month = "0" + correctMonth;
+        else
+            month = String.valueOf(correctMonth);
+        startTime.get(Calendar.MINUTE);
+        if (startTime.get(Calendar.MINUTE) < 10)
+            minute = "0" + startTime.get(Calendar.MINUTE);
+        else
+            minute = String.valueOf(startTime.get(Calendar.MINUTE));
+        startTime.get(Calendar.DAY_OF_MONTH);
+        if (startTime.get(Calendar.DAY_OF_MONTH) < 10)
+            day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
+        else
+            day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
+        date_start.setText(day + "." + month + "." + startTime.get(Calendar.YEAR));
+        time_start.setText(startTime.get(Calendar.HOUR_OF_DAY) + ":" + minute);
+    }
+
+    boolean hasTime(Event event) {
+        return event.getDates()!= null && event.getDates().get(0)!= null &&
+                event.getDates().get(0).getStart_date() != null &&
+                event.getDates().get(0).getStart_time() != null &&
+                event.getDates().get(0).getStart() != 0 &&
+                !(event.getDates().get(0).getStart_date().equals("null")  || event.getDates().get(0).getStart_time().equals("null"));
+    }
+    abstract void hideLoading();
     abstract void handleErrorInObserver();
 }

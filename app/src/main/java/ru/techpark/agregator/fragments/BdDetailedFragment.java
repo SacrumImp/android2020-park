@@ -6,11 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
@@ -56,48 +52,8 @@ public class BdDetailedFragment extends DetailedFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        button_go.setVisibility(View.GONE);
-        calendar_button.setVisibility(View.GONE);
+        likeEvent.setVisibility(View.VISIBLE);
         likeEvent.setImageResource(R.drawable.ic_action_delete);
-        Observer<Event> observer = event -> {
-            if (event != null) {
-                this.event = event;
-                if (!(event.getDates().get(0).getStart_date().equals("null")  || event.getDates().get(0).getStart_time().equals("null") )) {
-                    time_label.setVisibility(View.VISIBLE);
-                    time_start.setVisibility(View.VISIBLE);
-                    date_start.setVisibility(View.VISIBLE);
-                    button_go.setVisibility(View.VISIBLE);
-                    calendar_button.setVisibility(View.VISIBLE);
-                    calendar_button.setVisibility(View.VISIBLE);
-                    GregorianCalendar startTime = new GregorianCalendar();
-                    startTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l+10800000l);
-                    String month;
-                    String minute;
-                    String day;
-                    int correctMonth = startTime.get(Calendar.MONTH)+1;
-                    if (correctMonth >= 0 && correctMonth <10)
-                        month = "0" + correctMonth;
-                    else
-                        month = String.valueOf(correctMonth);
-                    if (startTime.get(Calendar.MINUTE) >= 0 && startTime.get(Calendar.MINUTE) <10)
-                        minute = "0" + startTime.get(Calendar.MINUTE);
-                    else
-                        minute = String.valueOf(startTime.get(Calendar.MINUTE));
-                    if (startTime.get(Calendar.DAY_OF_MONTH) >= 0 && startTime.get(Calendar.DAY_OF_MONTH) <10)
-                        day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
-                    else
-                        day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
-                    date_start.setText(day+"."+ month +"."+startTime.get(Calendar.YEAR));
-                    time_start.setText(startTime.get(Calendar.HOUR_OF_DAY )+ ":"+minute);
-                }
-            } else {
-                handleErrorInObserver();
-            }
-        };
-
-        detailedViewModel
-                .getEvent()
-                .observe(getViewLifecycleOwner(), observer);
 
         likeEvent.setOnClickListener((v) -> {
             detailedViewModel.deleteEventBD(event);
@@ -106,4 +62,10 @@ public class BdDetailedFragment extends DetailedFragment {
 
     }
 
+    @Override
+    void setTimeInformation(Event event) {
+        notifyButton.setVisibility(View.VISIBLE);
+        calendar_button.setVisibility(View.VISIBLE);
+        super.setTimeInformation(event);
+    }
 }
