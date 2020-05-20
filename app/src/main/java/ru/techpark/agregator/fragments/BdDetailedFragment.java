@@ -62,10 +62,4 @@ public class BdDetailedFragment extends DetailedFragment {
 
     }
 
-    @Override
-    void setTimeInformation(Event event) {
-        notifyButton.setVisibility(View.VISIBLE);
-        calendar_button.setVisibility(View.VISIBLE);
-        super.setTimeInformation(event);
-    }
 }

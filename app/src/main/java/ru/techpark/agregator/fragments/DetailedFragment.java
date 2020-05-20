@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -23,25 +22,33 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Observer;
+import androidx.viewpager.widget.ViewPager;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.FragmentNavigator;
 import ru.techpark.agregator.NotificationWorker;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
+import ru.techpark.agregator.event.Image;
 import ru.techpark.agregator.viewmodels.SingleViewModel;
+
+import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 public abstract class DetailedFragment extends Fragment {
 
@@ -52,6 +59,8 @@ public abstract class DetailedFragment extends Fragment {
     public final static String KEY_TIME = "KEY_TIME";
     static final String NUM_CURR = "CURRENT";
     private static final String TAG = "DetailedFragment";
+    MyPagerAdapter myPagerAdapter;
+    ViewPager viewPager;
     protected int id;
     protected Event event;
     ProgressBar loading_progress;
@@ -66,7 +75,7 @@ public abstract class DetailedFragment extends Fragment {
     TextView time_start;
     private TextView location;
     private TextView location_label;
-    private ImageView image;
+    private static ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
@@ -76,6 +85,8 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_address;
     private TextView place_address_label;
     ImageButton calendar_button;
+    TabLayout tabLayout;
+
 
 
     private TextView phone;
@@ -102,7 +113,6 @@ public abstract class DetailedFragment extends Fragment {
         description_label = view.findViewById(R.id.label_description);
         body_text = view.findViewById(R.id.body_text);
         price = view.findViewById(R.id.price);
-        image = view.findViewById(R.id.image);
         description = view.findViewById(R.id.description);
         date_start = view.findViewById(R.id.date_start);
         time_start = view.findViewById(R.id.time_start);
@@ -122,6 +132,8 @@ public abstract class DetailedFragment extends Fragment {
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
         calendar_button = view.findViewById(R.id.calendar_button);
+        viewPager = view.findViewById(R.id.pager);
+        tabLayout = view.findViewById(R.id.tab_layout);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -181,17 +193,14 @@ public abstract class DetailedFragment extends Fragment {
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT );
+        myPagerAdapter.setEvent(event);
+        viewPager.setAdapter(myPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager,true);
         title.setText(event.getTitle());
         description_label.setVisibility(View.VISIBLE);
         description.setText(Html.fromHtml(event.getDescription()));
-        if (event.getImages().size() > 0)
-            Glide.with(image.getContext())
-                    .load(event.getImages().get(0).getImageUrl())
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .fitCenter()
-                    .error(R.drawable.ic_image_placeholder)
-                    .into(image);
+
         body_text.setText(Html.fromHtml(event.getBody_text()));
         if (event.getPrice().length() != 0) {
             price_label.setVisibility(View.VISIBLE);
@@ -262,4 +271,55 @@ public abstract class DetailedFragment extends Fragment {
     abstract void hideLoading();
 
     abstract void handleErrorInObserver();
+    public class MyPagerAdapter extends FragmentStatePagerAdapter {
+        private Event myEvent;
+        public MyPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        public void setEvent (Event event){
+            myEvent = event;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            Fragment fragment = new ImageFragment();
+            Bundle args = new Bundle();
+            args.putString(ImageFragment.ARG_OBJECT1, event.getImages().get(i).getImageUrl());
+            args.putInt(ImageFragment.ARG_OBJECT, i);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return event.getImages().size();
+        }
+
+
+    }
+    public static class ImageFragment extends Fragment{
+        public static final String ARG_OBJECT = "object";
+        public static final String ARG_OBJECT1 = "object1";
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.image_fragment,container,false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            image = view.findViewById(R.id.image);
+            Bundle args = getArguments();
+            String imageURL = args.getString(ARG_OBJECT1);
+            Glide.with(image.getContext())
+                    .load(imageURL)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter()
+                    .error(R.drawable.ic_image_placeholder)
+                    .into(image);
+        }
+    }
+
 }
