@@ -1,8 +1,10 @@
 package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,6 +26,12 @@ public class BdFeedFragment extends FeedFragment {
         if (savedInstanceState == null) {
             feedViewModel.addFeedNextPage(pageCounter);
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setFilter.setVisibility(View.GONE);
     }
 
     @Override

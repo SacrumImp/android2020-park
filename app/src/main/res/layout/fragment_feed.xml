@@ -64,85 +64,73 @@
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout
-        android:id="@+id/chips_layout"
-        android:layout_width="match_parent"
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:textColor="@android:color/black"
+        android:layout_below="@+id/toolbar"
+        app:singleLine="false"
+        app:singleSelection="true">
 
-        <com.google.android.material.button.MaterialButtonToggleGroup xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/toggle_button_group"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_all"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="All" />
 
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
-
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
-
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
-
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
-
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        <com.google.android.material.button.MaterialButtonToggleGroup
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="Concerts" />
 
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exhibitions" />
 
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Education" />
 
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kids" />
 
-            <com.google.android.material.button.MaterialButton
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="text" />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theater" />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Festivals"/>
 
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pastime"/>
 
-
-    </LinearLayout>
+    </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_of_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/chip_group"
         android:clipToPadding="false"
-        android:layout_below="@+id/chips_layout"
         android:paddingBottom="70dp" />
 
     <ProgressBar

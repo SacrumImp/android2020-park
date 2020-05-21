@@ -4,8 +4,6 @@ package ru.techpark.agregator.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -30,12 +28,11 @@ import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -71,11 +68,13 @@ public abstract class DetailedFragment extends Fragment {
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    TextView time_label;
+    private TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
+    private View scrollView;
+    private AppBarLayout appBar;
     ImageButton calendar_button;
 
 
@@ -123,6 +122,8 @@ public abstract class DetailedFragment extends Fragment {
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
         calendar_button = view.findViewById(R.id.calendar_button);
+        scrollView = view.findViewById(R.id.scrollView);
+        appBar = view.findViewById(R.id.appbar);
 
         title.setVisibility(View.GONE);
         description_label.setVisibility(View.INVISIBLE);
@@ -142,6 +143,8 @@ public abstract class DetailedFragment extends Fragment {
         notifyButton.setVisibility(View.GONE);
         calendar_button.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
+        appBar.setVisibility(View.GONE);
 
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -227,7 +230,7 @@ public abstract class DetailedFragment extends Fragment {
             location.setText(event.getLocation().getName());
         }
 
-        if (hasTime(event)) {
+        if (UIutils.hasTime(event)) {
             setTimeInformation(event);
         }
 
@@ -248,12 +251,8 @@ public abstract class DetailedFragment extends Fragment {
                 phone.setText(event.getPlace().getPhone());
             }
         }
-        notifyButton.setOnClickListener(v -> {
-            turnOnNotification(event);
-        });
-        calendar_button.setOnClickListener(v ->{
-            addToCalendar(event);
-        });
+        notifyButton.setOnClickListener(v -> turnOnNotification(event));
+        calendar_button.setOnClickListener(v -> addToCalendar(event));
     }
 
     private void turnOnNotification(Event event) {
@@ -291,40 +290,16 @@ public abstract class DetailedFragment extends Fragment {
 
     void setTimeInformation(Event event) {
         time_label.setVisibility(View.VISIBLE);
-        time_start.setVisibility(View.VISIBLE);
-        date_start.setVisibility(View.VISIBLE);
-        GregorianCalendar startTime = new GregorianCalendar();
-        startTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
-        String month;
-        String minute;
-        String day;
-        int correctMonth = startTime.get(Calendar.MONTH) + 1;
-        if (correctMonth < 10)
-            month = "0" + correctMonth;
-        else
-            month = String.valueOf(correctMonth);
-        startTime.get(Calendar.MINUTE);
-        if (startTime.get(Calendar.MINUTE) < 10)
-            minute = "0" + startTime.get(Calendar.MINUTE);
-        else
-            minute = String.valueOf(startTime.get(Calendar.MINUTE));
-        startTime.get(Calendar.DAY_OF_MONTH);
-        if (startTime.get(Calendar.DAY_OF_MONTH) < 10)
-            day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
-        else
-            day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
-        date_start.setText(day + "." + month + "." + startTime.get(Calendar.YEAR));
-        time_start.setText(startTime.get(Calendar.HOUR_OF_DAY) + ":" + minute);
+        UIutils.setTimeInformation(event, time_start, date_start);
     }
 
-    boolean hasTime(Event event) {
-        return event.getDates()!= null && event.getDates().get(0)!= null &&
-                event.getDates().get(0).getStart_date() != null &&
-                event.getDates().get(0).getStart_time() != null &&
-                event.getDates().get(0).getStart() != 0 &&
-                !(event.getDates().get(0).getStart_date().equals("null")  || event.getDates().get(0).getStart_time().equals("null"));
+    void hideLoading() {
+        scrollView.setVisibility(View.VISIBLE);
+        loading_progress.setVisibility(View.GONE);
+        appBar.setVisibility(View.VISIBLE);
     }
-    abstract void hideLoading();
 
-    abstract void handleErrorInObserver();
+    void handleErrorInObserver() {
+        loading_progress.setVisibility(View.GONE);
+    }
 }

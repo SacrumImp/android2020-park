@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +25,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -43,19 +42,20 @@ public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
     protected String searchQuery;
+    protected FeedFragment.FeedAdapter adapter;
+    protected ProgressBar loadingProgress;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
     boolean isSearch = false;
     int pageCounter = 1;
-    protected FeedFragment.FeedAdapter adapter;
     private boolean isAllEvents = false;
-    protected ProgressBar loadingProgress;
-    private EditText searchField;
-    private ImageButton startSearch;
-    private ImageButton exitSearch;
-    private ImageButton setFilter;
+    EditText searchField;
+    ImageButton startSearch;
+    ImageButton exitSearch;
+    ImageButton setFilter;
     private Toolbar toolbar;
-    private LinearLayout chipsLayout;
+    ChipGroup chipsLayout;
+    private MaterialButtonToggleGroup a;
     private RecyclerView feed;
 
     @Override
@@ -98,7 +98,7 @@ public abstract class FeedFragment extends Fragment {
         searchField = toolbar.findViewById(R.id.search_query);
         exitSearch = toolbar.findViewById(R.id.exit_search);
         setFilter = toolbar.findViewById(R.id.filters_button);
-        chipsLayout = view.findViewById(R.id.chips_layout);
+        chipsLayout = view.findViewById(R.id.chip_group);
 
         if (savedInstanceState == null)
             loadingProgress.setVisibility(View.VISIBLE);
@@ -119,32 +119,29 @@ public abstract class FeedFragment extends Fragment {
 
         startSearch.setOnClickListener(l -> setSearchState());
 
-        setFilter.setOnClickListener(l -> setFilterState());
-
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchQuery = searchField.getText().toString();
-                    if (!searchQuery.equals("")) {
-                        pageCounter = 1;
-                        isAllEvents = false;
-                        isSearch = true;
-                        loadNextPage();
-                        handled = true;
-                    } else {
-                        Toast.makeText(getContext(), R.string.search_toast_empty_field, Toast.LENGTH_SHORT).show();
-                    }
+        searchField.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchQuery = searchField.getText().toString();
+                if (!searchQuery.equals("")) {
+                    pageCounter = 1;
+                    isAllEvents = false;
+                    isSearch = true;
+                    loadNextPage();
+                    handled = true;
+                } else {
+                    Toast.makeText(getContext(), R.string.search_toast_empty_field, Toast.LENGTH_SHORT).show();
                 }
-                return handled;
             }
+            return handled;
         });
+
         adapter = new FeedFragment.FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = Events -> {
             if (Events != null) {
+                //todo дважды прячется прогресс, тут что-то не так...
                 hideLoadingProgress();
                 adapter.setEvents(Events);
             } else {
@@ -155,7 +152,7 @@ public abstract class FeedFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), observer);
     }
 
-    private void setHomeState() {
+    void setHomeState() {
         exitSearch.setVisibility(View.GONE);
         setFilter.setVisibility(View.VISIBLE);
         startSearch.setVisibility(View.VISIBLE);
@@ -172,15 +169,6 @@ public abstract class FeedFragment extends Fragment {
         chipsLayout.setVisibility(View.GONE);
     }
 
-    private void setFilterState() {
-        exitSearch.setVisibility(View.GONE);
-        setFilter.setVisibility(View.GONE);
-        startSearch.setVisibility(View.GONE);
-        searchField.setVisibility(View.GONE);
-        exitSearch.setVisibility(View.VISIBLE);
-        chipsLayout.setVisibility(View.VISIBLE);
-        searchField.setText("");
-    }
 
     abstract void handleObserverError();
 
@@ -205,6 +193,7 @@ public abstract class FeedFragment extends Fragment {
         TextView date;
         TextView time;
         TextView dateLabel;
+        LinearLayout timeLayout;
 
         FeedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -214,6 +203,7 @@ public abstract class FeedFragment extends Fragment {
             date = itemView.findViewById(R.id.date_in_feed);
             time = itemView.findViewById(R.id.time_in_feed);
             dateLabel = itemView.findViewById(R.id.date_label_in_feed);
+            timeLayout = itemView.findViewById(R.id.time_layout);
             itemView.setOnClickListener(v -> {
                 int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
                 getFromAdapter(id);
@@ -255,42 +245,12 @@ public abstract class FeedFragment extends Fragment {
         public void onBindViewHolder(@NonNull FeedFragment.FeedViewHolder holder, int position) {
 
             Event event = events.get(position);
-            holder.dateLabel.setVisibility(View.INVISIBLE);
+            holder.timeLayout.setVisibility(View.GONE);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
-            if (event.getDates() != null && (!(event.getDates().get(0).getStart_date() == null || event.getDates().get(0).getStart_time() == null))) {
-                GregorianCalendar startTime = new GregorianCalendar();
-                startTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
-                String month;
-                String minute;
-                String day;
-                int correctMonth = startTime.get(Calendar.MONTH)+1;
-                if (correctMonth >= 0 && correctMonth <10)
-                    month = "0" + correctMonth;
-                else
-                    month = String.valueOf(correctMonth);
-                if (startTime.get(Calendar.MINUTE) >= 0 && startTime.get(Calendar.MINUTE) <10)
-                    minute = "0" + startTime.get(Calendar.MINUTE);
-                else
-                    minute = String.valueOf(startTime.get(Calendar.MINUTE));
-                if (startTime.get(Calendar.DAY_OF_MONTH) >= 0 && startTime.get(Calendar.DAY_OF_MONTH) <10)
-                    day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
-                else
-                    day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
-                holder.date.setText(day+"."+ month +"."+startTime.get(Calendar.YEAR));
-                holder.time.setText(startTime.get(Calendar.HOUR_OF_DAY )+ ":"+minute);
-                holder.dateLabel.setVisibility(View.VISIBLE);
-                boolean flag = false;
-                if (event.getDates().get(0).getStart_date()!=null){
-                    if (event.getDates().get(0).getStart_date().equals("null")) {
-                        flag = true;
-                    }
-                }
-                if (flag) {
-                    holder.dateLabel.setVisibility(View.INVISIBLE);
-                    holder.date.setVisibility(View.INVISIBLE);
-                    holder.time.setVisibility(View.INVISIBLE);
-                }
+            if (UIutils.hasTime(event)) {
+                holder.timeLayout.setVisibility(View.VISIBLE);
+                UIutils.setTimeInformation(event, holder.time, holder.date);
             }
 
             if (event.getImages().size() > 0)

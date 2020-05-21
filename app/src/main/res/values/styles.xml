@@ -19,6 +19,10 @@
         <item name="shapeAppearanceOverlay">?attr/shapeAppearanceLargeComponent</item>
     </style>
 
+<style name="Widget.MyTheme.Button.OutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <item name="autoSizeTextType">uniform</item>
+</style>
+
     <!--Navigation Drawer-->
 
     <style name="ThemeOverlay.MyTheme.ActionBar" parent="ThemeOverlay.MaterialComponents.ActionBar">
