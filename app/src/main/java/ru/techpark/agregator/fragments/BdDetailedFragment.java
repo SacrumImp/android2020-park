@@ -40,12 +40,9 @@ public class BdDetailedFragment extends DetailedFragment {
         else Toast.makeText(getContext(), "@string/error_find", Toast.LENGTH_SHORT).show();
     }
 
-    void hideLoading() {
-        loading_progress.setVisibility(View.GONE);
-    }
-
+    @Override
     void handleErrorInObserver() {
-        loading_progress.setVisibility(View.GONE);
+        super.handleErrorInObserver();
         Toast.makeText(getContext(), ERROR_IN_OBSERVER, Toast.LENGTH_SHORT).show();
     }
 

@@ -40,7 +40,8 @@ public class EventRepo {
 
     public void addDataFeed(final int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-        api.getFeedEvents(page).enqueue(new Callback<EventApi.FeedInfo>() {
+        //todo категории и город
+        api.getFeedEvents(page, "", "").enqueue(new Callback<EventApi.FeedInfo>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<EventApi.FeedInfo> call, Response<EventApi.FeedInfo> response) {
@@ -89,7 +90,8 @@ public class EventRepo {
 
     public void addDataSearch(String searchQuery, int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-        api.getSearchResult(page, searchQuery).enqueue(new Callback<EventApi.SearchInfo>() {
+        //todo тут достаем из shared pref город и на место пустой строки суем переменную
+        api.getSearchResult(page, searchQuery, "").enqueue(new Callback<EventApi.SearchInfo>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<EventApi.SearchInfo> call, Response<EventApi.SearchInfo> response) {

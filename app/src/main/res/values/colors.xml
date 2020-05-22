@@ -5,8 +5,8 @@
     <color name="red_variant_dark">#ed0000</color> <!--Color primary variant (dark)-->
     <color name="red_variant_light">#b10000</color> <!--Color primary variant (light)-->
 
-    <color name="blue_custom">#2832fc</color> <!--Color secondary-->
-    <color name="blue_custom_variant">#0000c7</color> <!--Color secondary variant-->
+    <color name="blue_custom">#29B6F6</color> <!--Color secondary-->
+    <color name="blue_custom_variant">#1976D2</color> <!--Color secondary variant-->
 
     <color name="red_200">#cf6679</color> <!--Color error (dark)-->
     <color name="red_600">#b00020</color> <!--Color error (light)-->

@@ -40,4 +40,6 @@
     <string name="nnv">Nizhny Novgorod</string>
     <string name="nsk">Novosibirsk</string>
     <string name="sochi">Sochi</string>
+    <string name="search_toast_empty_field">Empty query</string>
+    <string name="set_filter">Set filters</string>
 </resources>
