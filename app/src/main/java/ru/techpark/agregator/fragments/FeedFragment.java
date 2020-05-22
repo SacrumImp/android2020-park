@@ -123,7 +123,7 @@ public abstract class FeedFragment extends Fragment {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchQuery = searchField.getText().toString();
-                if (!searchQuery.equals("")) {
+                if (searchQuery.length() > 1) {
                     pageCounter = 1;
                     isAllEvents = false;
                     isSearch = true;
@@ -141,7 +141,6 @@ public abstract class FeedFragment extends Fragment {
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = Events -> {
             if (Events != null) {
-                //todo дважды прячется прогресс, тут что-то не так...
                 hideLoadingProgress();
                 adapter.setEvents(Events);
             } else {
@@ -212,6 +211,8 @@ public abstract class FeedFragment extends Fragment {
         }
     }
 
+    protected abstract void showEmptyState();
+
     protected class FeedAdapter extends RecyclerView.Adapter<FeedFragment.FeedViewHolder> {
 
         List<Event> events = new ArrayList<>();
@@ -227,6 +228,8 @@ public abstract class FeedFragment extends Fragment {
             else {
                 notifyItemRangeInserted(EVENTS_ON_PAGE * (pageCounter - 1), EVENTS_ON_PAGE);
             }
+            if (events.size() == 0)
+                showEmptyState();
         }
 
         int getIdOfEvent(int position) {

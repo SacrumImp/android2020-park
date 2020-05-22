@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -79,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openApiDetailedFragment(int id) {
-
         manager.beginTransaction()
                 .replace(R.id.fragment_container, ApiDetailedFragment.newInstance(id))
                 .addToBackStack(null)
@@ -88,8 +86,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openBDDetailedFragment(int id) {
-        manager
-                .beginTransaction()
+        manager.beginTransaction()
                 .replace(R.id.fragment_container, BdDetailedFragment.newInstance(id))
                 .addToBackStack(null)
                 .commit();

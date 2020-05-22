@@ -39,9 +39,13 @@ public class BdFeedFragment extends FeedFragment {
         showLoadingProgress();
         if (isSearch) {
             feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-            if (feedViewModel.isEmpty()) Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
         }
         else feedViewModel.addFeedNextPage(pageCounter);
+    }
+
+    @Override
+    protected void showEmptyState() {
+        Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
     }
 
 

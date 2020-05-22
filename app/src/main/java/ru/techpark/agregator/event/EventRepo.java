@@ -7,13 +7,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.network.ApiRepo;
 import ru.techpark.agregator.network.EventApi;
 
@@ -22,9 +22,6 @@ public class EventRepo {
     private static final String TAG = "EventRepo";
     private static List<Event> eventsInFeed = new ArrayList<>();
 
-    static {
-        mEvents.setValue(Collections.emptyList());
-    }
 
     private final Context mContext;
 
@@ -40,8 +37,10 @@ public class EventRepo {
 
     public void addDataFeed(final int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-        //todo категории и город
-        api.getFeedEvents(page, "", "").enqueue(new Callback<EventApi.FeedInfo>() {
+        //todo город
+        String filter = mContext.getSharedPreferences(mContext.getString(R.string.pref_feed_file), Context.MODE_PRIVATE)
+                .getString(mContext.getString(R.string.preference_filter), "");
+        api.getFeedEvents(page, "", filter).enqueue(new Callback<EventApi.FeedInfo>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<EventApi.FeedInfo> call, Response<EventApi.FeedInfo> response) {

@@ -20,7 +20,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPref, key) -> {
-            if(sharedPref.getBoolean(getString(R.string.preference_theme_key), false)){
+            if(sharedPref.getBoolean("dark_theme", false)){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 Log.d("theme", "night");
             }

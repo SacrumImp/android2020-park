@@ -20,7 +20,7 @@
     <string name="add_to_calendar">Добавить в календарь</string>
     <string name="open_in_browser">Открыть в браузере</string>
     <string name="error_find">Событие не найдено!</string>
-    <string name="search_toast_empty_field">Введите запрос</string>
+    <string name="search_toast_empty_field">Минимальная длина запроса: 2</string>
     <string name="set_filter">Установить фильтры</string>
     <string name="dark_theme">Темная тема</string>
     <string name="language">Язык</string>
@@ -43,4 +43,6 @@
     <string name="sochi">Сочи</string>
     <string name="preference_theme_key" translatable="false">dark_theme</string>
     <string name="preference_city_key" translatable="false">city_list</string>
+    <string name="preference_filter" translatable="false">preference_filter</string>
+    <string name="pref_feed_file" translatable="false">FeedPref</string>
 </resources>

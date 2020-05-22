@@ -19,7 +19,7 @@
         app:title="@string/theme">
         <SwitchPreferenceCompat
             android:defaultValue="false"
-            android:key="@string/preference_theme_key"
+            android:key="dark_theme"
             android:summary="turn this"
             android:title="@string/dark_theme"
             android:summaryOff="@string/light"

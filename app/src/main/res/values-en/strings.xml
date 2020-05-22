@@ -10,7 +10,7 @@
     <string name="description">Description:</string>
     <string name="time">Time:</string>
     <string name="phone">Phone number:</string>
-    <string name="place_title">City:</string>
+    <string name="place_title">Place:</string>
     <string name="place_address">Address</string>
     <string name="search_field_hint">Enter query</string>
     <string name="exit_search_descriptor">Go back to feed</string>
@@ -40,6 +40,6 @@
     <string name="nnv">Nizhny Novgorod</string>
     <string name="nsk">Novosibirsk</string>
     <string name="sochi">Sochi</string>
-    <string name="search_toast_empty_field">Empty query</string>
     <string name="set_filter">Set filters</string>
+    <string name="search_toast_empty_field">Minimum request length: 2</string>
 </resources>

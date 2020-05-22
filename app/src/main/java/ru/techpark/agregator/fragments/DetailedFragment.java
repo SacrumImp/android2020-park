@@ -35,17 +35,14 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.FragmentNavigator;
 import ru.techpark.agregator.NotificationWorker;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
-import ru.techpark.agregator.event.Image;
 import ru.techpark.agregator.viewmodels.SingleViewModel;
 
 import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
@@ -139,7 +136,6 @@ public abstract class DetailedFragment extends Fragment {
         scrollView = view.findViewById(R.id.scrollView);
         appBar = view.findViewById(R.id.appbar);
 
-        title.setVisibility(View.GONE);
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
@@ -217,6 +213,7 @@ public abstract class DetailedFragment extends Fragment {
         viewPager.setAdapter(myPagerAdapter);
         tabLayout.setupWithViewPager(viewPager,true);
         title.setText(event.getTitle());
+        Log.d(TAG, event.getTitle());
         description_label.setVisibility(View.VISIBLE);
         description.setText(Html.fromHtml(event.getDescription()));
 
@@ -311,17 +308,10 @@ public abstract class DetailedFragment extends Fragment {
     void handleErrorInObserver() {
         loading_progress.setVisibility(View.GONE);
     }
-    abstract void hideLoading();
 
-    abstract void handleErrorInObserver();
     public class MyPagerAdapter extends FragmentStatePagerAdapter {
-        private Event myEvent;
         public MyPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);
-        }
-
-        public void setEvent (Event event){
-            myEvent = event;
         }
 
         @Override
