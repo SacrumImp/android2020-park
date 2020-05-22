@@ -9,12 +9,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.chip.Chip;
+
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.viewmodels.ApiViewModel;
 
 public class ApiFeedFragment extends FeedFragment {
 
     private static final String TAG = "ApiFeed";
+    private Chip chipAll;
+    private Chip chipConcert;
+    private Chip chipExhibitions;
+    private Chip chipEducation;
+    private Chip chipKids;
+    private Chip chipTheatre;
+    private Chip chipFestivals;
+    private Chip chipPastime;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,38 +40,44 @@ public class ApiFeedFragment extends FeedFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setFilter.setOnClickListener(l -> setFilterState());
-
-        checkFilter();
+        chipAll = chipsLayout.findViewById(R.id.chip_all);
+        chipConcert = chipsLayout.findViewById(R.id.chip_concerts);
+        chipExhibitions = chipsLayout.findViewById(R.id.chip_exhibitions);
+        chipEducation = chipsLayout.findViewById(R.id.chip_education);
+        chipKids = chipsLayout.findViewById(R.id.chip_kids);
+        chipTheatre = chipsLayout.findViewById(R.id.chip_theater);
+        chipFestivals = chipsLayout.findViewById(R.id.chip_festivals);
+        chipPastime = chipsLayout.findViewById(R.id.chip_pastime);
+        if (savedInstanceState == null)
+            checkFilter();
         chipsLayout.setOnCheckedChangeListener((group, checkedId) -> {
-            Log.d(TAG, checkedId + " checked " + group.getCheckedChipId());
-            switch (checkedId % 8) {
-                case 2:
+            Log.d(TAG, checkedId + " checked ");
+            if (checkedId == -1) {
+                group.check(chipAll.getId());
+            } else {
+                Log.d(TAG, "chip id = " + checkedId);
+                if (checkedId == chipConcert.getId()) {
                     Log.d(TAG, "concert");
-                    break;
-                case 3:
+                } else if (checkedId == chipExhibitions.getId()) {
                     Log.d(TAG, "exhibition");
-                    break;
-                case 4:
+                } else if (checkedId == chipEducation.getId()) {
                     Log.d(TAG, "education");
-                    break;
-                case 5:
+                } else if (checkedId == chipKids.getId()) {
                     Log.d(TAG, "kids");
-                    break;
-                case 6:
+                } else if (checkedId == chipTheatre.getId()) {
                     Log.d(TAG, "theater");
-                    break;
-                case 7:
+                } else if (checkedId == chipFestivals.getId()) {
                     Log.d(TAG, "festival");
-                    break;
-                case 0:
+                } else if (checkedId == chipPastime.getId()) {
                     Log.d(TAG, "recreation");
-                    break;
-                //вместо 1 и -1
-                default:
-                    Log.d(TAG, "");
-                    group.check(group.findViewById(R.id.chip_all).getId());
-                    break;
+                } else if (checkedId == chipAll.getId()) {
+                    Log.d(TAG, "sd");
+                }
             }
+            isSearch = false;
+            isAllEvents = false;
+            pageCounter = 1;
+            loadNextPage();
             setHomeState();
         });
     }
@@ -72,39 +88,38 @@ public class ApiFeedFragment extends FeedFragment {
         switch ("concert") {
             case "concert":
                 Log.d(TAG, "concertx");
-                id = 1;
+                id = chipConcert.getId();
                 break;
             case "exhibition":
                 Log.d(TAG, "exhibitionx");
-                id = 2;
+                id = chipExhibitions.getId();
                 break;
             case "education":
                 Log.d(TAG, "educationx");
-                id = 3;
+                id = chipEducation.getId();
                 break;
             case "kids":
                 Log.d(TAG, "kidsx");
-                id = 4;
+                id = chipKids.getId();
                 break;
             case "theater":
                 Log.d(TAG, "theaterx");
-                id = 5;
+                id = chipTheatre.getId();
                 break;
             case "festival":
                 Log.d(TAG, "festivalx");
-                id = 6;
+                id = chipFestivals.getId();
                 break;
             case "recreation":
                 Log.d(TAG, "recreationx");
-                id = 7;
+                id = chipPastime.getId();
                 break;
-            //вместо 1 и -1
             default:
                 Log.d(TAG, "allx");
-                id = 0;
+                id = chipAll.getId();
                 break;
         }
-        chipsLayout.check(chipsLayout.findViewById(R.id.chip_all).getId() + id);
+        chipsLayout.check(id);
     }
 
     private void setFilterState() {
@@ -133,10 +148,11 @@ public class ApiFeedFragment extends FeedFragment {
         showLoadingProgress();
         if (isSearch) {
             feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-            if (feedViewModel.isEmpty()) Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
+            if (feedViewModel.isEmpty())
+                Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
+        } else {
+            feedViewModel.addFeedNextPage(pageCounter);
         }
-
-        else feedViewModel.addFeedNextPage(pageCounter);
     }
 
 }

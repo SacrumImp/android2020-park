@@ -42,13 +42,13 @@ public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
     protected String searchQuery;
-    protected FeedFragment.FeedAdapter adapter;
+    FeedFragment.FeedAdapter adapter;
     protected ProgressBar loadingProgress;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
     boolean isSearch = false;
     int pageCounter = 1;
-    private boolean isAllEvents = false;
+    boolean isAllEvents = false;
     EditText searchField;
     ImageButton startSearch;
     ImageButton exitSearch;
@@ -214,7 +214,7 @@ public abstract class FeedFragment extends Fragment {
 
     protected class FeedAdapter extends RecyclerView.Adapter<FeedFragment.FeedViewHolder> {
 
-        protected List<Event> events = new ArrayList<>();
+        List<Event> events = new ArrayList<>();
 
         void setEvents(List<Event> events) {
             int EVENTS_ON_PAGE = 20;

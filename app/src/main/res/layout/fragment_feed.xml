@@ -83,41 +83,48 @@
             android:text="All" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_concerts"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Concerts" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_exhibitions"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Exhibitions" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_education"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Education" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_kids"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kids" />
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_theater"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Theater" />
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_festivals"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Festivals"/>
 
         <com.google.android.material.chip.Chip
+            android:id="@+id/chip_pastime"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

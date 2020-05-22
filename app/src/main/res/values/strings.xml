@@ -41,4 +41,6 @@
     <string name="nnv">Нижний Новгород</string>
     <string name="nsk">Новосибирск</string>
     <string name="sochi">Сочи</string>
+    <string name="preference_theme_key" translatable="false">dark_theme</string>
+    <string name="preference_city_key" translatable="false">city_list</string>
 </resources>

@@ -79,7 +79,7 @@ public abstract class DetailedFragment extends Fragment {
 
 
     private TextView phone;
-    private Toolbar toolbar;
+    Toolbar toolbar;
 
     FragmentNavigator navigator;
 
@@ -145,7 +145,6 @@ public abstract class DetailedFragment extends Fragment {
         likeEvent.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
         appBar.setVisibility(View.GONE);
-
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         Observer<Event> observer = event -> {
@@ -232,6 +231,9 @@ public abstract class DetailedFragment extends Fragment {
 
         if (UIutils.hasTime(event)) {
             setTimeInformation(event);
+        } else {
+            toolbar.getMenu().removeItem(R.id.action_notify);
+            toolbar.getMenu().removeItem(R.id.action_add_to_calendar);
         }
 
         if (event.getPlace() != null) {
