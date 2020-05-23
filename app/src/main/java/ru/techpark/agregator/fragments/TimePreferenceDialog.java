@@ -40,10 +40,10 @@ public class TimePreferenceDialog extends PreferenceDialogFragmentCompat {
         super.onBindDialogView(view);
 
         mNumberPicker = view.findViewById(R.id.mNumberPicker);
-        mNumberPicker.setMaxValue(100);
+        mNumberPicker.setMaxValue(60);
         mNumberPicker.setMinValue(0);
         chNumberPicker = view.findViewById(R.id.chNumberPicker);
-        chNumberPicker.setMaxValue(100);
+        chNumberPicker.setMaxValue(30);
         chNumberPicker.setMinValue(0);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());

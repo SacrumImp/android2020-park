@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
@@ -32,6 +34,17 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(updateBaseContextLocale(newBase));
         if(prefs.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(newBase);
+        sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPref, key) -> {
+            Log.d(TAG, "enter");
+            if(key.equals("dark_theme")) {
+                if (sharedPref.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+            if(key.equals("switch_language")){
+                recreate();
+            }
+        });
     }
 
     @Override

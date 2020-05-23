@@ -47,4 +47,5 @@
     <string name="hours">hours</string>
     <string name="minutes">minutes</string>
     <string name="any">Any city</string>
+    <string name="added">Event saved</string>
 </resources>

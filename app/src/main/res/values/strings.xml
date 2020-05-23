@@ -46,4 +46,5 @@
     <string name="hours">часы</string>
     <string name="minutes">минуты</string>
     <string name="any">Любой</string>
+    <string name="added">Событие сохранено</string>
 </resources>
