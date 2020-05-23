@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(updateBaseContextLocale(newBase));
         if(prefs.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(newBase);
-        sharedPreferences.registerOnSharedPreferenceChangeListener((sharedPref, key) -> {
+        prefs = PreferenceManager.getDefaultSharedPreferences(newBase);
+        prefs.registerOnSharedPreferenceChangeListener((sharedPref, key) -> {
             Log.d(TAG, "enter");
             if(key.equals("dark_theme")) {
                 if (sharedPref.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);

@@ -17,13 +17,13 @@ public interface EventTableDao {
         void insert(EventTable tableEvent);
 
         // получение всех строк
-        @Query("SELECT * FROM event_table")
+        @Query("SELECT * FROM event_table ORDER BY position DESC")
         List<EventTable> getAllEvents();
 
         @Query("SELECT * FROM event_table WHERE (id = :certainId)")
         List<EventTable> getEvent(int certainId);
 
-        @Query("SELECT * FROM event_table WHERE (description LIKE :searchQuery)")
+        @Query("SELECT * FROM event_table WHERE ((description LIKE :searchQuery) OR (title LIKE :searchQuery))")
         List<EventTable> getSearchEvent(String searchQuery);
 
         // удаление записи
