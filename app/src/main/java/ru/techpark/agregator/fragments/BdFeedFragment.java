@@ -1,6 +1,7 @@
 package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,6 +14,8 @@ import ru.techpark.agregator.viewmodels.BdViewModel;
 
 public class BdFeedFragment extends FeedFragment {
 
+    private static final String TAG = "BDFeedFr";
+
     @Override
     void getFromAdapter(int id) {
         navigator.openBDDetailedFragment(id);
@@ -24,6 +27,7 @@ public class BdFeedFragment extends FeedFragment {
         feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
         //при первом запуске фрагмента запрашиваем ленту
         if (savedInstanceState == null) {
+            Log.d(TAG, "запрашиваем ленту у бд");
             feedViewModel.addFeedNextPage(pageCounter);
         }
     }
@@ -39,13 +43,15 @@ public class BdFeedFragment extends FeedFragment {
         showLoadingProgress();
         if (isSearch) {
             feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-        }
-        else feedViewModel.addFeedNextPage(pageCounter);
+        } else feedViewModel.addFeedNextPage(pageCounter);
     }
 
     @Override
     protected void showEmptyState() {
-        Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
+        if (isSearch)
+            Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getContext(), R.string.empty_feed, Toast.LENGTH_SHORT).show();
     }
 
 

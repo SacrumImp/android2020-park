@@ -42,8 +42,8 @@ public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
     protected String searchQuery;
-    FeedFragment.FeedAdapter adapter;
-    protected ProgressBar loadingProgress;
+    private FeedFragment.FeedAdapter adapter;
+    private ProgressBar loadingProgress;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
     boolean isSearch = false;
@@ -101,7 +101,7 @@ public abstract class FeedFragment extends Fragment {
         chipsLayout = view.findViewById(R.id.chip_group);
 
         if (savedInstanceState == null)
-            loadingProgress.setVisibility(View.VISIBLE);
+            showLoadingProgress();
         setHomeState();
         if (isSearch) {
             setSearchState();
@@ -141,6 +141,7 @@ public abstract class FeedFragment extends Fragment {
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = Events -> {
             if (Events != null) {
+                Log.d(TAG, "in observer");
                 hideLoadingProgress();
                 adapter.setEvents(Events);
             } else {
@@ -174,7 +175,7 @@ public abstract class FeedFragment extends Fragment {
     abstract void getFromAdapter(int id);
 
     void hideLoadingProgress() {
-        Log.d(TAG, "progress hidden");
+        Log.d(TAG, "progress hidden, " + isSearch );
         loadingProgress.setVisibility(View.GONE);
     }
 

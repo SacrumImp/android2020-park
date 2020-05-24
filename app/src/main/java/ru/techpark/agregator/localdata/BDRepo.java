@@ -26,7 +26,6 @@ public class BDRepo {
     public BDRepo(Context context){
         mContext = context;
         db = DBHelper.getInstance(context).getDb();
-        refresh();
     }
 
     public LiveData<List<Event>> getBD(){

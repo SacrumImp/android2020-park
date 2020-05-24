@@ -18,13 +18,15 @@ import ru.techpark.agregator.fragments.ApiDetailedFragment;
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 public class NotificationWorker extends Worker {
-    private final static String CHANEL_ID = "2342";
-    private final static String CHANEL_NAME = "CHANEL_NAME";
     final static String ACTION_TO_OPEN = "ACTION_TO_OPEN";
     final static String OPEN_FRAGMENT_ID = "OPEN_FRAGMENT_ID";
+    private final static String CHANEL_ID = "2342";
+    private final static String CHANEL_NAME = "CHANEL_NAME";
+    private Context context;
 
     public NotificationWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        this.context = context;
     }
 
     @NonNull
@@ -50,17 +52,19 @@ public class NotificationWorker extends Worker {
         intent.setAction(ACTION_TO_OPEN);
         intent.putExtra(OPEN_FRAGMENT_ID, event_id);
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(getApplicationContext(),  1, intent, FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(getApplicationContext(), 1, intent, FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), CHANEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(event_title)
-                .setContentText("У вас запланировано событие " +event_date+ " в "+ event_time)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                .bigText("У вас запланировано событие " +event_date+ " в "+ event_time))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
+                        .setSmallIcon(R.mipmap.ic_stat_directions_walk)
+                        .setContentTitle(event_title)
+                        .setContentText(context.getString(R.string.notification_text_first_part)
+                                + event_date + context.getString(R.string.notification_text_second_part) + event_time)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(context.getString(R.string.notification_text_first_part) + event_date +
+                                        context.getString(R.string.notification_text_second_part) + event_time))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true);
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(getApplicationContext());
         notificationManager.notify(event_id, notificationBuilder.build());
