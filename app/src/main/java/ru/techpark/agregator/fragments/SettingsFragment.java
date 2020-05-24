@@ -14,10 +14,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-
-
         ListPreference listPreference = findPreference("city_list");
-        listPreference.setSummaryProvider((Preference.SummaryProvider<ListPreference>) preference ->  preference.getEntry());
+        if (listPreference != null) {
+            listPreference.setSummaryProvider((Preference.SummaryProvider<ListPreference>) ListPreference::getEntry);
+        }
     }
 
     @Override

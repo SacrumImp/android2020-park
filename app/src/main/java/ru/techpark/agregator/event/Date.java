@@ -12,10 +12,6 @@ public class Date {
         this.start = start;
         this.end = end;
     }
-    public Date(String start_date, String start_time) {
-        this.start_date = start_date;
-        this.start_time = start_time;
-    }
 
 
     public long getStart() {

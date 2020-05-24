@@ -24,7 +24,7 @@ public class BdDetailedFragment extends DetailedFragment {
         return frag;
     }
 
-    void updateFeed() {
+    private void updateFeed() {
         navigator.openDBFeed();
     }
 

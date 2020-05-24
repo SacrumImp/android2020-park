@@ -1,14 +1,14 @@
 package ru.techpark.agregator;
 
 
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
@@ -24,33 +24,28 @@ import ru.techpark.agregator.fragments.BdDetailedFragment;
 import ru.techpark.agregator.fragments.BdFeedFragment;
 import ru.techpark.agregator.fragments.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements FragmentNavigator {
 
-    public static final String TAG = "MainActivity";
+public class MainActivity extends AppCompatActivity implements FragmentNavigator, SharedPreferences.OnSharedPreferenceChangeListener {
+
     private FragmentManager manager;
-    SharedPreferences prefs;
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(updateBaseContextLocale(newBase));
-        if(prefs.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        prefs = PreferenceManager.getDefaultSharedPreferences(newBase);
-        prefs.registerOnSharedPreferenceChangeListener((sharedPref, key) -> {
-            Log.d(TAG, "enter");
-            if(key.equals("dark_theme")) {
-                if (sharedPref.getBoolean("dark_theme", false)) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-            if(key.equals("switch_language")){
-                recreate();
-            }
-        });
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        recreate();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        PreferenceManager.getDefaultSharedPreferences(getApplication())
+                .registerOnSharedPreferenceChangeListener(this);
 
         manager = getSupportFragmentManager();
         if (savedInstanceState == null) {
@@ -88,6 +83,12 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        PreferenceManager.getDefaultSharedPreferences(getApplication())
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     @Override
     public void openApiDetailedFragment(int id) {
@@ -115,14 +116,21 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
                 .commit();
     }
 
-    private Context updateBaseContextLocale(Context context){
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+    private Context updateBaseContextLocale(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Locale loc;
-        if(prefs.getBoolean("switch_language", false)) loc = new Locale("en");
-        else loc = new Locale("ru", "rRu");
+        if (prefs.getBoolean("switch_language", false))
+            loc = new Locale("en");
+        else
+            loc = new Locale("ru", "rRu");
         Locale.setDefault(loc);
         Configuration configuration = new Configuration(context.getResources().getConfiguration());
         configuration.setLocale(loc);
+
+        if (prefs.getBoolean("dark_theme", false))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         return context.createConfigurationContext(configuration);
     }
 

@@ -2,7 +2,6 @@ package ru.techpark.agregator.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 
@@ -13,11 +12,11 @@ import ru.techpark.agregator.R;
 
 public class TimePreferenceDialog extends PreferenceDialogFragmentCompat {
 
-    SharedPreferences sharedPreferences;
-    NumberPicker mNumberPicker;
-    NumberPicker chNumberPicker;
+    private SharedPreferences sharedPreferences;
+    private NumberPicker mNumberPicker;
+    private NumberPicker chNumberPicker;
 
-    public static TimePreferenceDialog newInstance(String key) {
+    static TimePreferenceDialog newInstance(String key) {
         final TimePreferenceDialog fragment = new TimePreferenceDialog();
         final Bundle b = new Bundle(1);
         b.putString(ARG_KEY, key);

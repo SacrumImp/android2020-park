@@ -225,7 +225,7 @@ public abstract class FeedFragment extends Fragment {
             holder.description.setText(Html.fromHtml(event.getDescription()));
             if((!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null))){
                 GregorianCalendar startTime = new GregorianCalendar();
-                startTime.setTimeInMillis(event.getDates().get(0).getStart()*1000l+10800000l);
+                startTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
                 String month;
                 String minute;
                 String day;
