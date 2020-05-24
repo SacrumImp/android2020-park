@@ -252,6 +252,7 @@ public abstract class FeedFragment extends Fragment {
             holder.timeLayout.setVisibility(View.GONE);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
+          
             if (UIutils.hasTime(event)) {
                 holder.timeLayout.setVisibility(View.VISIBLE);
                 UIutils.setTimeInformation(event, holder.time, holder.date);

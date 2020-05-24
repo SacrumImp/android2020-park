@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
+import ru.techpark.agregator.R;
 import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
 
 public class ApiDetailedFragment extends DetailedFragment {
@@ -48,7 +49,11 @@ public class ApiDetailedFragment extends DetailedFragment {
         super.onViewCreated(view, savedInstanceState);
 
         //обработка нажатия лайка
-        likeEvent.setOnClickListener((v) -> detailedViewModel.insertEventBD(event));
+        likeEvent.setOnClickListener((v) -> {
+            detailedViewModel.insertEventBD(event);
+            Toast.makeText(getContext(), R.string.added, Toast.LENGTH_SHORT).show();
+            likeEvent.setVisibility(View.GONE);
+        });
     }
 
 

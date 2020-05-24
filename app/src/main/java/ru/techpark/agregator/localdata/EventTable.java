@@ -15,8 +15,8 @@ import ru.techpark.agregator.event.Place;
 @Entity(tableName = "event_table")      // таблица всех ивентов
 public class EventTable {
 
-    @PrimaryKey
-    public int id;     // id каждой записи (увеличивается автоматически)
+
+    public int id;     // id каждой записи
 
     public String title;   // название
     public String description;     // краткое описание
@@ -31,6 +31,8 @@ public class EventTable {
     @TypeConverters({PlaceConverter.class})
     public Place place;
     public String site_url;
+    @PrimaryKey(autoGenerate = true)
+    public int position;
 
     public EventTable() {
     }

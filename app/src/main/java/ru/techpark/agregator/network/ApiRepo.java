@@ -9,7 +9,6 @@ import ru.techpark.agregator.AgregatorApp;
 
 public class ApiRepo {
 
-    private static final String TAG = "ApiRepo";
     private final EventApi mEventApi;
     private final OkHttpClient mOkHttpClient;
     private static final String BASE_URL = "https://kudago.com/public-api/v1.4/";

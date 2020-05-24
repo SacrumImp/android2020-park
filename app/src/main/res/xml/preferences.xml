@@ -38,4 +38,13 @@
             android:entryValues="@array/listValues" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:key="@string/notify"
+        app:title="@string/notify">
+        <ru.techpark.agregator.fragments.TimePreference
+            android:key="time_picked"
+            android:title="@string/choosing_time">
+        </ru.techpark.agregator.fragments.TimePreference>
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>
