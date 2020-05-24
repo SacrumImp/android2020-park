@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -20,10 +19,6 @@ public class BDRepo {
     private final MutableLiveData<Event> sEvent = new MutableLiveData<>();
     private List<Event> eventList;
 
-    static{
-        sEvents.setValue(Collections.emptyList());
-    }
-
     private final Context mContext;
     private Executor executor = Executors.newSingleThreadExecutor();
     private AppDatabase db;
@@ -31,7 +26,6 @@ public class BDRepo {
     public BDRepo(Context context){
         mContext = context;
         db = DBHelper.getInstance(context).getDb();
-        refresh();
     }
 
     public LiveData<List<Event>> getBD(){

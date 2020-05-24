@@ -35,7 +35,8 @@ public class DetailedEventRepo {
     private static Event transform(EventApi.DetailedEvent detailedEvent) {
         List<Image> images = new ArrayList<>();
         if (detailedEvent.images.size() > 0)
-            images.add(new Image(detailedEvent.images.get(0).image));
+            for (int i =0;i<detailedEvent.images.size(); i++)
+                images.add(new Image(detailedEvent.images.get(i).image));
         List<Date> dates = new ArrayList<>();
       
         if (detailedEvent.dates.size()>0)

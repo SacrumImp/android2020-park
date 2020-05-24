@@ -32,7 +32,7 @@
         app:title="@string/location">
         <ListPreference
             android:title="@string/choosing_city"
-            android:key="city_list"
+            android:key="@string/preference_city_key"
             android:defaultValue="msk"
             android:entries="@array/listCities"
             android:entryValues="@array/listValues" />

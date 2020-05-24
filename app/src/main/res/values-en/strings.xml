@@ -10,7 +10,7 @@
     <string name="description">Description:</string>
     <string name="time">Time:</string>
     <string name="phone">Phone number:</string>
-    <string name="place_title">City:</string>
+    <string name="place_title">Place:</string>
     <string name="place_address">Address</string>
     <string name="search_field_hint">Enter query</string>
     <string name="exit_search_descriptor">Go back to feed</string>
@@ -20,7 +20,7 @@
     <string name="share_event">Share</string>
     <string name="add_to_calendar">Add to calendar</string>
     <string name="open_in_browser">Open in browser</string>
-    <string name="error_find">Can not find event!</string>
+    <string name="error_find">Can not find events!</string>
     <string name="dark_theme">Dark theme</string>
     <string name="language">Language</string>
     <string name="switch_language">Switch language</string>
@@ -48,4 +48,9 @@
     <string name="minutes">minutes</string>
     <string name="any">Any city</string>
     <string name="added">Event saved</string>
+    <string name="set_filter">Set filters</string>
+    <string name="search_toast_empty_field">Minimum request length: 2</string>
+    <string name="notification_text_first_part">"You have event "</string>
+    <string name="notification_text_second_part">" at "</string>
+    <string name="empty_feed">Feed is empty</string>
 </resources>

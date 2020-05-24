@@ -33,14 +33,14 @@ public class ApiDetailedFragment extends DetailedFragment {
             detailedViewModel.getDetailedEvent(id);
         }
     }
-
+    @Override
     void hideLoading() {
-        loading_progress.setVisibility(View.GONE);
+        super.hideLoading();
         likeEvent.setVisibility(View.VISIBLE);
     }
-
+    @Override
     void handleErrorInObserver() {
-        loading_progress.setVisibility(View.GONE);
+        super.handleErrorInObserver();
         Toast.makeText(getContext(), ERROR_IN_OBSERVER, Toast.LENGTH_SHORT).show();
     }
 

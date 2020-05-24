@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +11,24 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -40,16 +42,21 @@ public abstract class FeedFragment extends Fragment {
     private static final String SEARCH_QUERY = "SEARCH_QUERY";
     private static final String PAGE = "PAGE";
     protected String searchQuery;
+    private FeedFragment.FeedAdapter adapter;
+    private ProgressBar loadingProgress;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
     boolean isSearch = false;
     int pageCounter = 1;
-    protected FeedFragment.FeedAdapter adapter;
-    private boolean isAllEvents = false;
-    protected ProgressBar loadingProgress;
-    private EditText searchField;
-    private ImageButton startSearch;
-    private ImageButton exitSearch;
+    boolean isAllEvents = false;
+    EditText searchField;
+    ImageButton startSearch;
+    ImageButton exitSearch;
+    ImageButton setFilter;
+    private Toolbar toolbar;
+    ChipGroup chipsLayout;
+    private MaterialButtonToggleGroup a;
+    private RecyclerView feed;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -84,59 +91,57 @@ public abstract class FeedFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RecyclerView feed = view.findViewById(R.id.list_of_events);
+        feed = view.findViewById(R.id.list_of_events);
         loadingProgress = view.findViewById(R.id.loading_progress);
+        toolbar = view.findViewById(R.id.toolbar);
+        startSearch = toolbar.findViewById(R.id.start_search);
+        searchField = toolbar.findViewById(R.id.search_query);
+        exitSearch = toolbar.findViewById(R.id.exit_search);
+        setFilter = toolbar.findViewById(R.id.filters_button);
+        chipsLayout = view.findViewById(R.id.chip_group);
+
         if (savedInstanceState == null)
-            loadingProgress.setVisibility(View.VISIBLE);
-        startSearch = view.findViewById(R.id.start_search);
-        searchField = view.findViewById(R.id.search_query);
-        exitSearch = view.findViewById(R.id.exit_search);
-        if (isSearch)
-            exitSearch.setVisibility(View.VISIBLE);
+            showLoadingProgress();
+        setHomeState();
+        if (isSearch) {
+            setSearchState();
+        }
 
         exitSearch.setOnClickListener((l) -> {
-            isSearch = false;
-            isAllEvents = false;
-            pageCounter = 1;
-            loadNextPage();
-            exitSearch.setVisibility(View.GONE);
-            searchField.setText("");
-        });
-
-        startSearch.setOnClickListener((l) -> {
-            searchQuery = searchField.getText().toString();
-            if (!searchQuery.equals("")) {
-                pageCounter = 1;
+            if (isSearch) {
+                isSearch = false;
                 isAllEvents = false;
-                isSearch = true;
-                exitSearch.setVisibility(View.VISIBLE);
+                pageCounter = 1;
                 loadNextPage();
             }
+            setHomeState();
         });
 
-        searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    searchQuery = searchField.getText().toString();
-                    if (!searchQuery.equals("")) {
-                        pageCounter = 1;
-                        isAllEvents = false;
-                        isSearch = true;
-                        exitSearch.setVisibility(View.VISIBLE);
-                        loadNextPage();
-                        handled = true;
-                    }
+        startSearch.setOnClickListener(l -> setSearchState());
+
+        searchField.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchQuery = searchField.getText().toString();
+                if (searchQuery.length() > 1) {
+                    pageCounter = 1;
+                    isAllEvents = false;
+                    isSearch = true;
+                    loadNextPage();
+                    handled = true;
+                } else {
+                    Toast.makeText(getContext(), R.string.search_toast_empty_field, Toast.LENGTH_SHORT).show();
                 }
-                return handled;
             }
+            return handled;
         });
+
         adapter = new FeedFragment.FeedAdapter();
         feed.setAdapter(adapter);
         feed.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Observer<List<Event>> observer = Events -> {
             if (Events != null) {
+                Log.d(TAG, "in observer");
                 hideLoadingProgress();
                 adapter.setEvents(Events);
             } else {
@@ -147,12 +152,30 @@ public abstract class FeedFragment extends Fragment {
                 .observe(getViewLifecycleOwner(), observer);
     }
 
+    void setHomeState() {
+        exitSearch.setVisibility(View.GONE);
+        setFilter.setVisibility(View.VISIBLE);
+        startSearch.setVisibility(View.VISIBLE);
+        searchField.setVisibility(View.GONE);
+        chipsLayout.setVisibility(View.GONE);
+        searchField.setText("");
+    }
+
+    private void setSearchState() {
+        searchField.setVisibility(View.VISIBLE);
+        setFilter.setVisibility(View.GONE);
+        exitSearch.setVisibility(View.VISIBLE);
+        startSearch.setVisibility(View.GONE);
+        chipsLayout.setVisibility(View.GONE);
+    }
+
+
     abstract void handleObserverError();
 
     abstract void getFromAdapter(int id);
 
     void hideLoadingProgress() {
-        Log.d(TAG, "progress hidden");
+        Log.d(TAG, "progress hidden, " + isSearch );
         loadingProgress.setVisibility(View.GONE);
     }
 
@@ -170,6 +193,7 @@ public abstract class FeedFragment extends Fragment {
         TextView date;
         TextView time;
         TextView dateLabel;
+        LinearLayout timeLayout;
 
         FeedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -179,6 +203,7 @@ public abstract class FeedFragment extends Fragment {
             date = itemView.findViewById(R.id.date_in_feed);
             time = itemView.findViewById(R.id.time_in_feed);
             dateLabel = itemView.findViewById(R.id.date_label_in_feed);
+            timeLayout = itemView.findViewById(R.id.time_layout);
             itemView.setOnClickListener(v -> {
                 int id = adapter.getIdOfEvent(getAbsoluteAdapterPosition());
                 getFromAdapter(id);
@@ -187,9 +212,11 @@ public abstract class FeedFragment extends Fragment {
         }
     }
 
+    protected abstract void showEmptyState();
+
     protected class FeedAdapter extends RecyclerView.Adapter<FeedFragment.FeedViewHolder> {
 
-        protected List<Event> events = new ArrayList<>();
+        List<Event> events = new ArrayList<>();
 
         void setEvents(List<Event> events) {
             int EVENTS_ON_PAGE = 20;
@@ -202,6 +229,8 @@ public abstract class FeedFragment extends Fragment {
             else {
                 notifyItemRangeInserted(EVENTS_ON_PAGE * (pageCounter - 1), EVENTS_ON_PAGE);
             }
+            if (events.size() == 0)
+                showEmptyState();
         }
 
         int getIdOfEvent(int position) {
@@ -220,47 +249,13 @@ public abstract class FeedFragment extends Fragment {
         public void onBindViewHolder(@NonNull FeedFragment.FeedViewHolder holder, int position) {
 
             Event event = events.get(position);
-            holder.dateLabel.setVisibility(View.INVISIBLE);
+            holder.timeLayout.setVisibility(View.GONE);
             holder.title.setText(event.getTitle());
             holder.description.setText(Html.fromHtml(event.getDescription()));
-            if((!(event.getDates().get(0).getStart_date()==null || event.getDates().get(0).getStart_time() == null))){
-                GregorianCalendar startTime = new GregorianCalendar();
-                startTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
-                String month;
-                String minute;
-                String day;
-                int correctMonth = startTime.get(Calendar.MONTH)+1;
-                if (correctMonth >= 0 && correctMonth <10)
-                    month = "0" + correctMonth;
-                else
-                    month = String.valueOf(correctMonth);
-                if (startTime.get(Calendar.MINUTE) >= 0 && startTime.get(Calendar.MINUTE) <10)
-                    minute = "0" + startTime.get(Calendar.MINUTE);
-                else
-                    minute = String.valueOf(startTime.get(Calendar.MINUTE));
-                if (startTime.get(Calendar.DAY_OF_MONTH) >= 0 && startTime.get(Calendar.DAY_OF_MONTH) <10)
-                    day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
-                else
-                    day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
-                holder.date.setText(day+"."+ month +"."+startTime.get(Calendar.YEAR));
-                holder.time.setText(startTime.get(Calendar.HOUR_OF_DAY )+ ":"+minute);
-                holder.dateLabel.setVisibility(View.VISIBLE);
-                boolean flag = false;
-                if (event.getDates().get(0).getStart_date()!=null){
-                    if (event.getDates().get(0).getStart_date().equals("null")) {
-                        flag = true;
-                    }
-                }
-                if (event.getDates().get(0).getStart_time()!=null){
-                    if (event.getDates().get(0).getStart_time().equals("null")) {
-                        flag = true;
-                    }
-                }
-                if (flag) {
-                    holder.dateLabel.setVisibility(View.INVISIBLE);
-                    holder.date.setVisibility(View.INVISIBLE);
-                    holder.time.setVisibility(View.INVISIBLE);
-                }
+          
+            if (UIutils.hasTime(event)) {
+                holder.timeLayout.setVisibility(View.VISIBLE);
+                UIutils.setTimeInformation(event, holder.time, holder.date);
             }
 
             if (event.getImages().size() > 0)

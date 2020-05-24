@@ -22,19 +22,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Observer;
+
 import androidx.preference.PreferenceManager;
+import androidx.viewpager.widget.ViewPager;
+
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 import ru.techpark.agregator.FragmentNavigator;
@@ -42,6 +48,8 @@ import ru.techpark.agregator.NotificationWorker;
 import ru.techpark.agregator.R;
 import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.SingleViewModel;
+
+import static androidx.fragment.app.FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 public abstract class DetailedFragment extends Fragment {
 
@@ -52,6 +60,8 @@ public abstract class DetailedFragment extends Fragment {
     public final static String KEY_TIME = "KEY_TIME";
     static final String NUM_CURR = "CURRENT";
     private static final String TAG = "DetailedFragment";
+    MyPagerAdapter myPagerAdapter;
+    ViewPager viewPager;
     protected int id;
     protected Event event;
     ProgressBar loading_progress;
@@ -66,7 +76,7 @@ public abstract class DetailedFragment extends Fragment {
     TextView time_start;
     private TextView location;
     private TextView location_label;
-    private ImageView image;
+    private static ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
@@ -75,11 +85,15 @@ public abstract class DetailedFragment extends Fragment {
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
+    private View scrollView;
+    private AppBarLayout appBar;
     ImageButton calendar_button;
+    TabLayout tabLayout;
+
 
 
     private TextView phone;
-    private Toolbar toolbar;
+    Toolbar toolbar;
 
     FragmentNavigator navigator;
 
@@ -102,7 +116,6 @@ public abstract class DetailedFragment extends Fragment {
         description_label = view.findViewById(R.id.label_description);
         body_text = view.findViewById(R.id.body_text);
         price = view.findViewById(R.id.price);
-        image = view.findViewById(R.id.image);
         description = view.findViewById(R.id.description);
         date_start = view.findViewById(R.id.date_start);
         time_start = view.findViewById(R.id.time_start);
@@ -122,8 +135,11 @@ public abstract class DetailedFragment extends Fragment {
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
         calendar_button = view.findViewById(R.id.calendar_button);
+        viewPager = view.findViewById(R.id.pager);
+        tabLayout = view.findViewById(R.id.tab_layout);
+        scrollView = view.findViewById(R.id.scrollView);
+        appBar = view.findViewById(R.id.appbar);
 
-        title.setVisibility(View.GONE);
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
         price_label.setVisibility(View.INVISIBLE);
@@ -141,7 +157,8 @@ public abstract class DetailedFragment extends Fragment {
         notifyButton.setVisibility(View.GONE);
         calendar_button.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
-
+        scrollView.setVisibility(View.GONE);
+        appBar.setVisibility(View.GONE);
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
 
         Observer<Event> observer = event -> {
@@ -156,8 +173,6 @@ public abstract class DetailedFragment extends Fragment {
         detailedViewModel
                 .getEvent()
                 .observe(getViewLifecycleOwner(), observer);
-
-
 
         toolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -193,22 +208,18 @@ public abstract class DetailedFragment extends Fragment {
             }
         });
     }
+
+
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
-        title.setVisibility(View.VISIBLE);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT );
+        viewPager.setAdapter(myPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager,true);
         title.setText(event.getTitle());
+        Log.d(TAG, event.getTitle());
         description_label.setVisibility(View.VISIBLE);
         description.setText(Html.fromHtml(event.getDescription()));
-
-        if (event.getImages() != null && event.getImages().size() > 0)
-            Glide.with(image.getContext())
-                    .load(event.getImages().get(0).getImageUrl())
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .fitCenter()
-                    .error(R.drawable.ic_image_placeholder)
-                    .into(image);
 
         body_text.setText(Html.fromHtml(event.getBody_text()));
         if (event.getPrice() != null && !event.getPrice().equals("null") && event.getPrice().length() != 0) {
@@ -226,8 +237,11 @@ public abstract class DetailedFragment extends Fragment {
             location.setText(event.getLocation().getName());
         }
 
-        if (hasTime(event)) {
+        if (UIutils.hasTime(event)) {
             setTimeInformation(event);
+        } else {
+            toolbar.getMenu().removeItem(R.id.action_notify);
+            toolbar.getMenu().removeItem(R.id.action_add_to_calendar);
         }
 
         if (event.getPlace() != null) {
@@ -247,12 +261,8 @@ public abstract class DetailedFragment extends Fragment {
                 phone.setText(event.getPlace().getPhone());
             }
         }
-        notifyButton.setOnClickListener(v -> {
-            turnOnNotification(event);
-        });
-        calendar_button.setOnClickListener(v ->{
-            addToCalendar(event);
-        });
+        notifyButton.setOnClickListener(v -> turnOnNotification(event));
+        calendar_button.setOnClickListener(v -> addToCalendar(event));
     }
 
     private void turnOnNotification(Event event) {
@@ -291,39 +301,63 @@ public abstract class DetailedFragment extends Fragment {
 
     void setTimeInformation(Event event) {
         time_label.setVisibility(View.VISIBLE);
-        time_start.setVisibility(View.VISIBLE);
-        date_start.setVisibility(View.VISIBLE);
-        GregorianCalendar startTime = new GregorianCalendar();
-        startTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
-        String month;
-        String minute;
-        String day;
-        int correctMonth = startTime.get(Calendar.MONTH) + 1;
-        if (correctMonth < 10)
-            month = "0" + correctMonth;
-        else
-            month = String.valueOf(correctMonth);
-        startTime.get(Calendar.MINUTE);
-        if (startTime.get(Calendar.MINUTE) < 10)
-            minute = "0" + startTime.get(Calendar.MINUTE);
-        else
-            minute = String.valueOf(startTime.get(Calendar.MINUTE));
-        startTime.get(Calendar.DAY_OF_MONTH);
-        if (startTime.get(Calendar.DAY_OF_MONTH) < 10)
-            day = "0" + startTime.get(Calendar.DAY_OF_MONTH);
-        else
-            day = String.valueOf(startTime.get(Calendar.DAY_OF_MONTH));
-        date_start.setText(day + "." + month + "." + startTime.get(Calendar.YEAR));
-        time_start.setText(startTime.get(Calendar.HOUR_OF_DAY) + ":" + minute);
+        UIutils.setTimeInformation(event, time_start, date_start);
     }
 
-    boolean hasTime(Event event) {
-        return event.getDates()!= null && event.getDates().get(0)!= null &&
-                event.getDates().get(0).getStart_date() != null &&
-                event.getDates().get(0).getStart_time() != null &&
-                event.getDates().get(0).getStart() != 0 &&
-                !(event.getDates().get(0).getStart_date().equals("null")  || event.getDates().get(0).getStart_time().equals("null"));
+    void hideLoading() {
+        scrollView.setVisibility(View.VISIBLE);
+        loading_progress.setVisibility(View.GONE);
+        appBar.setVisibility(View.VISIBLE);
     }
-    abstract void hideLoading();
-    abstract void handleErrorInObserver();
+
+    void handleErrorInObserver() {
+        loading_progress.setVisibility(View.GONE);
+    }
+
+    public class MyPagerAdapter extends FragmentStatePagerAdapter {
+        public MyPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            Fragment fragment = new ImageFragment();
+            Bundle args = new Bundle();
+            args.putString(ImageFragment.ARG_OBJECT1, event.getImages().get(i).getImageUrl());
+            args.putInt(ImageFragment.ARG_OBJECT, i);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return event.getImages().size();
+        }
+
+
+    }
+    public static class ImageFragment extends Fragment{
+        public static final String ARG_OBJECT = "object";
+        public static final String ARG_OBJECT1 = "object1";
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.image_fragment,container,false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            image = view.findViewById(R.id.image);
+            Bundle args = getArguments();
+            String imageURL = args.getString(ARG_OBJECT1);
+            Glide.with(image.getContext())
+                    .load(imageURL)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter()
+                    .error(R.drawable.ic_image_placeholder)
+                    .into(image);
+        }
+    }
+
 }

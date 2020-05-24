@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openApiDetailedFragment(int id) {
-
         manager.beginTransaction()
                 .replace(R.id.fragment_container, ApiDetailedFragment.newInstance(id))
                 .addToBackStack(null)
@@ -101,8 +100,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openBDDetailedFragment(int id) {
-        manager
-                .beginTransaction()
+        manager.beginTransaction()
                 .replace(R.id.fragment_container, BdDetailedFragment.newInstance(id))
                 .addToBackStack(null)
                 .commit();
