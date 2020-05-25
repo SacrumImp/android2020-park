@@ -33,8 +33,8 @@
         <SwitchPreferenceCompat
             app:key = "enable_online"
             app:title = "@string/online_events"
-            android:summaryOff="@string/online"
-            android:summaryOn="@string/offline"/>
+            android:summaryOff="@string/only_online"
+            android:summaryOn="@string/all_events"/>
 
         <ListPreference
             android:title="@string/choosing_city"

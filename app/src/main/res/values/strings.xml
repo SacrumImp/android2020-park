@@ -56,7 +56,7 @@
     <string name="notification_text_first_part">"У вас запланировано событие "</string>
     <string name="notification_text_second_part">" в "</string>
     <string name="empty_feed">Лента пуста</string>
-    <string name="online">Онлайн</string>
-    <string name="offline">Оффлайн</string>
-    <string name="online_events">Онлайн мероприятия</string>
+    <string name="online_events">Онлайн события</string>
+    <string name="only_online">Только онлайн события</string>
+    <string name="all_events">Все события</string>
 </resources>

@@ -53,7 +53,7 @@
     <string name="notification_text_first_part">"You have event "</string>
     <string name="notification_text_second_part">" at "</string>
     <string name="empty_feed">Feed is empty</string>
-    <string name="online">Online</string>
-    <string name="offline">Offline</string>
     <string name="online_events">Online events</string>
+    <string name="only_online">Only online events</string>
+    <string name="all_events">All events</string>
 </resources>
