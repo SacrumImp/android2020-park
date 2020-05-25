@@ -36,7 +36,10 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        recreate();
+        if(key.equals("switch_language") || key.equals("dark_theme")) {
+            recreate();
+        }
+
     }
 
     @Override
