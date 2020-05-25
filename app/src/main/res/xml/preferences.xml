@@ -30,10 +30,17 @@
     <PreferenceCategory
         app:key="city"
         app:title="@string/location">
+        <SwitchPreferenceCompat
+            app:key = "enable_online"
+            app:title = "@string/online_events"
+            android:summaryOff="@string/online"
+            android:summaryOn="@string/offline"/>
+
         <ListPreference
             android:title="@string/choosing_city"
             android:key="@string/preference_city_key"
             android:defaultValue="msk"
+            android:dependency="enable_online"
             android:entries="@array/listCities"
             android:entryValues="@array/listValues" />
     </PreferenceCategory>

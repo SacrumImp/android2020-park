@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +38,10 @@ public class EventRepo {
 
     public void addDataFeed(final int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-        //todo город
+        String city = getLocation();
         String filter = mContext.getSharedPreferences(mContext.getString(R.string.pref_feed_file), Context.MODE_PRIVATE)
                 .getString(mContext.getString(R.string.preference_filter), "");
-        api.getFeedEvents(page, "", filter).enqueue(new Callback<EventApi.FeedInfo>() {
+        api.getFeedEvents(page, city, filter).enqueue(new Callback<EventApi.FeedInfo>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<EventApi.FeedInfo> call, Response<EventApi.FeedInfo> response) {
@@ -74,13 +75,13 @@ public class EventRepo {
         List<Date> dates = new ArrayList<>();
         if (feedEvent.images.size() > 0)
             images.add(new Image(feedEvent.images.get(0).image));
-        if (feedEvent.dates.size()>0)
-            dates.add(new Date (feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
+        if (feedEvent.dates.size() > 0)
+            dates.add(new Date(feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
                     feedEvent.dates.get(0).getStart(), feedEvent.dates.get(0).getEnd()));
 
         return new Event(
                 feedEvent.id,
-                feedEvent.title.substring(0,1).toUpperCase() + feedEvent.title.substring(1),
+                feedEvent.title.substring(0, 1).toUpperCase() + feedEvent.title.substring(1),
                 images,
                 feedEvent.description,
                 dates
@@ -89,8 +90,8 @@ public class EventRepo {
 
     public void addDataSearch(String searchQuery, int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
-        //todo тут достаем из shared pref город и на место пустой строки суем переменную
-        api.getSearchResult(page, searchQuery, "").enqueue(new Callback<EventApi.SearchInfo>() {
+        String city = getLocation();
+        api.getSearchResult(page, searchQuery, city).enqueue(new Callback<EventApi.SearchInfo>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<EventApi.SearchInfo> call, Response<EventApi.SearchInfo> response) {
@@ -117,19 +118,26 @@ public class EventRepo {
         }
     }
 
+    private String getLocation() {
+        if (!PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean("enable_online", false))
+            return "online";
+        else
+            return PreferenceManager.getDefaultSharedPreferences(mContext).getString("city_list", "");
+    }
+
     private static Event mapSearchEvent(EventApi.SearchEvent searchEvent) {
 
         List<Image> images = new ArrayList<>();
         images.add(new Image(searchEvent.first_image.image));
         return new Event(
                 searchEvent.id,
-                searchEvent.title,
+                searchEvent.title.substring(0, 1).toUpperCase() + searchEvent.title.substring(1),
                 images,
                 searchEvent.description
         );
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return eventsInFeed.isEmpty();
     }
 }

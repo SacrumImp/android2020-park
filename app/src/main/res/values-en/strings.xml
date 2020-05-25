@@ -54,4 +54,6 @@
     <string name="notification_text_second_part">" at "</string>
     <string name="empty_feed">Feed is empty</string>
     <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="online_events">Online events</string>
 </resources>
