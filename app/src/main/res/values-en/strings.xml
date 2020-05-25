@@ -53,4 +53,5 @@
     <string name="notification_text_first_part">"You have event "</string>
     <string name="notification_text_second_part">" at "</string>
     <string name="empty_feed">Feed is empty</string>
+    <string name="online">Online</string>
 </resources>
