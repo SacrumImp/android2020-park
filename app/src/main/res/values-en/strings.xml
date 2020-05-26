@@ -56,4 +56,16 @@
     <string name="online_events">Online events</string>
     <string name="only_online">Only online events</string>
     <string name="all_events">All events</string>
+    <string name="chip_all">All</string>
+    <string name="chip_exhibitions">Exhibitions</string>
+    <string name="chip_concerts">Concerts</string>
+    <string name="chip_education">Education</string>
+    <string name="chip_kids">Kids</string>
+    <string name="chip_theater">Theater</string>
+    <string name="chip_festivals">Festivals</string>
+    <string name="chip_pastime">Pastime</string>
+    <string name="refresh">Refresh</string>
+    <string name="error_description">Error while get event</string>
+    <string name="database_error">Error in database</string>
+    <string name="network_error">No internet connection</string>
 </resources>

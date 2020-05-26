@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -148,13 +147,17 @@ public class ApiFeedFragment extends FeedFragment {
         searchField.setVisibility(View.GONE);
         exitSearch.setVisibility(View.VISIBLE);
         chipsLayout.setVisibility(View.VISIBLE);
+        errorLayout.setVisibility(View.GONE);
         searchField.setText("");
     }
 
     @Override
     void handleObserverError() {
         hideLoadingProgress();
-        Toast.makeText(getContext(), "Нет соеинения с интернетом", Toast.LENGTH_SHORT).show();
+        feed.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
+        errorText.setText(R.string.network_error);
+        errorImage.setImageResource(R.drawable.ic_network_error);
     }
 
     @Override
@@ -162,19 +165,12 @@ public class ApiFeedFragment extends FeedFragment {
         navigator.openApiDetailedFragment(id);
     }
 
-    @Override
-    void loadNextPage() {
-        showLoadingProgress();
-        if (isSearch) {
-            feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-        } else {
-            feedViewModel.addFeedNextPage(pageCounter);
-        }
-    }
 
     @Override
     protected void showEmptyState() {
-        Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
+        errorLayout.setVisibility(View.VISIBLE);
+        errorText.setText(R.string.error_find);
+        errorImage.setImageResource(R.drawable.ic_empty_search);
     }
 
 }

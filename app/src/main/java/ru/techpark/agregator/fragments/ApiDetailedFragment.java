@@ -13,8 +13,6 @@ import ru.techpark.agregator.viewmodels.ApiSingleViewModel;
 
 public class ApiDetailedFragment extends DetailedFragment {
 
-    private static final String ERROR_IN_OBSERVER = "Нет соеинения с интернетом";
-
     public static ApiDetailedFragment newInstance(int num) {
         ApiDetailedFragment frag = new ApiDetailedFragment();
         Bundle bundle = new Bundle();
@@ -41,7 +39,8 @@ public class ApiDetailedFragment extends DetailedFragment {
     @Override
     void handleErrorInObserver() {
         super.handleErrorInObserver();
-        Toast.makeText(getContext(), ERROR_IN_OBSERVER, Toast.LENGTH_SHORT).show();
+        errorText.setText(R.string.network_error);
+        errorImage.setImageResource(R.drawable.ic_network_error);
     }
 
     @Override

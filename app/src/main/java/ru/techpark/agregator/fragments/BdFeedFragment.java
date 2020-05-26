@@ -1,9 +1,7 @@
 package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,11 +23,7 @@ public class BdFeedFragment extends FeedFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedViewModel = new ViewModelProvider(this).get(BdViewModel.class);
-        //при первом запуске фрагмента запрашиваем ленту
-        if (savedInstanceState == null) {
-            Log.d(TAG, "запрашиваем ленту у бд");
-            feedViewModel.addFeedNextPage(pageCounter);
-        }
+            feedViewModel.addFeedNextPage(0);
     }
 
     @Override
@@ -39,26 +33,25 @@ public class BdFeedFragment extends FeedFragment {
     }
 
     @Override
-    void loadNextPage() {
-        showLoadingProgress();
-        if (isSearch) {
-            feedViewModel.addSearchNextPage(searchQuery, pageCounter);
-        } else feedViewModel.addFeedNextPage(pageCounter);
-    }
-
-    @Override
     protected void showEmptyState() {
-        if (isSearch)
-            Toast.makeText(getContext(), R.string.error_find, Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(getContext(), R.string.empty_feed, Toast.LENGTH_SHORT).show();
+        feed.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
+        if (isSearch) {
+            errorText.setText(R.string.error_find);
+            errorImage.setImageResource(R.drawable.ic_empty_search);
+        } else {
+            errorText.setText(R.string.empty_feed);
+            errorImage.setImageResource(R.drawable.ic_database_empty);
+        }
     }
 
 
     @Override
     void handleObserverError() {
         hideLoadingProgress();
-        Toast.makeText(getContext(), "Ошибка в БД", Toast.LENGTH_SHORT).show();
+        feed.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
+        errorText.setText(R.string.database_error);
+        errorImage.setImageResource(R.drawable.ic_database_error);
     }
-
 }

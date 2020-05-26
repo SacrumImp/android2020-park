@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,6 +24,9 @@ public class EventRepo {
     private static final String TAG = "EventRepo";
     private static List<Event> eventsInFeed = new ArrayList<>();
 
+    static {
+        mEvents.setValue(Collections.emptyList());
+    }
 
     private final Context mContext;
 
@@ -30,11 +34,40 @@ public class EventRepo {
         mContext = context;
     }
 
+    private static Event mapEvent(EventApi.Event feedEvent) {
+
+        List<Image> images = new ArrayList<>();
+        List<Date> dates = new ArrayList<>();
+        if (feedEvent.images.size() > 0)
+            images.add(new Image(feedEvent.images.get(0).image));
+        if (feedEvent.dates.size() > 0)
+            dates.add(new Date(feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
+                    feedEvent.dates.get(0).getStart(), feedEvent.dates.get(0).getEnd()));
+
+        return new Event(
+                feedEvent.id,
+                feedEvent.title.substring(0, 1).toUpperCase() + feedEvent.title.substring(1),
+                images,
+                feedEvent.description,
+                dates
+        );
+    }
+
+    private static Event mapSearchEvent(EventApi.SearchEvent searchEvent) {
+
+        List<Image> images = new ArrayList<>();
+        images.add(new Image(searchEvent.first_image.image));
+        return new Event(
+                searchEvent.id,
+                searchEvent.title.substring(0, 1).toUpperCase() + searchEvent.title.substring(1),
+                images,
+                searchEvent.description
+        );
+    }
 
     public LiveData<List<Event>> getEvents() {
         return mEvents;
     }
-
 
     public void addDataFeed(final int page) {
         final EventApi api = ApiRepo.from(mContext).getEventApi();
@@ -67,25 +100,6 @@ public class EventRepo {
             Event event = mapEvent(feedEvent);
             eventsInFeed.add(event);
         }
-    }
-
-    private static Event mapEvent(EventApi.Event feedEvent) {
-
-        List<Image> images = new ArrayList<>();
-        List<Date> dates = new ArrayList<>();
-        if (feedEvent.images.size() > 0)
-            images.add(new Image(feedEvent.images.get(0).image));
-        if (feedEvent.dates.size() > 0)
-            dates.add(new Date(feedEvent.dates.get(0).getStart_date(), feedEvent.dates.get(0).getStart_time(),
-                    feedEvent.dates.get(0).getStart(), feedEvent.dates.get(0).getEnd()));
-
-        return new Event(
-                feedEvent.id,
-                feedEvent.title.substring(0, 1).toUpperCase() + feedEvent.title.substring(1),
-                images,
-                feedEvent.description,
-                dates
-        );
     }
 
     public void addDataSearch(String searchQuery, int page) {
@@ -123,18 +137,6 @@ public class EventRepo {
             return "online";
         else
             return PreferenceManager.getDefaultSharedPreferences(mContext).getString("city_list", "");
-    }
-
-    private static Event mapSearchEvent(EventApi.SearchEvent searchEvent) {
-
-        List<Image> images = new ArrayList<>();
-        images.add(new Image(searchEvent.first_image.image));
-        return new Event(
-                searchEvent.id,
-                searchEvent.title.substring(0, 1).toUpperCase() + searchEvent.title.substring(1),
-                images,
-                searchEvent.description
-        );
     }
 
     public boolean isEmpty() {
