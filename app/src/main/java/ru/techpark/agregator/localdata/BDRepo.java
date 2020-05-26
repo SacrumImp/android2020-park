@@ -50,8 +50,7 @@ public class BDRepo {
 
     public void deleteEventBD(Event event){
         executor.execute(() -> {
-            EventTable eventBd = new EventTable(event);
-            db.getDao().delete(eventBd);
+            db.getDao().delete(event.getId());
         });
     }
 

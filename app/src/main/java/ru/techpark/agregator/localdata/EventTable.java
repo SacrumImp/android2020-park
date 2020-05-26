@@ -17,7 +17,6 @@ public class EventTable {
 
 
     public int id;     // id каждой записи
-
     public String title;   // название
     public String description;     // краткое описание
     public String body_text;       // подробное описание
@@ -31,6 +30,7 @@ public class EventTable {
     @TypeConverters({PlaceConverter.class})
     public Place place;
     public String site_url;
+
     @PrimaryKey(autoGenerate = true)
     public int position;
 

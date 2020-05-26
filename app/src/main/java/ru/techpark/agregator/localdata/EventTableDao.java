@@ -27,6 +27,6 @@ public interface EventTableDao {
         List<EventTable> getSearchEvent(String searchQuery);
 
         // удаление записи
-        @Delete
-        void delete(EventTable ... tableEvents);
+        @Query("DELETE FROM event_table WHERE id == :idTableEvent")
+        void delete(int idTableEvent);
 }
