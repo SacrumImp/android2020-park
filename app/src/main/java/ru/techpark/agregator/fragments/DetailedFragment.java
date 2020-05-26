@@ -13,8 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,10 +26,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Observer;
-
 import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
-
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -60,42 +59,37 @@ public abstract class DetailedFragment extends Fragment {
     public final static String KEY_TIME = "KEY_TIME";
     static final String NUM_CURR = "CURRENT";
     private static final String TAG = "DetailedFragment";
-    MyPagerAdapter myPagerAdapter;
-    ViewPager viewPager;
     protected int id;
     protected Event event;
-    ProgressBar loading_progress;
-    ImageButton notifyButton;
     FloatingActionButton likeEvent;
     SingleViewModel detailedViewModel;
+    LinearLayout errorLayout;
+    TextView errorText;
+    ImageView errorImage;
+    FragmentNavigator navigator;
+    private ViewPager viewPager;
+    private ProgressBar loading_progress;
     private TextView title;
     private TextView description;
     private TextView body_text;
     private TextView price;
-    TextView date_start;
-    TextView time_start;
+    private TextView date_start;
+    private TextView time_start;
     private TextView location;
     private TextView location_label;
-    private static ImageView image;
     private TextView price_label;
     private TextView description_label;
     private TextView phone_label;
-    TextView time_label;
+    private TextView time_label;
     private TextView place_title_label;
     private TextView place_title;
     private TextView place_address;
     private TextView place_address_label;
     private View scrollView;
     private AppBarLayout appBar;
-    ImageButton calendar_button;
-    TabLayout tabLayout;
-
-
-
+    private TabLayout tabLayout;
     private TextView phone;
-    Toolbar toolbar;
-
-    FragmentNavigator navigator;
+    private Toolbar toolbar;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -128,17 +122,19 @@ public abstract class DetailedFragment extends Fragment {
         place_title = view.findViewById(R.id.place_title);
         place_title_label = view.findViewById(R.id.place_title_label);
         phone = view.findViewById(R.id.phone);
-        notifyButton = view.findViewById(R.id.notify_button);
         loading_progress = view.findViewById(R.id.loading_progress);
         title = view.findViewById(R.id.title);
         toolbar = view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.detailed_event_toolbar_menu);
         likeEvent = view.findViewById(R.id.likeUnlike);
-        calendar_button = view.findViewById(R.id.calendar_button);
         viewPager = view.findViewById(R.id.pager);
         tabLayout = view.findViewById(R.id.tab_layout);
         scrollView = view.findViewById(R.id.scrollView);
         appBar = view.findViewById(R.id.appbar);
+        errorLayout = view.findViewById(R.id.error_layout);
+        errorText = errorLayout.findViewById(R.id.error_text);
+        errorImage = errorLayout.findViewById(R.id.error_image);
+        Button refreshButton = errorLayout.findViewById(R.id.refresh);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -154,12 +150,13 @@ public abstract class DetailedFragment extends Fragment {
         price_label.setVisibility(View.GONE);
         price.setVisibility(View.GONE);
         loading_progress.setVisibility(View.VISIBLE);
-        notifyButton.setVisibility(View.GONE);
-        calendar_button.setVisibility(View.GONE);
         likeEvent.setVisibility(View.GONE);
         scrollView.setVisibility(View.GONE);
         appBar.setVisibility(View.GONE);
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
+        errorLayout.setVisibility(View.GONE);
+        refreshButton.setVisibility(View.GONE);
+
 
         Observer<Event> observer = event -> {
             if (event != null) {
@@ -213,9 +210,9 @@ public abstract class DetailedFragment extends Fragment {
     private void setEventData(Event event) {
         this.event = event;
         hideLoading();
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(),BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT );
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(myPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager,true);
+        tabLayout.setupWithViewPager(viewPager, true);
         title.setText(event.getTitle());
         Log.d(TAG, event.getTitle());
         description_label.setVisibility(View.VISIBLE);
@@ -261,8 +258,6 @@ public abstract class DetailedFragment extends Fragment {
                 phone.setText(event.getPlace().getPhone());
             }
         }
-        notifyButton.setOnClickListener(v -> turnOnNotification(event));
-        calendar_button.setOnClickListener(v -> addToCalendar(event));
     }
 
     private void turnOnNotification(Event event) {
@@ -286,9 +281,9 @@ public abstract class DetailedFragment extends Fragment {
 
     private void addToCalendar(Event event) {
         Calendar beginTime = Calendar.getInstance();
-        beginTime.setTimeInMillis(event.getDates().get(0).getStart()* 1000L + 10800000L);
+        beginTime.setTimeInMillis(event.getDates().get(0).getStart() * 1000L + 10800000L);
         Calendar endTime = Calendar.getInstance();
-        endTime.setTimeInMillis(event.getDates().get(0).getEnd()* 1000L + 10800000L);
+        endTime.setTimeInMillis(event.getDates().get(0).getEnd() * 1000L + 10800000L);
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
@@ -308,10 +303,37 @@ public abstract class DetailedFragment extends Fragment {
         scrollView.setVisibility(View.VISIBLE);
         loading_progress.setVisibility(View.GONE);
         appBar.setVisibility(View.VISIBLE);
+        errorLayout.setVisibility(View.GONE);
     }
 
     void handleErrorInObserver() {
         loading_progress.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
+    }
+
+    public static class ImageFragment extends Fragment {
+        public static final String ARG_OBJECT = "object";
+        public static final String ARG_OBJECT1 = "object1";
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.image_fragment, container, false);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            ImageView image = view.findViewById(R.id.image);
+            Bundle args = getArguments();
+            String imageURL = args.getString(ARG_OBJECT1);
+            Glide.with(image.getContext())
+                    .load(imageURL)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .fitCenter()
+                    .error(R.drawable.ic_image_placeholder)
+                    .into(image);
+        }
     }
 
     public class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -335,29 +357,6 @@ public abstract class DetailedFragment extends Fragment {
         }
 
 
-    }
-    public static class ImageFragment extends Fragment{
-        public static final String ARG_OBJECT = "object";
-        public static final String ARG_OBJECT1 = "object1";
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.image_fragment,container,false);
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            image = view.findViewById(R.id.image);
-            Bundle args = getArguments();
-            String imageURL = args.getString(ARG_OBJECT1);
-            Glide.with(image.getContext())
-                    .load(imageURL)
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .fitCenter()
-                    .error(R.drawable.ic_image_placeholder)
-                    .into(image);
-        }
     }
 
 }

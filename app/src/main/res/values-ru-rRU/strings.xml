@@ -56,4 +56,16 @@
     <string name="online_events">Онлайн события</string>
     <string name="only_online">Только онлайн события</string>
     <string name="all_events">Все события</string>
+    <string name="chip_all">Всё</string>
+    <string name="chip_concerts">Концерты</string>
+    <string name="chip_exhibitions">Выставки</string>
+    <string name="chip_education">Образование</string>
+    <string name="chip_kids">Дети</string>
+    <string name="chip_theater">Театр</string>
+    <string name="chip_festivals">Фестивали</string>
+    <string name="chip_pastime">Отдых</string>
+    <string name="network_error">Нет соеинения с интернетом</string>
+    <string name="database_error">Ошибка в БД</string>
+    <string name="error_description">Ошибка в получении события</string>
+    <string name="refresh">Обновить</string>
 </resources>

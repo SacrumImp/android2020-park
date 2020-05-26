@@ -1,11 +1,9 @@
 package ru.techpark.agregator;
 
 
-import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -27,6 +25,7 @@ import ru.techpark.agregator.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator, SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private static final String BD_EVENT_OPENED = "bd event opened";
     private FragmentManager manager;
 
     @Override
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            manager.popBackStack();
             switch (item.getItemId()) {
                 case R.id.action_feed:
                     manager.beginTransaction()
@@ -111,10 +111,8 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
 
     @Override
     public void openDBFeed() {
-        manager.beginTransaction()
-                .replace(R.id.fragment_container, new BdFeedFragment())
-                .addToBackStack(null)
-                .commit();
+        manager.popBackStack();
+
     }
 
     private Context updateBaseContextLocale(Context context) {

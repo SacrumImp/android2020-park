@@ -2,19 +2,15 @@ package ru.techpark.agregator.fragments;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.techpark.agregator.R;
-import ru.techpark.agregator.event.Event;
 import ru.techpark.agregator.viewmodels.BdSingleViewModel;
 
 public class BdDetailedFragment extends DetailedFragment {
-
-    private static final String ERROR_IN_OBSERVER = "Ошибка в чтении БД";
 
     public static BdDetailedFragment newInstance(int num) {
         BdDetailedFragment frag = new BdDetailedFragment();
@@ -37,13 +33,14 @@ public class BdDetailedFragment extends DetailedFragment {
             id = arguments.getInt(NUM_CURR);
             detailedViewModel.getDetailedEvent(id);
         }
-        else Toast.makeText(getContext(), "@string/error_find", Toast.LENGTH_SHORT).show();
+        else handleErrorInObserver();
     }
 
     @Override
     void handleErrorInObserver() {
         super.handleErrorInObserver();
-        Toast.makeText(getContext(), ERROR_IN_OBSERVER, Toast.LENGTH_SHORT).show();
+        errorText.setText(R.string.database_error);
+        errorImage.setImageResource(R.drawable.ic_database_error);
     }
 
     @Override

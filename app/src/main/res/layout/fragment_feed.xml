@@ -68,10 +68,10 @@
         android:id="@+id/chip_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/toolbar"
         app:singleLine="false"
         app:singleSelection="true">
 
@@ -80,55 +80,56 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All" />
+            android:text="@string/chip_all" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_concerts"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Concerts" />
+            android:text="@string/chip_concerts" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_exhibitions"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exhibitions" />
+            android:text="@string/chip_exhibitions" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_education"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Education" />
+            android:text="@string/chip_education" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_kids"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kids" />
+            android:text="@string/chip_kids" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_theater"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Theater" />
+            android:text="@string/chip_theater" />
+
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_festivals"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Festivals"/>
+            android:text="@string/chip_festivals" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_pastime"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pastime"/>
+            android:text="@string/chip_pastime" />
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -139,6 +140,36 @@
         android:layout_below="@+id/chip_group"
         android:clipToPadding="false"
         android:paddingBottom="70dp" />
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/error_description"
+            android:src="@drawable/ic_network_error" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/refresh" />
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/loading_progress"

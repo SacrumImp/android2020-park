@@ -242,21 +242,7 @@
                         android:textAppearance="@style/TextAppearance.MyTheme.Subtitle2"
                         tools:text="Цена" />
 
-                    <ImageButton
-                        android:id="@+id/notify_button"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentEnd="true"
-                        android:contentDescription="@string/notification_button"
-                        app:srcCompat="@drawable/ic_notification_button" />
 
-                    <ImageButton
-                        android:id="@+id/calendar_button"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_below="@+id/notify_button"
-                        app:srcCompat="@drawable/ic_calendar_button" />
 
 
                 </RelativeLayout>
@@ -292,6 +278,36 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/error_description"
+            android:src="@drawable/ic_network_error" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
+
+        <Button
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/refresh" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/likeUnlike"
