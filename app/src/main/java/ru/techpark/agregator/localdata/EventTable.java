@@ -3,6 +3,7 @@ package ru.techpark.agregator.localdata;
 import java.util.List;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 import ru.techpark.agregator.event.Date;
@@ -12,7 +13,7 @@ import ru.techpark.agregator.event.Location;
 import ru.techpark.agregator.event.Place;
 
 
-@Entity(tableName = "event_table")      // таблица всех ивентов
+@Entity(tableName = "event_table", indices = {@Index(value = {"id"}, unique = true)})      // таблица всех ивентов
 public class EventTable {
 
 
