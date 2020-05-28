@@ -54,10 +54,4 @@ public class BdDetailedFragment extends DetailedFragment {
         });
 
     }
-
-    @Override
-    protected void showMapButton(String latitude, String longitude) {
-        //todo ничего не делает, так как в бд нет кнопки для карты
-    }
-
 }

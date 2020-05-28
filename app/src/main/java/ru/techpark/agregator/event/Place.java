@@ -6,10 +6,11 @@ public class Place {
     private String phone;
     private Coordinates coords;
 
-    public Place(String title, String address, String phone) {
+    public Place(String title, String address, String phone, String latitude, String longitude) {
         this.title = title;
         this.address = address;
         this.phone = phone;
+        coords = new Coordinates(latitude, longitude);
     }
 
     public Coordinates getCoordinates() {

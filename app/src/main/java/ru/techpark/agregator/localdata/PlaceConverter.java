@@ -1,21 +1,23 @@
 package ru.techpark.agregator.localdata;
 
 import androidx.room.TypeConverter;
+
 import ru.techpark.agregator.event.Place;
 
 public class PlaceConverter {
 
     @TypeConverter
-    public String fromPlace(Place place){
-        if(place == null) return "";
-        else return place.getTitle() + "," + place.getAddress() + "," + place.getPhone();
+    public String fromPlace(Place place) {
+        if (place == null) return "";
+        else return place.getTitle() + ";;" + place.getAddress() + ";;" + place.getPhone()
+                + ";;" + place.getCoordinates().getLatitude() + ";;" + place.getCoordinates().getLongitude();
     }
 
     @TypeConverter
-    public Place toPlace(String line){
-        if(line.length() == 0) return new Place("","","");
-        String[] arr = line.split(",");
-        return new Place(arr[0], arr[1], arr[2]);
+    public Place toPlace(String line) {
+        if (line.length() == 0) return new Place("", "", "", "", "");
+        String[] arr = line.split(";;");
+        return new Place(arr[0], arr[1], arr[2], arr[3], arr[4]);
     }
 
 }

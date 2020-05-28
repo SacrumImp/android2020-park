@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +67,7 @@ public abstract class DetailedFragment extends Fragment {
     TextView errorText;
     ImageView errorImage;
     FragmentNavigator navigator;
+    private Button openMap;
     private LinearLayout errorLayout;
     private ViewPager viewPager;
     private ProgressBar loading_progress;
@@ -135,6 +137,7 @@ public abstract class DetailedFragment extends Fragment {
         errorText = errorLayout.findViewById(R.id.error_text);
         errorImage = errorLayout.findViewById(R.id.error_image);
         Button refreshButton = errorLayout.findViewById(R.id.refresh);
+        openMap = view.findViewById(R.id.btn_open_map);
 
         description_label.setVisibility(View.INVISIBLE);
         time_label.setVisibility(View.GONE);
@@ -156,7 +159,6 @@ public abstract class DetailedFragment extends Fragment {
         body_text.setMovementMethod(LinkMovementMethod.getInstance());
         errorLayout.setVisibility(View.GONE);
         refreshButton.setVisibility(View.GONE);
-
 
         Observer<Event> observer = event -> {
             if (event != null) {
@@ -205,7 +207,6 @@ public abstract class DetailedFragment extends Fragment {
             }
         });
     }
-
 
     private void setEventData(Event event) {
         this.event = event;
@@ -259,13 +260,28 @@ public abstract class DetailedFragment extends Fragment {
             }
             if (event.getPlace().getCoordinates() != null &&
                     !event.getPlace().getCoordinates().getLatitude().equals("") &&
-                    !event.getPlace().getCoordinates().getLongitude().equals(""))
+                    !event.getPlace().getCoordinates().getLongitude().equals("")) {
+                Log.d(TAG, event.getPlace().getCoordinates().getLatitude() + " / " +
+                        event.getPlace().getCoordinates().getLongitude());
                 showMapButton(event.getPlace().getCoordinates().getLatitude(),
                         event.getPlace().getCoordinates().getLongitude());
+            }
         }
     }
 
-    protected abstract void showMapButton(String latitude, String longitude);
+    private void showMapButton(String latitude, String longitude) {
+        openMap.setVisibility(View.VISIBLE);
+        openMap.setOnClickListener(l -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            Uri location = Uri.parse("geo:" + latitude + ", " + longitude + "?z=15");
+            intent.setData(location);
+            if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+                startActivity(intent);
+            } else {
+                Toast.makeText(getContext(), R.string.error_while_show_map, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void turnOnNotification(Event event) {
         String workTag = event.getId() + "";
