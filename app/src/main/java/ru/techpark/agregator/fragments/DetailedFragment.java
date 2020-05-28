@@ -63,10 +63,10 @@ public abstract class DetailedFragment extends Fragment {
     protected Event event;
     FloatingActionButton likeEvent;
     SingleViewModel detailedViewModel;
-    LinearLayout errorLayout;
     TextView errorText;
     ImageView errorImage;
     FragmentNavigator navigator;
+    private LinearLayout errorLayout;
     private ViewPager viewPager;
     private ProgressBar loading_progress;
     private TextView title;
@@ -257,8 +257,15 @@ public abstract class DetailedFragment extends Fragment {
                 phone.setVisibility(View.VISIBLE);
                 phone.setText(event.getPlace().getPhone());
             }
+            if (event.getPlace().getCoordinates() != null &&
+                    !event.getPlace().getCoordinates().getLatitude().equals("") &&
+                    !event.getPlace().getCoordinates().getLongitude().equals(""))
+                showMapButton(event.getPlace().getCoordinates().getLatitude(),
+                        event.getPlace().getCoordinates().getLongitude());
         }
     }
+
+    protected abstract void showMapButton(String latitude, String longitude);
 
     private void turnOnNotification(Event event) {
         String workTag = event.getId() + "";
@@ -274,7 +281,6 @@ public abstract class DetailedFragment extends Fragment {
         extra_time += sharedPreferences.getInt("notif_ch", 0) * 3600000;
         difference = eventDate.getTime() - System.currentTimeMillis() - extra_time; // за 5 часов до события
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationWorker.class)
-                //          .setInputData(put).build();
                 .setInputData(put).setInitialDelay(difference, TimeUnit.MILLISECONDS).addTag(workTag).build();
         WorkManager.getInstance(getContext()).enqueue(notificationWork);
     }
@@ -294,7 +300,7 @@ public abstract class DetailedFragment extends Fragment {
         startActivity(intent);
     }
 
-    void setTimeInformation(Event event) {
+    private void setTimeInformation(Event event) {
         time_label.setVisibility(View.VISIBLE);
         UIutils.setTimeInformation(event, time_start, date_start);
     }

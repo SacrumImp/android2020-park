@@ -15,6 +15,7 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import ru.techpark.agregator.fragments.ApiDetailedFragment;
 import ru.techpark.agregator.fragments.ApiFeedFragment;
@@ -25,7 +26,6 @@ import ru.techpark.agregator.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements FragmentNavigator, SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String BD_EVENT_OPENED = "bd event opened";
     private FragmentManager manager;
 
     @Override
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements FragmentNavigator
         }
 
         Intent intent = getIntent();
-        if (intent.getAction().equals(NotificationWorker.ACTION_TO_OPEN)) {
+        if (Objects.equals(intent.getAction(), NotificationWorker.ACTION_TO_OPEN)) {
             int id = intent.getIntExtra(NotificationWorker.OPEN_FRAGMENT_ID, 0);
             openApiDetailedFragment(id);
         }

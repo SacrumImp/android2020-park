@@ -44,6 +44,7 @@ public abstract class FeedFragment extends Fragment {
     protected String searchQuery;
     FragmentNavigator navigator;
     FeedViewModel feedViewModel;
+
     boolean isSearch = false;
     int pageCounter = 1;
     boolean isAllEvents = false;

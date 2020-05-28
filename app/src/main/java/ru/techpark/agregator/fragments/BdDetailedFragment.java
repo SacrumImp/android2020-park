@@ -32,8 +32,7 @@ public class BdDetailedFragment extends DetailedFragment {
         if (arguments != null) {
             id = arguments.getInt(NUM_CURR);
             detailedViewModel.getDetailedEvent(id);
-        }
-        else handleErrorInObserver();
+        } else handleErrorInObserver();
     }
 
     @Override
@@ -54,6 +53,11 @@ public class BdDetailedFragment extends DetailedFragment {
             updateFeed();
         });
 
+    }
+
+    @Override
+    protected void showMapButton(String latitude, String longitude) {
+        //todo ничего не делает, так как в бд нет кнопки для карты
     }
 
 }

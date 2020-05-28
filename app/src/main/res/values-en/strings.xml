@@ -68,4 +68,6 @@
     <string name="error_description">Error while get event</string>
     <string name="database_error">Error in database</string>
     <string name="network_error">No internet connection</string>
+    <string name="text_open_map">Show on map</string>
+    <string name="error_while_show_map">Unable to show on map</string>
 </resources>

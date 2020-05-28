@@ -71,4 +71,6 @@
     <string name="database_error">Ошибка в БД</string>
     <string name="error_description">Ошибка в получении события</string>
     <string name="refresh">Обновить</string>
+    <string name="text_open_map">Показать на карте</string>
+    <string name="error_while_show_map">Невозможно показать на карте</string>
 </resources>
