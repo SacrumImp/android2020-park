@@ -13,8 +13,8 @@ import ru.techpark.agregator.R;
 public class TimePreferenceDialog extends PreferenceDialogFragmentCompat {
 
     private SharedPreferences sharedPreferences;
-    private NumberPicker mNumberPicker;
-    private NumberPicker chNumberPicker;
+    private NumberPicker minuteNumberPicker;
+    private NumberPicker hourNumberPicker;
 
     static TimePreferenceDialog newInstance(String key) {
         final TimePreferenceDialog fragment = new TimePreferenceDialog();
@@ -28,8 +28,8 @@ public class TimePreferenceDialog extends PreferenceDialogFragmentCompat {
     public void onDialogClosed(boolean positiveResult) {
         if(positiveResult) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("notif_min", mNumberPicker.getValue());
-            editor.putInt("notif_ch", chNumberPicker.getValue());
+            editor.putInt("notification_minute_time", minuteNumberPicker.getValue());
+            editor.putInt("notification_hour_time", hourNumberPicker.getValue());
             editor.apply();
         }
     }
@@ -38,15 +38,15 @@ public class TimePreferenceDialog extends PreferenceDialogFragmentCompat {
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        mNumberPicker = view.findViewById(R.id.mNumberPicker);
-        mNumberPicker.setMaxValue(60);
-        mNumberPicker.setMinValue(0);
-        chNumberPicker = view.findViewById(R.id.chNumberPicker);
-        chNumberPicker.setMaxValue(30);
-        chNumberPicker.setMinValue(0);
+        minuteNumberPicker = view.findViewById(R.id.mNumberPicker);
+        minuteNumberPicker.setMaxValue(60);
+        minuteNumberPicker.setMinValue(0);
+        hourNumberPicker = view.findViewById(R.id.chNumberPicker);
+        hourNumberPicker.setMaxValue(30);
+        hourNumberPicker.setMinValue(0);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        mNumberPicker.setValue(sharedPreferences.getInt("notif_min", 0));
-        chNumberPicker.setValue(sharedPreferences.getInt("notif_ch", 0));
+        minuteNumberPicker.setValue(sharedPreferences.getInt("notification_minute_time", 0));
+        hourNumberPicker.setValue(sharedPreferences.getInt("notification_hour_time", 1));
     }
 }
