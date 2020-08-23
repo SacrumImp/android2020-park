@@ -1,4 +1,5 @@
 # Агрегатор мероприятий/событий
+![Лого](https://github.com/SacrumImp/Android2020_Park/blob/master/app/src/main/res/mipmap-hdpi/ic_launcher.png)
   Семестровый проект курсов по разработке Android приложений.
 ## Концепция приложения
   Основная функция приложения заключается в сборе и предоставлении списка планируемых мероприятий и событий. Это могут быть выставки, концерты, премьеры в театре или встречи, организуемые каким-либо сообществом. 
@@ -12,4 +13,8 @@
     - Создание списка избранных мероприятий.
     - Сохранение избранных событий локально для обеспечения возможности просмотра без использования сети.
     - Экспорт данных о мероприятии в календарь или использование Push-уведомлений для напоминания.
- 
+  - Небольшие фичи
+    - Открытие места проведения мероприятия для быстрого вызова такси или посторения маршрута.
+    - Темная тема.
+ ## Немного скриншотов
+<img src="https://github.com/SacrumImp/Android2020_Park/blob/master/screenshots/photo_2020-08-23_12-27-39.jpg" width="128"><img src="https://github.com/SacrumImp/Android2020_Park/blob/master/screenshots/photo_2020-08-23_12-28-56.jpg" width="128"><img src="https://github.com/SacrumImp/Android2020_Park/blob/master/screenshots/photo_2020-08-23_12-30-13.jpg" width="128"><img src="https://github.com/SacrumImp/Android2020_Park/blob/master/screenshots/photo_2020-08-23_12-29-09.jpg" width="128"><img src="https://github.com/SacrumImp/Android2020_Park/blob/master/screenshots/photo_2020-08-23_12-29-00.jpg" width="128">
